@@ -1,0 +1,40 @@
+{
+  "title": "My Listings",
+  "subtitle": "Manage your agricultural waste inventory",
+  "searchPlaceholder": "Search your listings...",
+  "filters": {
+    "all": "All",
+    "crops": "Crops",
+    "vegetables": "Vegetables",
+    "fruits": "Fruits"
+  },
+  "results": "{shown} of {total} listings",
+  "loading": "Loading listings...",
+  "empty": {
+    "title": "No listings found",
+    "tryFilters": "Try adjusting your search or filters",
+    "startCreate": "Start by creating your first waste listing"
+  },
+  "unknown": "Unknown",
+  "wasteTypes": {
+    "crop": "Crops",
+    "vegetable": "Vegetables",
+    "fruit": "Fruits"
+  },
+  "labels": {
+    "quantity": "Quantity",
+    "moisture": "Moisture"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "confirm": {
+    "delete": "Are you sure you want to delete this listing?"
+  },
+  "toast": {
+    "deleted": "Listing deleted",
+    "deleteFailed": "Failed to delete listing. Please try again.",
+    "deleteError": "Delete failed. Please try again."
+  }
+}

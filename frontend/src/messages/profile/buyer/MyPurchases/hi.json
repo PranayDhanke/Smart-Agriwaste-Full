@@ -1,0 +1,78 @@
+{
+  "title": "मेरे ऑर्डर",
+  "description": "अपने स्थानीय किसानों से सभी ऑर्डरों को ट्रैक और प्रबंधित करें",
+  "negotiations": "वार्ता",
+  "stats": {
+    "totalOrders": "कुल ऑर्डर",
+    "pending": "प्रतीक्षारत",
+    "confirmed": "स्वीकृत",
+    "delivered": "वितरित"
+  },
+  "searchPlaceholder": "ऑर्डर, खरीदार, या उत्पाद खोजें...",
+  "filter": {
+    "all": "सभी ऑर्डर",
+    "pending": "प्रतीक्षारत",
+    "confirmed": "स्वीकृत",
+    "delivered": "वितरित",
+    "cancelled": "रद्द"
+  },
+  "foundResults": "{count} परिणाम मिलें",
+  "loading": {
+    "text": "आपके ऑर्डर लोड हो रहे हैं..."
+  },
+  "empty": {
+    "title": "अभी कोई ऑर्डर नहीं",
+    "desc": "यहाँ अपने ऑर्डर देखने के लिए खरीदारी शुरू करें। हमारे मार्केटप्लेस ब्राउज़ करें और स्थानीय किसानों से बेहतरीन कृषि उत्पाद पाएं।",
+    "browse": "उत्पाद ब्राउज़ करें"
+  },
+  "noResults": {
+    "title": "कोई ऑर्डर नहीं मिला",
+    "desc": "जो आप ढूंढ रहे हैं, उसे पाने के लिए अपनी खोज या फ़िल्टर समायोजित करें।"
+  },
+  "items": "आइटम",
+  "orderNumber": "ऑर्डर #{id}",
+  "moreItems": "+{count} और आइटम",
+  "total": "कुल",
+  "payment": {
+    "label": "भुगतान",
+    "completed": "पूर्ण",
+    "pending": "प्रतीक्षारत"
+  },
+  "actions": {
+    "viewDetails": "विवरण देखें",
+    "cancel": "रद्द करें",
+    "outForPickup": "पिकअप के लिए निकला",
+    "confirmPickup": "पिकअप की पुष्टि करें",
+    "payNow": "अभी भुगतान करें"
+  },
+  "toast": {
+    "loadFailed": "आपके ऑर्डर लोड करने में विफल",
+    "orderStatusSuccess": "ऑर्डर सफलतापूर्वक {status}",
+    "changeStatusFailed": "ऑर्डर स्थिति बदलने में विफल",
+    "outForDelivery": "ऑर्डर डिलीवरी के लिए चिह्नित",
+    "outForDeliveryFailed": "डिलीवरी के लिए सेट करने में विफल",
+    "deliveredSuccess": "ऑर्डर सफलतापूर्वक वितरित किया गया",
+    "markDeliveryFailed": "डिलीवरी चिह्नित करने में विफल",
+    "paymentSoon": "भुगतान गेटवे जल्द आ रहा है!"
+  },
+  "notify": {
+    "titleStatus": "खरीदार ने ऑर्डर {status} किया है",
+    "messageStatus": "खरीदार {buyer} ने ऑर्डर {status} किया है",
+    "outForPickupTitle": "ऑर्डर पिकअप के लिए निकला है",
+    "outForPickupMessage": "खरीदार {buyer} पिकअप के लिए निकला है",
+    "pickedUpTitle": "ऑर्डर उठाया गया",
+    "pickedUpMessage": "खरीदार {buyer} ने ऑर्डर उठाया"
+  },
+  "status": {
+    "delivered": "वितरित",
+    "readyForPickup": "पिकअप के लिए तैयार",
+    "outForDelivery": "डिलीवरी के लिए बाहर",
+    "cancelled": "रद्द",
+    "confirmed": "पुष्ट",
+    "pending": "प्रतीक्षारत"
+  },
+  "delivery": {
+    "delivery": "डिलीवरी",
+    "pickup": "पिकअप"
+  }
+}

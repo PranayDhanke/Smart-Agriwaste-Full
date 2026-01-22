@@ -1,0 +1,33 @@
+{
+  "title": "खरेदीदार प्रोफाइल",
+  "description": "आपली वैयक्तिक आणि संपर्क माहिती व्यवस्थापित करा",
+  "loadingUser": "वापरकर्ता लोड करत आहे...",
+  "loadingBuyerData": "खरेदीदार डेटा लोड होत आहे...",
+  "buyerIdLabel": "खरेदीदार आयडी:",
+  "accountInformation": "खाते माहिती",
+  "contactPersonalDetails": "संपर्क आणि वैयक्तिक तपशील",
+  "addressDetails": "पत्ता तपशील",
+  "document": "दस्तऐवज",
+  "aadharDocument": "आधार दस्तऐवज",
+  "saveChanges": "बदल जतन करा",
+  "fields": {
+    "phone": "फोन नंबर",
+    "aadharnumber": "आधार क्रमांक",
+    "state": "राज्य",
+    "district": "जिल्हा",
+    "taluka": "ता:",
+    "village": "गाव",
+    "houseBuildingName": "घर/इमारत नाव",
+    "roadarealandmarkName": "रस्ता, क्षेत्र, लँडमार्क नाव",
+    "firstName": "पहिले नाव",
+    "lastName": "आडनाव",
+    "username": "वापरकर्तानाव",
+    "emailAddress": "ईमेल पत्ता"
+  },
+  "enterField": "{field} प्रविष्ट करा",
+  "toasts": {
+    "updated": "खरेदीदार प्रोफाइल अद्यतनित झाली",
+    "updateFailed": "प्रोफाइल अद्यतनित करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "genericError": "काहीतरी चुकले आहे, कृपया पुन्हा प्रयत्न करा."
+  }
+}

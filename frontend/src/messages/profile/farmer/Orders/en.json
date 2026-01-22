@@ -1,0 +1,74 @@
+{
+  "title": "Order Management",
+  "subtitle": "Track and manage incoming orders",
+  "actions": {
+    "negotiations": "Negotiations",
+    "view": "View",
+    "accept": "Accept",
+    "reject": "Reject",
+    "outForDelivery": "Out for Delivery",
+    "delivered": "Delivered"
+  },
+  "stats": {
+    "total": "Total Orders",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered"
+  },
+  "search": {
+    "placeholder": "Search orders, buyers, or products..."
+  },
+  "filters": {
+    "all": "All Orders",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "found": "Found {count} result{count, plural, one {} other {s}}",
+  "loading": "Loading your orders...",
+  "empty": {
+    "title": "No Orders Yet",
+    "description": "Once buyers place orders for your products, they'll appear here. Start by listing your products to receive orders.",
+    "noMatch": "No orders match your search criteria"
+  },
+  "status": {
+    "cancelled": "Cancelled",
+    "delivered": "Delivered",
+    "outForDelivery": "Out for Delivery",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "waitingPickup": "Waiting for Pickup",
+    "complete": "Complete"
+  },
+  "delivery": {
+    "byFarmer": "Delivery by You",
+    "pickupByBuyer": "Pickup by Buyer"
+  },
+  "labels": {
+    "totalEarning": "Total Earning:",
+    "buyer": "Buyer:"
+  },
+  "payment": {
+    "verified": "Payment Verified"
+  },
+  "toast": {
+    "orderStatusUpdated": "Order {status} successfully",
+    "outForDelivery": "Order marked as out for delivery",
+    "delivered": "Order marked as delivered"
+  },
+  "errors": {
+    "loadFailed": "Error loading orders. Please refresh the page.",
+    "updateStatus": "Failed to update order status",
+    "updateDelivery": "Failed to update delivery status",
+    "confirmDelivery": "Failed to confirm delivery"
+  },
+  "notify": {
+    "orderStatusTitle": "Your order has been {status}",
+    "orderStatusMessage": "Farmer {farmer} has {status} your order",
+    "outForDeliveryTitle": "Order is out for Delivery",
+    "outForDeliveryMessage": "Farmer {farmer} has sent your order for delivery",
+    "deliveredTitle": "Order Delivered",
+    "deliveredMessage": "Your order from farmer {farmer} has been delivered"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "home": "मुख्यपृष्ठ",
+    "marketplace": "बाजारपेठ",
+    "community": "समुदाय",
+    "myListings": "माझ्या जाहिराती",
+    "orders": "ऑर्डर्स",
+    "analytics": "विश्लेषण",
+    "myPurchases": "माझी खरेदी"
+  },
+
+  "auth": {
+    "login": "लॉगिन",
+    "signup": "नोंदणी",
+    "signupAs": "म्हणून सामील व्हा",
+    "signOut": "लॉगआउट",
+    "listWaste": "कचरा नोंदवा"
+  },
+
+  "role": {
+    "farmer": "शेतकरी",
+    "buyer": "खरेदीदार"
+  },
+
+  "profile": {
+    "myAccount": "माझे खाते",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्ज"
+  },
+
+  "notification": {
+    "title": "सूचना"
+  },
+
+  "language": {
+    "label": "भाषा",
+    "english": "इंग्रजी",
+    "hindi": "हिंदी",
+    "marathi": "मराठी"
+  }
+}

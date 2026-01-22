@@ -1,0 +1,27 @@
+{
+  "title": "Analytics Dashboard",
+  "tabs": {
+    "waste": "Waste Trends",
+    "usage": "Usage Breakdown"
+  },
+  "waste": {
+    "title": "Waste Generation Trends"
+  },
+  "series": {
+    "crop": "Crop Residues",
+    "vegetables": "Vegetables",
+    "fruits": "Fruits"
+  },
+  "usage": {
+    "title": "Waste Usage Breakdown",
+    "compost": "Compost",
+    "biogas": "Biogas",
+    "animalFeed": "Animal Feed",
+    "sold": "Sold"
+  },
+  "stats": {
+    "totalWaste": "Total Waste Managed",
+    "productsSold": "Products Sold",
+    "biogasProduced": "Biogas Produced"
+  }
+}

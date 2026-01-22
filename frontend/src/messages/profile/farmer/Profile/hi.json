@@ -1,0 +1,59 @@
+{
+  "title": "किसान प्रोफाइल",
+  "subtitle": "अपनी व्यक्तिगत और खेत की जानकारी प्रबंधित करें",
+  "loadingUser": "उपयोगकर्ता लोड हो रहा है...",
+  "loadingData": "किसान का डेटा लोड हो रहा है...",
+  "farmerIdLabel": "किसान आईडी:",
+  "account": {
+    "heading": "खाता जानकारी",
+    "firstName": "पहला नाम",
+    "lastName": "अंतिम नाम",
+    "username": "यूज़रनेम",
+    "emailAddress": "ईमेल पता"
+  },
+  "contact": {
+    "heading": "संपर्क और व्यक्तिगत विवरण"
+  },
+  "fields": {
+    "phone": "फ़ोन नंबर",
+    "aadharnumber": "आधार नंबर",
+    "state": "राज्य",
+    "district": "जिला",
+    "taluka": "तालुका",
+    "village": "गाँव",
+    "houseBuildingName": "घर/भवन का नाम",
+    "roadarealandmarkName": "सड़क, क्षेत्र, लैंडमार्क का नाम",
+    "farmNumber": "खेत संख्या",
+    "farmArea": "खेत क्षेत्र",
+    "farmUnit": "खेत इकाई"
+  },
+  "placeholders": {
+    "phone": "फोन नंबर दर्ज करें",
+    "aadharnumber": "आधार नंबर दर्ज करें",
+    "state": "राज्य दर्ज करें",
+    "district": "जिला दर्ज करें",
+    "taluka": "तालुका दर्ज करें",
+    "village": "गाँव दर्ज करें",
+    "houseBuildingName": "घर/भवन का नाम दर्ज करें",
+    "roadarealandmarkName": "सड़क/क्षेत्र/लैंडमार्क दर्ज करें",
+    "farmNumber": "खेत संख्या दर्ज करें",
+    "farmArea": "खेत क्षेत्र दर्ज करें",
+    "farmUnit": "खेत इकाई दर्ज करें"
+  },
+  "farm": {
+    "heading": "खेत की जानकारी"
+  },
+  "documents": {
+    "heading": "दस्तावेज़",
+    "aadhar": "आधार दस्तावेज़",
+    "farm": "खेत दस्तावेज़"
+  },
+  "address": {
+    "heading": "पते की जानकारी"
+  },
+  "saveChanges": "परिवर्तनों को सहेजें",
+  "uploadFailed": "अपलोड विफल। कृपया पुनः प्रयास करें।",
+  "profileUpdated": "प्रोफ़ाइल अपडेट हो गई",
+  "profileUpdateFailed": "प्रोफ़ाइल अपडेट करने में विफल",
+  "somethingWentWrong": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।"
+}

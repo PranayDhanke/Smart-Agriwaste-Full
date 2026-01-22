@@ -1,0 +1,21 @@
+{
+  "chatTitle": "समुदाय चैट",
+  "connected": "कनेक्टेड",
+  "offline": "ऑफ़लाइन",
+  "signedInAs": "साइन इन: {username}",
+  "guest": "अतिथि",
+  "noMessages": "अभी तक कोई संदेश नहीं",
+  "beFirst": "बातचीत शुरू करने वाला पहला बनें!",
+  "placeholder": "संदेश टाइप करें...",
+  "offlinePlaceholder": "ऑफ़लाइन होने पर भेजा नहीं जा सकता",
+  "signInToChat": "चैट के लिए साइन इन करें",
+  "sendAria": "संदेश भेजें",
+
+  "errors": {
+    "disconnected": "चैट से कनेक्शन अलग हो गया।",
+    "historyFailed": "चैट इतिहास लोड करने में विफल।",
+    "sendFailed": "संदेश भेजने में विफल।",
+    "connectFailed": "चैट सर्वर से कनेक्ट करने में असमर्थ।",
+    "offlineSend": "आप ऑफ़लाइन हैं। संदेश नहीं भेजा जाएगा।"
+  }
+}

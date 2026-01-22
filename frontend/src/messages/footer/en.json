@@ -1,0 +1,58 @@
+{
+  "brand": {
+    "description": "Connecting farmers and buyers for sustainable agricultural waste management and a greener future.",
+    "email": "support@agriwaste.com",
+    "phone": "+91 123 456 7890",
+    "location": "India"
+  },
+
+  "sections": {
+    "quickLinks": "Quick Links",
+    "getStarted": "Get Started",
+    "forFarmers": "For Farmers",
+    "forBuyers": "For Buyers",
+    "legal": "Legal",
+    "followUs": "Follow Us"
+  },
+
+  "links": {
+    "home": "Home",
+    "marketplace": "Marketplace",
+    "process": "Waste Management Processes",
+    "community": "Community",
+    "about": "About Us",
+    "help": "Help & Support",
+    "contact": "Contact Us"
+  },
+
+  "auth": {
+    "joinFarmer": "Join as Farmer",
+    "joinBuyer": "Join as Buyer",
+    "signIn": "Sign In"
+  },
+
+  "farmer": {
+    "listWaste": "List Your Waste",
+    "myListings": "My Listings",
+    "myOrders": "My Orders",
+    "analytics": "Analytics"
+  },
+
+  "buyer": {
+    "browse": "Browse Marketplace",
+    "myPurchases": "My Purchases",
+    "profile": "My Profile"
+  },
+
+  "legal": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "refund": "Refund Policy"
+  },
+
+  "bottom": {
+    "rights": "All rights reserved.",
+    "madeWith": "Made with",
+    "for": "for sustainable agriculture"
+  }
+}

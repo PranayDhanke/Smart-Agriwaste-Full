@@ -1,0 +1,33 @@
+{
+  "title": "Your Negotiations",
+  "description": "Track farmer responses and take action when available",
+  "toast": {
+    "addedToCart": "Item added to cart",
+    "loadFailed": "Failed to load negotiations"
+  },
+  "empty": {
+    "title": "No negotiations yet",
+    "desc": "Your negotiation requests will appear here"
+  },
+  "label": {
+    "farmer": "Farmer:"
+  },
+  "stats": {
+    "listedPrice": "Listed Price",
+    "yourOffer": "Your Offer",
+    "moisture": "Moisture"
+  },
+  "discount": {
+    "text": "You requested {percent} lower price (₹{diff} difference)"
+  },
+  "actions": {
+    "waiting": "Waiting for farmer response",
+    "placeOrder": "Place Order",
+    "sendNewNegotiation": "Send New Negotiation"
+  },
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected"
+  }
+}

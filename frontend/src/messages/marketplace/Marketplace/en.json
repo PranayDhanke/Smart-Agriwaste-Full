@@ -1,0 +1,57 @@
+{
+  "title": "Marketplace",
+  "subtitle": "Connect with sustainable solutions. Buy and sell agricultural waste products responsibly.",
+  "listingsActive": "listings active",
+  "placeholders": {
+    "search": "Search waste products, categories, or sellers..."
+  },
+  "categories": {
+    "all": "All Products"
+  },
+  "category": {
+    "crop": "Crop",
+    "fruit": "Fruit",
+    "vegetable": "Vegetable"
+  },
+  "filters": {
+    "hide": "Hide",
+    "show": "Show",
+    "label": "Filters",
+    "clearAll": "Clear all",
+    "applied": "Filters applied:",
+    "location": "Location",
+    "minPrice": "Min Price (₹)",
+    "maxPrice": "Max Price (₹)",
+    "sortBy": "Sort By"
+  },
+
+  "unit": {
+    "kg": "Kilogram",
+    "ton": "Ton",
+    "gram": "Gram"
+  },
+  "errors": {
+    "fetchListings": "Failed to fetch waste listings",
+    "fetchData": "Error fetching data:"
+  },
+  "sort": {
+    "mostRecent": "Most Recent",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "name": "Name (A–Z)"
+  },
+  "results": "Showing {count, plural, one {# product} other {# products}}",
+  "auth": {
+    "loginBuyer": "Login as Buyer to buy item"
+  },
+  "actions": {
+    "cart": "Cart",
+    "negotiate": "Negotiate",
+    "view": "View"
+  },
+  "noResults": {
+    "title": "No products found",
+    "message": "Try adjusting your search filters or explore other categories",
+    "clear": "Clear Filters"
+  }
+}

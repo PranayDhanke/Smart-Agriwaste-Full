@@ -1,0 +1,137 @@
+{
+  "crop": {
+    "grain_crop": [
+      "wheat",
+      "rice",
+      "maize",
+      "jowar",
+      "bajra",
+      "ragi",
+      "barley",
+      "oats"
+    ],
+
+    "pulses": [
+      "toor",
+      "moong",
+      "udad",
+      "chana",
+      "masoor",
+      "rajma",
+      "peas",
+      "soybean"
+    ],
+
+    "oil_seeds": [
+      "soybean",
+      "sunflower",
+      "groundnut",
+      "mustard",
+      "sesame",
+      "castor",
+      "safflower",
+      "niger_seed"
+    ],
+
+    "commercial": [
+      "sugarcane",
+      "cotton",
+      "tobacco",
+      "tea",
+      "coffee",
+      "rubber",
+      "jute"
+    ],
+
+    "fodder": [
+      "berseem",
+      "lucerne",
+      "napier_grass",
+      "sorghum_fodder"
+    ],
+
+    "plantation": [
+      "tea",
+      "coffee",
+      "coconut",
+      "rubber"
+    ],
+
+    "horticulture": [
+      "rose",
+      "marigold",
+      "jasmine",
+      "sunflower",
+      "aloe_vera",
+      "tulsi",
+      "ashwagandha"
+    ]
+  },
+
+  "vegetable": {
+    "leafy": [
+      "spinach",
+      "fenugreek",
+      "amaranthus",
+      "cabbage",
+      "lettuce"
+    ],
+
+    "root_bulb": [
+      "potato",
+      "onion",
+      "garlic",
+      "carrot",
+      "beetroot",
+      "radish"
+    ],
+
+    "fruit_vegetable": [
+      "tomato",
+      "brinjal",
+      "capsicum",
+      "chillies",
+      "pumpkin",
+      "bottle_gourd",
+      "ridge_gourd",
+      "bitter_gourd",
+      "cucumber",
+      "okra"
+    ],
+
+    "others": [
+      "cauliflower",
+      "broccoli",
+      "beans",
+      "peas"
+    ]
+  },
+
+  "fruit": {
+    "tropical": [
+      "mango",
+      "banana",
+      "papaya",
+      "guava",
+      "pineapple",
+      "coconut"
+    ],
+
+    "citrus": [
+      "orange",
+      "lemon",
+      "mosambi"
+    ],
+
+    "temperate": [
+      "apple",
+      "pear",
+      "plum"
+    ],
+
+    "melons": [
+      "watermelon",
+      "muskmelon"
+    ]
+  }
+}

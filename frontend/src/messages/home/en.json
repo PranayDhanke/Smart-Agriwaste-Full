@@ -1,0 +1,50 @@
+{
+    "features": {
+      "analytics": {
+        "description": "Track performance, monitor trends, and make data-driven decisions.",
+        "title": "Smart Analytics"
+      },
+      "eco": {
+        "description": "Reduce pollution and promote sustainable farming through proper waste management.",
+        "title": "Eco-Friendly"
+      },
+      "fair": {
+        "description": "Connect farmers directly with buyers for transparent and profitable transactions.",
+        "title": "Fair Marketplace"
+      }
+    },
+    "hero": {
+      "buyer": {
+        "buttons": {
+          "browse": "Browse Marketplace",
+          "purchases": "My Purchases"
+        },
+        "subtitle": "Discover quality agricultural waste and connect with verified farmers.",
+        "title": "Welcome Back"
+      },
+      "farmer": {
+        "buttons": {
+          "analytics": "View Analytics",
+          "listWaste": "List New Waste",
+          "myListings": "My Listings"
+        },
+        "subtitle": "Manage your waste listings, track orders, and grow your sustainable farming business.",
+        "title": "Welcome Back"
+      },
+      "guest": {
+        "buttons": {
+          "buyer": "Join as Buyer",
+          "farmer": "Join as Farmer",
+          "marketplace": "Explore Marketplace"
+        },
+        "subtitle": "Connect farmers and buyers in a sustainable marketplace. List your waste or find quality agricultural resources.",
+        "title": "Transform Agricultural Waste into Value"
+      }
+    },
+    "process": {
+      "button": "Explore Management Processes",
+      "subtitle": "Discover the best methods and processes for managing different types of agricultural waste.",
+      "title": "Need Waste Management Guidance?"
+    }
+  
+}

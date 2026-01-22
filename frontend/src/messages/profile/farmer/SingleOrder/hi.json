@@ -1,0 +1,105 @@
+{
+  "back": "ऑर्डरों पर वापस जाएँ",
+  "loading": "ऑर्डर विवरण लोड हो रहे हैं...",
+  "title": "ऑर्डर विवरण",
+  "placedOn": "ऑर्डर दिया गया: {date}",
+  "orderId": "ऑर्डर आईडी:",
+  "copyTitle": "ऑर्डर आईडी कॉपी करें",
+  "copied": "✓ कॉपी किया गया!",
+  "statusLabel": "ऑर्डर स्थिति",
+  "status": {
+    "pending": "लंबित",
+    "confirmed": "पुष्टि हुई",
+    "cancelled": "रद्द किया गया",
+    "delivered": "डिलीवर किया गया",
+    "outForDelivery": "डिलिवरी के लिए भेजा गया",
+    "waitingPickup": "पिकअप की प्रतीक्षा",
+    "complete": "पूर्ण"
+  },
+  "metrics": {
+    "totalEarning": "कुल कमाई",
+    "items": "आइटम",
+    "yourEarning": "आपकी कमाई"
+  },
+  "payment": {
+    "title": "भुगतान",
+    "verified": "भुगतान सत्यापित",
+    "pending": "लंबित",
+    "verifiedDesc": "भुगतान की पुष्टि की गई है। आप पूर्ति के साथ आगे बढ़ सकते हैं।"
+  },
+  "delivery": {
+    "title": "डिलीवरी",
+    "byFarmer": "आप द्वारा",
+    "pickupByBuyer": "खरीदार द्वारा पिकअप"
+  },
+  "fulfillment": {
+    "farmerTitle": "किसान पूर्ति प्रगति",
+    "buyerTitle": "खरीदार पूर्ति प्रगति",
+    "currentStatus": "वर्तमान स्थिति",
+    "orderCancelled": "ऑर्डर रद्द किया गया",
+    "cancelledDesc": "ऑर्डर रद्द कर दिया गया है",
+    "awaitingConfirmation": "आपकी पुष्टि का इंतजार",
+    "confirmationDesc": "तैयारी होने पर ऑर्डर की पुष्टि करें",
+    "confirmedTitle": "ऑर्डर की पुष्टि की गई है",
+    "youConfirmed": "आपने ऑर्डर की पुष्टि कर दी है।",
+    "buyerOutForPickup": "खरीदार पिकअप के लिए गया है",
+    "headingToCollect": "आपके स्थान पर ऑर्डर लेने के लिए जा रहा है।",
+    "pickupComplete": "पिकअप पूरा"
+  },
+  "timeline": {
+    "received": "प्राप्त",
+    "confirmed": "पुष्टि",
+    "shipped": "शिप्ड",
+    "complete": "पूर्ण"
+  },
+  "cancellation": {
+    "notice": "⚠️ यह ऑर्डर रद्द कर दिया गया है। आगे कोई पूर्ति आवश्यक नहीं।"
+  },
+  "buyer": {
+    "title": "खरीदार जानकारी",
+    "name": "नाम",
+    "deliveryLocation": "डिलीवरी स्थान",
+    "collectTitle": "खरीदार सामान इकट्ठा करेगा",
+    "collectDesc": "कृपया सुनिश्चित करें कि सभी आइटम पैकेज किए गए हैं और खरीदार द्वारा संग्रह के लिए तैयार हैं। खरीदार संग्रह करने के बाद आइटम डिलीवर के रूप में चिह्नित किए जाएंगे।"
+  },
+  "orderItems": "ऑर्डर आइटम",
+  "actions": {
+    "contact": "संपर्क करें",
+    "share": "शेयर",
+    "accept": "ऑर्डर स्वीकार करें",
+    "reject": "ऑर्डर अस्वीकार करें",
+    "outForDelivery": "डिलिवरी के लिए चिह्नित करें",
+    "confirmDelivery": "डिलिवरी की पुष्टि करें"
+  },
+  "orderInfo": {
+    "title": "ऑर्डर जानकारी",
+    "paymentMethod": "भुगतान विधि",
+    "deliveryMethod": "डिलीवरी विधि"
+  },
+  "sticky": {
+    "cancelled": "यह ऑर्डर रद्द कर दिया गया है",
+    "completed": "ऑर्डर सफलतापूर्वक पूरा हुआ ✅"
+  },
+  "notFound": {
+    "title": "ऑर्डर नहीं मिला",
+    "message": "हम ऑर्डर नहीं खोज सके जिसे आप ढूँढ रहे हैं। कृपया ऑर्डर आईडी की जाँच करें और पुनः प्रयास करें।"
+  },
+  "toast": {
+    "orderStatusUpdated": "ऑर्डर {status} सफलतापूर्वक",
+    "outForDelivery": "ऑर्डर डिलीवरी के लिए भेजा गया",
+    "delivered": "ऑर्डर डिलीवर किया गया"
+  },
+  "errors": {
+    "updateStatus": "ऑर्डर स्थिति अपडेट करने में विफल",
+    "updateDelivery": "डिलिवरी स्थिति अपडेट करने में विफल",
+    "confirmDelivery": "डिलिवरी की पुष्टि करने में विफल"
+  },
+  "notify": {
+    "orderStatusTitle": "आपका ऑर्डर {status} है",
+    "orderStatusMessage": "किसान {farmer} ने आपका ऑर्डर {status} किया है",
+    "outForDeliveryTitle": "ऑर्डर डिलिवरी के लिए भेजा गया है",
+    "outForDeliveryMessage": "किसान {farmer} ने आपका ऑर्डर डिलिवरी के लिए भेज दिया है",
+    "deliveredTitle": "ऑर्डर डिलीवर हुआ",
+    "deliveredMessage": "आपका ऑर्डर किसान {farmer} से डिलीवर कर दिया गया है"
+  }
+}

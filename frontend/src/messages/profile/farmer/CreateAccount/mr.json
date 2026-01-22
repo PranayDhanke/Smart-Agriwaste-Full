@@ -1,0 +1,98 @@
+{
+  "loading": "लोड करत आहे...",
+  "authRequired": {
+    "title": "प्रमाणीकरण आवश्यक",
+    "description": "या पृष्ठाला प्रवेश करण्यासाठी आपल्याला साइन अप करावे लागेल",
+    "button": "साइन अप वर जा"
+  },
+  "header": {
+    "title": "शेतीकरी नोंदणी",
+    "description": "स्वागत आहे, {firstName}! चला तुमच्या प्रोफाइलची सेटअप करूया"
+  },
+  "steps": {
+    "personalInfo": "वैयक्तिक माहिती",
+    "farmDetails": "शेत तपशील"
+  },
+  "sections": {
+    "identity": { "title": "ओळख सत्यापन" },
+    "contact": { "title": "संपर्क माहिती" },
+    "location": { "title": "ठिकाण तपशील" },
+    "address": { "title": "पत्ता तपशील" },
+    "farmDocs": { "title": "शेत दस्तऐवज" },
+    "farmArea": { "title": "शेत क्षेत्र" }
+  },
+  "fields": {
+    "aadhaarNumber": "आधार क्रमांक",
+    "aadhaarPhoto": "आधार कार्ड फोटो (फाइल 1MB पेक्षा कमी असावी)",
+    "phone": "फोन नंबर",
+    "state": "राज्य",
+    "district": "जिल्हा",
+    "taluka": "तालुका",
+    "village": "गाव / शहर",
+    "houseNumber": "घर क्रमांक / इमारत नाव",
+    "road": "रस्ता, क्षेत्र, लँडमार्क",
+    "farmNumber": "7/12 किंवा 8A दस्तऐवज क्रमांक",
+    "farmDoc": "शेत दस्तऐवज अपलोड करा (फाइल 1MB पेक्षा कमी असावी)",
+    "totalArea": "एकूण क्षेत्र",
+    "unit": "युनिट"
+  },
+  "placeholders": {
+    "aadhaar": "XXXX XXXX XXXX",
+    "phone": "+91 XXXXX XXXXX",
+    "selectState": "राज्य निवडा",
+    "selectDistrict": "जिल्हा निवडा",
+    "selectStateFirst": "प्रथम राज्य निवडा",
+    "selectTaluka": "तालुका निवडा",
+    "selectDistrictFirst": "प्रथम जिल्हा निवडा",
+    "selectVillage": "गाव/शहर निवडा",
+    "selectTalukaFirst": "प्रथम तालुका निवडा",
+    "houseBuilding": "उदा., घर क्र. 123, निवासी कंपलेक्स",
+    "road": "उदा., टाउन हॉल जवळ, MG रोड",
+    "farmNumber": "आपला जमीन दस्तऐवज क्रमांक प्रविष्ट करा",
+    "totalArea": "उदा., 5.5"
+  },
+  "hints": {
+    "aadhaarFormat": "कमाल आकार: 5MB | फॉरमॅट: JPG, PNG",
+    "farmNumber": "हा तुमचा अधिकृत जमीन मालकीचा दस्तऐवज क्रमांक आहे",
+    "farmDoc": "कमाल आकार: 10MB | फॉरमॅट: JPG, PNG, PDF"
+  },
+  "actions": {
+    "continue": "शेत तपशीलांकडे पुढे जा",
+    "uploadingAadhaar": "आधार अपलोड करत आहे...",
+    "uploadingFarmDoc": "शेत दस्तऐवज अपलोड करत आहे...",
+    "back": "वैयक्तिक माहिती परत जा",
+    "creating": "प्रोफाइल तयार केली जात आहे...",
+    "complete": "नोंदणी पूर्ण करा"
+  },
+  "warnings": { "fillRequired": "कृपया सर्व आवश्यक फील्ड बरोबर भरा" },
+  "units": {
+    "hectare": "हेक्टअर (ha)",
+    "acre": "एकर",
+    "hectarePlural": "हेक्टेअर",
+    "acrePlural": "एकर"
+  },
+  "labels": { "totalFarmArea": "एकूण व्यवस्थापित क्षेत्र:" },
+  "errors": {
+    "aadhaarRequired": "आधार आवश्यक आहे",
+    "aadhaarDigits": "आधार 12 अंकांचा असणे आवश्यक आहे",
+    "phoneRequired": "फोन नंबर आवश्यक आहे",
+    "phoneInvalid": "कृपया 10 अंकांचा वैध फोन नंबर प्रविष्ट करा",
+    "farmAreaRequired": "शेत क्षेत्र आवश्यक आहे",
+    "farmAreaNumber": "कृपया वैध संख्या प्रविष्ट करा",
+    "farmAreaPositive": "क्षेत्र 0 पेक्षा जास्त असावे",
+    "stateRequired": "राज्य आवश्यक आहे",
+    "districtRequired": "जिल्हा आवश्यक आहे",
+    "talukaRequired": "तालुका आवश्यक आहे",
+    "villageRequired": "गाव/शहर आवश्यक आहे",
+    "farmNumberRequired": "दस्तऐवज क्रमांक आवश्यक आहे",
+    "aadharFileRequired": "आधार फाइल आवश्यक आहे",
+    "aadharFileSize": "आधार फाइल 1MB पेक्षा कमी असावी",
+    "farmdocRequired": "शेत दस्तऐवज आवश्यक आहे",
+    "farmdocSize": "शेत दस्तऐवज 1MB पेक्षा कमी असावा",
+    "submitFill": "कृपया सबमिट करण्यापूर्वी सर्व आवश्यक फील्ड योग्यरित्या भरा.",
+    "createFailed": "प्रोफाइल तयार करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "somethingWrong": "काहीतरी चूकीचे झाले आहे. कृपया पुन्हा प्रयत्न करा."
+  },
+  "legal": { "prefix": "नोंदणी पूर्ण करताना, आपण आमच्या स्वीकारता", "and": "आणि" },
+  "links": { "terms": "सेवा अटी", "privacy": "गोपनीयता धोरण" }
+}

@@ -1,0 +1,85 @@
+{
+  "pageTitle": "कृषी कचरा सूचीबद्ध करा",
+  "pageSubtitle": "खरेदीदारांशी जोडा आणि कचर्‍यातून मूल्य निर्माण करा",
+
+  "formCompletion": "फॉर्म पूर्णता",
+  "percentage": "{value}%",
+
+  "pageTitleEdit": "कचरा संपादित करा",
+  "pageSubtitleEdit": "तुमच्या सूचीचे तपशील अपडेट करा",
+
+  "sections": {
+    "wasteDetails": "कचरा तपशील",
+    "basicInfo": "मूलभूत माहिती",
+    "specifications": "तपशील",
+    "productImage": "उत्पादन प्रतिमा"
+  },
+
+  "fields": {
+    "title": {
+      "label": "सूची शीर्षक",
+      "placeholder": "उदा. ताजे कापूस पीक अवशेष उपलब्ध"
+    },
+    "wasteType": {
+      "label": "कचरा प्रकार",
+      "placeholder": "प्रकार निवडा"
+    },
+    "wasteCategory": {
+      "label": "उत्पादन श्रेणी",
+      "placeholder": "श्रेणी निवडा",
+      "disabledPlaceholder": "आधी प्रकार निवडा"
+    },
+    "wasteProduct": {
+      "label": "विशिष्ट उत्पादन",
+      "placeholder": "उत्पादन निवडा",
+      "disabledPlaceholder": "आधी श्रेणी निवडा"
+    },
+    "quantity": {
+      "label": "उपलब्ध प्रमाण",
+      "placeholder": "उदा. 500"
+    },
+    "unit": {
+      "label": "एकक",
+      "placeholder": "एकक निवडा"
+    },
+    "price": {
+      "label": "अपेक्षित किंमत",
+      "placeholder": "उदा. ₹2000"
+    },
+    "moisture": {
+      "label": "ओलावा पातळी",
+      "placeholder": "ओलावा पातळी निवडा"
+    },
+    "description": {
+      "label": "वर्णन",
+      "placeholder": "स्थिती, साठवण, स्थान यांचे वर्णन करा..."
+    },
+    "image": {
+      "label": "फोटो अपलोड करा",
+      "click": "अपलोड करण्यासाठी क्लिक करा",
+      "or": "किंवा ड्रॅग आणि ड्रॉप करा",
+      "helper": "PNG, JPG किंवा JPEG (कमाल 5MB)",
+      "change": "प्रतिमा बदला",
+      "noImageSelected" : "प्रतिमा निवडलेली नाही  "
+    }
+  },
+
+  "unit": {
+    "kg": "किलोग्रॅम",
+    "ton": "टन",
+    "gram": "ग्रॅम"
+  },
+
+  "buttons": {
+    "submit": "कचरा सूचीबद्ध करा",
+    "submitting": "कचरा सूचीबद्ध होत आहे...",
+    "save" : "संपादित करा"
+  }, 
+
+  "messages": {
+    "success": "कचरा यशस्वीपणे सूचीबद्ध केला!",
+    "failure": "कचरा सूचीबद्ध करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "uploadingImage": "प्रतिमा अपलोड होत आहे...",
+    "genericError": "काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा."
+  }
+}

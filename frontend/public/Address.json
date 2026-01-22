@@ -1,0 +1,24 @@
+{
+  "states": ["Maharashtra"],
+  "districts": {
+    "Maharashtra": ["Amravati", "Nagpur", "Wardha"]
+  },
+  "talukas": {
+    "Amravati": ["Amravati Taluka", "Achalpur", "Chandurbazar"],
+    "Nagpur": ["Nagpur Rural", "Nagpur Urban", "Hingna"],
+    "Wardha": ["Wardha Taluka", "Arvi", "Hinganghat"]
+  },
+  "villages": {
+    "Amravati Taluka": ["Dastur Nagar", "Gadge Nagar", "Nandgaon Peth"],
+    "Achalpur": ["Pathrot", "Paratwada"],
+    "Chandurbazar": ["Shendurjana Ghat", "Ner Pinglai"],
+
+    "Nagpur Rural": ["Khapri", "Butibori", "Kalmeshwar"],
+    "Nagpur Urban": ["Sitabuldi", "Dharampeth", "Mahal"],
+    "Hingna": ["Wadi", "Wanadongri"],
+
+    "Wardha Taluka": ["Sindi", "Anji", "Sevagram"],
+    "Arvi": ["Dahegaon", "Sewagram"],
+    "Hinganghat": ["Seloo", "Samudrapur"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "intro": {
+    "title": "Community",
+    "subtitle": "Connect with farmers, experts, and innovators who are passionate about sustainable agricultural waste management. Share ideas, ask questions, and collaborate!",
+    "joinButton": "Join the Discussion"
+  },
+  "benefits": {
+    "heading": "Why Join Our Community?",
+    "connect": {
+      "title": "Connect",
+      "description": "Meet other farmers, researchers, and eco-entrepreneurs who share your goals."
+    },
+    "share": {
+      "title": "Share",
+      "description": "Post your challenges, success stories, and ask questions to learn together."
+    },
+    "learn": {
+      "title": "Learn",
+      "description": "Discover innovative waste management practices and earn from your knowledge."
+    }
+  }
+  
+}

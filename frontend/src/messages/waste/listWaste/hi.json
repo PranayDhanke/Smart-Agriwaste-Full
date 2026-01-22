@@ -1,0 +1,85 @@
+{
+  "pageTitle": "कृषि अपशिष्ट सूचीबद्ध करें",
+  "pageSubtitle": "खरीदारों से जुड़ें और अपने अपशिष्ट से मूल्य बनाएं",
+
+  "pageTitleEdit": "अपशिष्ट संपादित करें",
+  "pageSubtitleEdit": "अपनी लिस्टिंग डिटेल्स अपडेट करें",
+
+  "formCompletion": "फ़ॉर्म पूर्णता",
+  "percentage": "{value}%",
+
+  "sections": {
+    "wasteDetails": "अपशिष्ट विवरण",
+    "basicInfo": "मूल जानकारी",
+    "specifications": "विशेषताएँ",
+    "productImage": "उत्पाद छवि"
+  },
+
+  "fields": {
+    "title": {
+      "label": "सूची शीर्षक",
+      "placeholder": "उदा. ताजा कपास फसल अवशेष उपलब्ध"
+    },
+    "wasteType": {
+      "label": "अपशिष्ट का प्रकार",
+      "placeholder": "प्रकार चुनें"
+    },
+    "wasteCategory": {
+      "label": "अपशिष्ट श्रेणी",
+      "placeholder": "श्रेणी चुनें",
+      "disabledPlaceholder": "पहले प्रकार चुनें"
+    },
+    "wasteProduct": {
+      "label": "विशिष्ट उत्पाद",
+      "placeholder": "उत्पाद चुनें",
+      "disabledPlaceholder": "पहले श्रेणी चुनें"
+    },
+    "quantity": {
+      "label": "उपलब्ध मात्रा",
+      "placeholder": "उदा. 500"
+    },
+    "unit": {
+      "label": "इकाई",
+      "placeholder": "इकाई चुनें"
+    },
+    "price": {
+      "label": "अपेक्षित मूल्य",
+      "placeholder": "उदा. ₹2000"
+    },
+    "moisture": {
+      "label": "नमी स्तर",
+      "placeholder": "नमी स्तर चुनें"
+    },
+    "description": {
+      "label": "विवरण",
+      "placeholder": "स्थिति, भंडारण, स्थान आदि का विवरण दें..."
+    },
+    "image": {
+      "label": "फोटो अपलोड करें",
+      "click": "अपलोड करने के लिए क्लिक करें",
+      "or": "या खींचकर छोड़ें",
+      "helper": "PNG, JPG या JPEG (अधिकतम 5MB)",
+      "change": "छवि बदलें",
+      "noImageSelected": "छवि चयनित नहीं है"
+    }
+  },
+
+  "unit": {
+    "kg": "किलोग्राम",
+    "ton": "टन",
+    "gram": "ग्राम"
+  },
+
+  "buttons": {
+    "submit": "अपशिष्ट सूचीबद्ध करें",
+    "submitting": "अपशिष्ट सूचीबद्ध किया जा रहा है...",
+    "save": "संपादन करना"
+  },
+
+  "messages": {
+    "success": "अपशिष्ट सफलतापूर्वक सूचीबद्ध किया गया!",
+    "failure": "अपशिष्ट सूचीबद्ध करने में विफल। पुनः प्रयास करें।",
+    "uploadingImage": "छवि अपलोड की जा रही है...",
+    "genericError": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "loading": "Loading...",
+  "authRequired": {
+    "title": "Authentication Required",
+    "description": "You must be signed up to access this page",
+    "button": "Go to Sign up"
+  },
+  "header": {
+    "title": "Farmer Registration",
+    "description": "Welcome, {firstName}! Let's set up your profile"
+  },
+  "steps": {
+    "personalInfo": "Personal Info",
+    "farmDetails": "Farm Details"
+  },
+  "sections": {
+    "identity": { "title": "Identity Verification" },
+    "contact": { "title": "Contact Information" },
+    "location": { "title": "Location Details" },
+    "address": { "title": "Address Details" },
+    "farmDocs": { "title": "Farm Documentation" },
+    "farmArea": { "title": "Farm Area" }
+  },
+  "fields": {
+    "aadhaarNumber": "Aadhaar Number",
+    "aadhaarPhoto": "Aadhaar Card Photo (File Must Be Less than 1MB)",
+    "phone": "Phone Number",
+    "state": "State",
+    "district": "District",
+    "taluka": "Taluka",
+    "village": "Village / City",
+    "houseNumber": "House Number / Building Name",
+    "road": "Road, Area, Landmark",
+    "farmNumber": "7/12 or 8A Document Number",
+    "farmDoc": "Upload Farm Document (File Must Be Less than 1MB)",
+    "totalArea": "Total Area",
+    "unit": "Unit"
+  },
+  "placeholders": {
+    "aadhaar": "XXXX XXXX XXXX",
+    "phone": "+91 XXXXX XXXXX",
+    "selectState": "Select State",
+    "selectDistrict": "Select District",
+    "selectStateFirst": "Select State First",
+    "selectTaluka": "Select Taluka",
+    "selectDistrictFirst": "Select District First",
+    "selectVillage": "Select Village/City",
+    "selectTalukaFirst": "Select Taluka First",
+    "houseBuilding": "e.g., House No. 123, Residential Complex",
+    "road": "e.g., Near Town Hall, MG Road",
+    "farmNumber": "Enter your land document number",
+    "totalArea": "e.g., 5.5"
+  },
+  "hints": {
+    "aadhaarFormat": "Max size: 5MB | Formats: JPG, PNG",
+    "farmNumber": "This is your official land ownership document number",
+    "farmDoc": "Max size: 10MB | Formats: JPG, PNG, PDF"
+  },
+  "actions": {
+    "continue": "Continue to Farm Details",
+    "uploadingAadhaar": "Uploading Aadhaar...",
+    "uploadingFarmDoc": "Uploading Farm Document...",
+    "back": "Back to Personal Info",
+    "creating": "Creating Profile...",
+    "complete": "Complete Registration"
+  },
+  "warnings": { "fillRequired": "Please fill all required fields correctly" },
+  "units": {
+    "hectare": "Hectare (ha)",
+    "acre": "Acre",
+    "hectarePlural": "hectares",
+    "acrePlural": "acres"
+  },
+  "labels": { "totalFarmArea": "Total Farm Area:" },
+  "errors": {
+    "aadhaarRequired": "Aadhaar is required",
+    "aadhaarDigits": "Aadhaar must be 12 digits",
+    "phoneRequired": "Phone number is required",
+    "phoneInvalid": "Enter valid 10-digit phone number",
+    "farmAreaRequired": "Farm area is required",
+    "farmAreaNumber": "Enter a valid number",
+    "farmAreaPositive": "Area must be greater than 0",
+    "stateRequired": "State is required",
+    "districtRequired": "District is required",
+    "talukaRequired": "Taluka is required",
+    "villageRequired": "Village/City is required",
+    "farmNumberRequired": "Document number is required",
+    "aadharFileRequired": "Aadhaar file is required",
+    "aadharFileSize": "Aadhaar file must be less than 1MB",
+    "farmdocRequired": "Farm document is required",
+    "farmdocSize": "Farm document must be less than 1MB",
+    "submitFill": "Please fill all required fields correctly before submitting.",
+    "createFailed": "Failed to create profile. Please try again.",
+    "somethingWrong": "Something went wrong. Please try again."
+  },
+  "legal": { "prefix": "By completing registration, you agree to our", "and": "and" },
+  "links": { "terms": "Terms of Service", "privacy": "Privacy Policy" }
+}

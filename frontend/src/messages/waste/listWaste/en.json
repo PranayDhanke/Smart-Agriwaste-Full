@@ -1,0 +1,85 @@
+{
+  "pageTitle": "List Your Agricultural Waste",
+  "pageSubtitle": "Connect with buyers and turn your waste into value",
+
+  "pageTitleEdit": "Edit Waste",
+  "pageSubtitleEdit": "Update your listing details",
+
+  "formCompletion": "Form Completion",
+  "percentage": "{value}%",
+
+  "sections": {
+    "wasteDetails": "Waste Details",
+    "basicInfo": "Basic Information",
+    "specifications": "Specifications",
+    "productImage": "Product Image"
+  },
+
+  "fields": {
+    "title": {
+      "label": "Listing Title",
+      "placeholder": "e.g., Fresh Cotton Crop Residues Available"
+    },
+    "wasteType": {
+      "label": "Waste Type",
+      "placeholder": "Choose Type"
+    },
+    "wasteCategory": {
+      "label": "Waste Category",
+      "placeholder": "Choose category",
+      "disabledPlaceholder": "Select Typew first"
+    },
+    "wasteProduct": {
+      "label": "Specific Product",
+      "placeholder": "Select product",
+      "disabledPlaceholder": "Select category first"
+    },
+    "quantity": {
+      "label": "Available Quantity",
+      "placeholder": "e.g., 500"
+    },
+    "unit": {
+      "label": "Unit",
+      "placeholder": "Select unit"
+    },
+    "price": {
+      "label": "Expected Price",
+      "placeholder": "e.g., ₹2000"
+    },
+    "moisture": {
+      "label": "Moisture Level",
+      "placeholder": "Select moisture level"
+    },
+    "description": {
+      "label": "Description",
+      "placeholder": "Describe the condition, storage, location, and any other relevant details..."
+    },
+    "image": {
+      "label": "Upload Photo",
+      "click": "Click to upload",
+      "or": "or drag and drop",
+      "helper": "PNG, JPG or JPEG (MAX. 5MB)",
+      "change": "Change Image" ,
+      "noImageSelected" : "Image not Selected"
+    }
+  },
+
+  "unit": {
+    "kg": "Kilogram",
+    "ton": "Ton",
+    "gram": "Gram"
+  },
+
+  "buttons": {
+    "submit": "List Waste Now",
+    "submitting": "Listing Your Waste...",
+    "save":"Edit Waste"
+  },
+
+  "messages": {
+    "success": "Waste listed successfully!",
+    "failure": "Failed to list waste. Please try again.",
+    "uploadingImage": "Uploading image...",
+    "genericError": "Something went wrong. Please try again."
+  }
+}

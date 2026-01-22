@@ -1,0 +1,73 @@
+{
+  "title": "ऑर्डर व्यवस्थापन",
+  "subtitle": "येणाऱ्या ऑर्डरचा मागोवा घ्या आणि व्यवस्थापित करा",
+  "actions": {
+    "negotiations": "वाटाघाटी",
+    "view": "पाहा",
+    "accept": "स्वीकारा",
+    "reject": "नाकारा",
+    "outForDelivery": "डिलिव्हरीसाठी पाठवले",
+    "delivered": "वितरित"
+  },
+  "stats": {
+    "total": "एकूण ऑर्डर",
+    "pending": "प्रलंबित",
+    "confirmed": "निश्चित",
+    "delivered": "वितरित"
+  },
+  "search": {
+    "placeholder": "ऑर्डर, खरेदीदार किंवा उत्पादने शोधा..."
+  },
+  "filters": {
+    "all": "सर्व ऑर्डर्स",
+    "pending": "प्रलंबित",
+    "confirmed": "निश्चित",
+    "delivered": "वितरित",
+    "cancelled": "रद्द"
+  },
+  "found": "{count} निकाल{count, plural, one {} other {s}}",
+  "loading": "आपले ऑर्डर लोड करत आहेत...",
+  "empty": {
+    "title": "अद्याप कोणतेही ऑर्डर नाहीत",
+    "description": "जेव्हा खरेदीदार आपल्या उत्पादनांसाठी ऑर्डर देतील, ते येथे दिसतील. ऑर्डर प्राप्त करण्यासाठी आपल्या उत्पादनांची सूची तयार करा.",
+    "noMatch": "आपल्या शोधाशी जुळणारे कोणतेही ऑर्डर नाहीत"
+  },
+  "status": {
+    "cancelled": "रद्द केले",
+    "delivered": "वितरित",
+    "outForDelivery": "डिलिव्हरीसाठी पाठवले",
+    "confirmed": "निश्चित",
+    "pending": "प्रलंबित",
+    "waitingPickup": "पिकअपची वाट पाहत आहे",
+    "complete": "पूर्ण"
+  },
+  "delivery": {
+    "byFarmer": "आपण पाठवले",
+    "pickupByBuyer": "खरेदीदाराने उचलले"
+  },
+  "labels": {
+    "totalEarning": "एकूण कमाई:"
+  },
+  "payment": {
+    "verified": "पेमेंट सत्यापित"
+  },
+  "toast": {
+    "orderStatusUpdated": "ऑर्डर {status} यशस्वीरित्या",
+    "outForDelivery": "ऑर्डर डिलिव्हरीसाठी पाठवले",
+    "delivered": "ऑर्डर वितरित केले"
+  },
+  "errors": {
+    "loadFailed": "ऑर्डर लोड करण्यात त्रुटी. कृपया पृष्ठ रीफ्रेश करा.",
+    "updateStatus": "ऑर्डर स्थिती अपडेट करण्यात अयशस्वी",
+    "updateDelivery": "डिलिव्हरी स्थिती अपडेट करण्यात अयशस्वी",
+    "confirmDelivery": "डिलिव्हरीची पुष्टी करण्यात अयशस्वी"
+  },
+  "notify": {
+    "orderStatusTitle": "आपला ऑर्डर {status} आहे",
+    "orderStatusMessage": "शेतकऱ्याने {farmer} आपला ऑर्डर {status} केला आहे",
+    "outForDeliveryTitle": "ऑर्डर डिलिव्हरीसाठी पाठवले",
+    "outForDeliveryMessage": "शेतकऱ्याने {farmer} आपला ऑर्डर डिलिव्हरीसाठी पाठवला आहे",
+    "deliveredTitle": "ऑर्डर वितरित केले",
+    "deliveredMessage": "शेतकऱ्याकडून {farmer} आपला ऑर्डर वितरित झाला आहे"
+  }
+}

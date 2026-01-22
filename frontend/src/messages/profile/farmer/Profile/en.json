@@ -1,0 +1,59 @@
+{
+  "title": "Farmer Profile",
+  "subtitle": "Manage your personal and farm information",
+  "loadingUser": "Loading user...",
+  "loadingData": "Loading farmer data...",
+  "farmerIdLabel": "Farmer ID:",
+  "account": {
+    "heading": "Account Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "username": "Username",
+    "emailAddress": "Email Address"
+  },
+  "contact": {
+    "heading": "Contact & Personal Details"
+  },
+  "fields": {
+    "phone": "Phone Number",
+    "aadharnumber": "Aadhar Number",
+    "state": "State",
+    "district": "District",
+    "taluka": "Taluka",
+    "village": "Village",
+    "houseBuildingName": "House/Building Name",
+    "roadarealandmarkName": "Road, Area, Landmark Name",
+    "farmNumber": "Farm Number",
+    "farmArea": "Farm Area",
+    "farmUnit": "Farm Unit"
+  },
+  "placeholders": {
+    "phone": "Enter phone number",
+    "aadharnumber": "Enter Aadhar number",
+    "state": "Enter state",
+    "district": "Enter district",
+    "taluka": "Enter taluka",
+    "village": "Enter village",
+    "houseBuildingName": "Enter house/building name",
+    "roadarealandmarkName": "Enter road, area, landmark",
+    "farmNumber": "Enter farm number",
+    "farmArea": "Enter farm area",
+    "farmUnit": "Enter farm unit"
+  },
+  "farm": {
+    "heading": "Farm Information"
+  },
+  "documents": {
+    "heading": "Documents",
+    "aadhar": "Aadhar Document",
+    "farm": "Farm Document"
+  },
+  "address": {
+    "heading": "Address Information"
+  },
+  "saveChanges": "Save Changes",
+  "uploadFailed": "Upload failed. Please try again.",
+  "profileUpdated": "Profile updated",
+  "profileUpdateFailed": "Failed to update profile. Please try again.",
+  "somethingWentWrong": "Something went wrong. Please try again."
+}

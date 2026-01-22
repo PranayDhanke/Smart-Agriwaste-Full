@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "home": "होम",
+    "marketplace": "मार्केटप्लेस",
+    "community": "समुदाय",
+    "myListings": "मेरी लिस्टिंग",
+    "orders": "ऑर्डर",
+    "analytics": "विश्लेषण",
+    "myPurchases": "मेरी खरीदारी"
+  },
+
+  "auth": {
+    "login": "लॉगिन",
+    "signup": "साइन अप",
+    "signupAs": "के रूप में जुड़ें",
+    "signOut": "लॉग आउट",
+    "listWaste": "कचरा सूचीबद्ध करें"
+  },
+
+  "role": {
+    "farmer": "किसान",
+    "buyer": "खरीदार"
+  },
+
+  "profile": {
+    "myAccount": "मेरा खाता",
+    "profile": "प्रोफ़ाइल",
+    "settings": "सेटिंग्स"
+  },
+
+  "notification": {
+    "title": "सूचनाएं"
+  },
+
+  "language": {
+    "label": "भाषा",
+    "english": "अंग्रेज़ी",
+    "hindi": "हिंदी",
+    "marathi": "मराठी"
+  }
+}

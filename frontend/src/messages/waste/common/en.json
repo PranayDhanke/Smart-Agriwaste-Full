@@ -1,0 +1,175 @@
+{
+  "wasteTypes": {
+    "crop": "Crop",
+    "vegetable": "Vegetable",
+    "fruit": "Fruit"
+  },
+
+  "moisture": {
+    "dry": "Dry",
+    "semi_wet": "Semi-wet",
+    "wet": "Wet"
+  },
+
+  "wasteCat": {
+    "crop": {
+      "grain_crop": "Grain Crops",
+      "pulses": "Pulses & Legumes",
+      "oil_seeds": "Oil Seeds",
+      "commercial": "Commercial Crops",
+      "fodder": "Fodder Crops",
+      "plantation": "Plantation Crops",
+      "horticulture": "Horticulture Crops"
+    },
+    "vegetable": {
+      "leafy": "Leafy Vegetables",
+      "root_bulb": "Root & Bulb Vegetables",
+      "fruit_vegetable": "Fruit Vegetables",
+      "others": "Other Vegetables"
+    },
+    "fruit": {
+      "tropical": "Tropical Fruits",
+      "citrus": "Citrus Fruits",
+      "temperate": "Temperate Fruits",
+      "melons": "Melons"
+    }
+  },
+
+  "productSet": {
+    "crop": {
+      "grain_crop": {
+        "wheat": "wheat",
+        "rice": "rice (paddy)",
+        "maize": "maize (corn)",
+        "jowar": "jowar (sorghum)",
+        "bajra": "bajra (pearl millet)",
+        "ragi": "ragi (finger millet)",
+        "barley": "barley",
+        "oats": "oats"
+      },
+
+      "pulses": {
+        "toor": "toor / arhar",
+        "moong": "moong",
+        "udad": "udad / urad",
+        "chana": "chana",
+        "masoor": "masoor",
+        "rajma": "rajma",
+        "peas": "peas",
+        "soybean": "soybean"
+      },
+
+      "oil_seeds": {
+        "soybean": "soybean",
+        "sunflower": "sunflower",
+        "groundnut": "groundnut",
+        "mustard": "mustard",
+        "sesame": "sesame",
+        "castor": "castor",
+        "safflower": "safflower",
+        "niger_seed": "niger seed"
+      },
+
+      "commercial": {
+        "sugarcane": "sugarcane",
+        "cotton": "cotton",
+        "tobacco": "tobacco",
+        "tea": "tea",
+        "coffee": "coffee",
+        "rubber": "rubber",
+        "jute": "jute"
+      },
+
+      "fodder": {
+        "berseem": "berseem",
+        "lucerne": "lucerne",
+        "napier_grass": "napier grass",
+        "sorghum_fodder": "sorghum fodder"
+      },
+
+      "plantation": {
+        "tea": "tea",
+        "coffee": "coffee",
+        "coconut": "coconut",
+        "rubber": "rubber"
+      },
+
+      "horticulture": {
+        "rose": "rose",
+        "marigold": "marigold",
+        "jasmine": "jasmine",
+        "sunflower": "sunflower",
+        "aloe_vera": "aloe vera",
+        "tulsi": "tulsi",
+        "ashwagandha": "ashwagandha"
+      }
+    },
+
+    "vegetable": {
+      "leafy": {
+        "spinach": "spinach",
+        "fenugreek": "fenugreek",
+        "amaranthus": "amaranthus",
+        "cabbage": "cabbage",
+        "lettuce": "lettuce"
+      },
+
+      "root_bulb": {
+        "potato": "potato",
+        "onion": "onion",
+        "garlic": "garlic",
+        "carrot": "carrot",
+        "beetroot": "beetroot",
+        "radish": "radish"
+      },
+
+      "fruit_vegetable": {
+        "tomato": "tomato",
+        "brinjal": "brinjal",
+        "capsicum": "capsicum",
+        "chillies": "chillies",
+        "pumpkin": "pumpkin",
+        "bottle_gourd": "bottle gourd",
+        "ridge_gourd": "ridge gourd",
+        "bitter_gourd": "bitter gourd",
+        "cucumber": "cucumber",
+        "okra": "okra"
+      },
+
+      "others": {
+        "cauliflower": "cauliflower",
+        "broccoli": "broccoli",
+        "beans": "beans",
+        "peas": "peas"
+      }
+    },
+
+    "fruit": {
+      "tropical": {
+        "mango": "mango",
+        "banana": "banana",
+        "papaya": "papaya",
+        "guava": "guava",
+        "pineapple": "pineapple",
+        "coconut": "coconut"
+      },
+
+      "citrus": {
+        "orange": "orange",
+        "lemon": "lemon",
+        "mosambi": "mosambi"
+      },
+
+      "temperate": {
+        "apple": "apple",
+        "pear": "pear",
+        "plum": "plum"
+      },
+
+      "melons": {
+        "watermelon": "watermelon",
+        "muskmelon": "muskmelon"
+      }
+    }
+  }
+}

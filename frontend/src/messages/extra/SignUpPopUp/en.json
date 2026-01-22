@@ -1,0 +1,20 @@
+{
+  "title": "Create an account",
+  "subtitle": "Choose the role that best describes you — we’ll tailor the signup experience.",
+  "closeAria": "Close sign up modal",
+  "roles": {
+    "farmer": {
+      "title": "Farmer",
+      "subtitle": "Sell your agricultural waste and get best offers.",
+      "badge": "Recommended"
+    },
+    "buyer": {
+      "title": "Buyer",
+      "subtitle": "Purchase quality agricultural materials and bulk lots."
+    }
+  },
+  "terms": "Terms",
+  "privacy": "Privacy Policy",
+  "already": "Already have an account?",
+  "cancel": "Cancel"
+}

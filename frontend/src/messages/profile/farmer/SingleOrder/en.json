@@ -1,0 +1,105 @@
+{
+  "back": "Back to Orders",
+  "loading": "Loading order details...",
+  "title": "Order Details",
+  "placedOn": "Order placed on {date}",
+  "orderId": "Order ID:",
+  "copyTitle": "Copy Order ID",
+  "copied": "✓ Copied!",
+  "statusLabel": "Order Status",
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled",
+    "delivered": "Delivered",
+    "outForDelivery": "Out for Delivery",
+    "waitingPickup": "Waiting for Pickup",
+    "complete": "Complete"
+  },
+  "metrics": {
+    "totalEarning": "Total Earning",
+    "items": "Items",
+    "yourEarning": "Your Earning"
+  },
+  "payment": {
+    "title": "Payment",
+    "verified": "Payment Verified",
+    "pending": "Pending",
+    "verifiedDesc": "Payment confirmed. You can proceed with fulfillment."
+  },
+  "delivery": {
+    "title": "Delivery",
+    "byFarmer": "By You",
+    "pickupByBuyer": "Pickup by Buyer"
+  },
+  "fulfillment": {
+    "farmerTitle": "Farmer Fulfillment Progress",
+    "buyerTitle": "Buyer Fulfillment Progress",
+    "currentStatus": "Current Status",
+    "orderCancelled": "Order Cancelled",
+    "cancelledDesc": "Order has been cancelled",
+    "awaitingConfirmation": "Awaiting Your Confirmation",
+    "confirmationDesc": "Confirm the order when preparation is done",
+    "confirmedTitle": "Order has been confirmed",
+    "youConfirmed": "You have confirmed the order.",
+    "buyerOutForPickup": "Buyer is Out for Pickup",
+    "headingToCollect": "Heading to your location to collect the order.",
+    "pickupComplete": "Pickup Complete"
+  },
+  "timeline": {
+    "received": "Received",
+    "confirmed": "Confirmed",
+    "shipped": "Shipped",
+    "complete": "Complete"
+  },
+  "cancellation": {
+    "notice": "⚠️ This order has been cancelled. No further fulfillment required."
+  },
+  "buyer": {
+    "title": "Buyer Information",
+    "name": "Name",
+    "deliveryLocation": "Delivery Location",
+    "collectTitle": "Buyer Will Collect Items",
+    "collectDesc": "Please ensure all items are packaged and ready for buyer collection. Items will be marked as delivered once buyer collects them."
+  },
+  "orderItems": "Order Items",
+  "actions": {
+    "contact": "Contact",
+    "share": "Share",
+    "accept": "Accept Order",
+    "reject": "Reject Order",
+    "outForDelivery": "Mark Out for Delivery",
+    "confirmDelivery": "Confirm Delivery"
+  },
+  "orderInfo": {
+    "title": "Order Information",
+    "paymentMethod": "Payment Method",
+    "deliveryMethod": "Delivery Method"
+  },
+  "sticky": {
+    "cancelled": "This order has been cancelled",
+    "completed": "Order completed successfully ✅"
+  },
+  "notFound": {
+    "title": "Order Not Found",
+    "message": "We couldn't find the order you're looking for. Please check the order ID and try again."
+  },
+  "toast": {
+    "orderStatusUpdated": "Order {status} successfully",
+    "outForDelivery": "Order marked as out for delivery",
+    "delivered": "Order marked as delivered"
+  },
+  "errors": {
+    "updateStatus": "Failed to update order status",
+    "updateDelivery": "Failed to update delivery status",
+    "confirmDelivery": "Failed to confirm delivery"
+  },
+  "notify": {
+    "orderStatusTitle": "Your order has been {status}",
+    "orderStatusMessage": "Farmer {farmer} has {status} your order",
+    "outForDeliveryTitle": "Order is out for Delivery",
+    "outForDeliveryMessage": "Farmer {farmer} has sent your order for delivery",
+    "deliveredTitle": "Order Delivered",
+    "deliveredMessage": "Your order from farmer {farmer} has been delivered"
+  }
+}

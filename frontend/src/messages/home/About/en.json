@@ -1,0 +1,36 @@
+{
+  "title": "About Us",
+  "subtitle": "Our Agriculture Waste Management platform helps farmers and communities turn agricultural residues into valuable resources. From composting to biomass energy, we bridge the gap between sustainable practices and practical solutions.",
+  "mission": {
+    "title": "Our Mission",
+    "body": "To empower farmers and rural communities by providing them with easy access to sustainable waste management solutions, reducing environmental pollution, and improving income opportunities."
+  },
+  "vision": {
+    "title": "Our Vision",
+    "body": "A future where no agricultural waste is left unmanaged— every residue is transformed into compost, energy, or raw material, creating a cleaner, greener, and more profitable ecosystem."
+  },
+  "features": {
+    "heading": "What We Offer",
+    "smart": {
+      "title": "Smart Processes",
+      "description": "Find the best waste management process tailored to your waste type, quantity, and available resources."
+    },
+    "market": {
+      "title": "Farmer Marketplace",
+      "description": "Connect with buyers and sellers to trade compost, biomass, manure, and other agri by-products directly."
+    },
+    "eco": {
+      "title": "Eco-Friendly Solutions",
+      "description": "Reduce burning and dumping by adopting eco-friendly alternatives like composting, mulching, and biogas."
+    },
+    "sustain": {
+      "title": "Sustainability Impact",
+      "description": "Together, we’re reducing pollution, improving soil fertility, and contributing to a sustainable future for agriculture."
+    }
+  },
+  "cta": {
+    "title": "Join Our Mission",
+    "subtitle": "Whether you’re a farmer, entrepreneur, or eco-conscious citizen, be a part of the change. Explore processes, trade resources, and help build a greener tomorrow.",
+    "button": "Explore Marketplace"
+  }
+}

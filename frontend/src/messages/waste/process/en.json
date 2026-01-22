@@ -1,0 +1,55 @@
+{
+  "header": {
+    "title": "Smart Waste Management",
+    "subtitle": "Auto-categorized waste processing plan"
+  },
+
+  "form": {
+    "wasteType": "Type of Waste",
+    "wasteCategory": "Product Category",
+    "wasteProduct": "Product",
+    "quantity": "Quantity (kg)",
+    "moisture": "Moisture",
+    "intendedUse": "Intended Use",
+    "contamination": "Contamination",
+    "notes": "Notes"
+  },
+
+  "placeholders": {
+    "selectWasteType": "Select waste type",
+    "selectCategory": "Select category",
+    "selectProduct": "Select product",
+    "quantity": "e.g. 50",
+    "selectUse": "Select use",
+    "notes": "Optional notes"
+  },
+
+  "intendedUse": {
+    "compost": "Compost",
+    "feed": "Feed",
+    "sell": "Sell",
+    "biogas" : "Biogas"
+    
+  },
+
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  },
+
+  "actions": {
+    "showPlan": "Show Plan",
+    "reset": "Reset",
+    "processing": "Processing..."
+  },
+
+"result": {
+  "title": "Recommendation",
+  "benefits": "Benefits",
+  "finalOutput": "Final Output",
+  "process": "Processing Steps",
+  "notes": "Notes",
+  "notFound": "No recommendation found for the selected inputs"
+}
+
+}

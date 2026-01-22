@@ -1,0 +1,30 @@
+{
+  "errors": {
+    "selectDelivery": "Please select a delivery method"
+  },
+  "success": {
+    "orderPlaced": "Order placed successfully"
+  },
+  "empty": {
+    "title": "Your cart is empty",
+    "subtitle": "Add products to place an order",
+    "browse": "Browse Products"
+  },
+  "summary": {
+    "title": "Order Summary",
+    "clearCart": "Clear Cart"
+  },
+  "delivery": {
+    "title": "Delivery Method",
+    "pickup": "Pickup by you",
+    "farmer": "Farmer Delivery",
+    "farmerCharges": "Delivery charges may apply for farmer delivery"
+  },
+  "total": {
+    "label": "Total"
+  },
+  "checkout": {
+    "select": "Select payment & delivery method",
+    "proceed": "Proceed to Checkout"
+  }
+}

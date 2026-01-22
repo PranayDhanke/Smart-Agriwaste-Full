@@ -1,0 +1,36 @@
+{
+  "title": "मोलभाव अनुरोध",
+  "subtitle": "खरीदारों के ऑफ़र समीक्षा करें और उत्तर दें",
+  "pending": "{count} लंबित अनुरोध{count, plural, one {} other {s}}",
+  "empty": {
+    "title": "अभी तक कोई मोलभाव अनुरोध नहीं",
+    "description": "जब खरीदार आपके उत्पादों के लिए ऑफ़र भेजेंगे, वे यहाँ दिखाई देंगे"
+  },
+  "productName": "उत्पाद का नाम",
+  "offerFrom": "ऑफ़र भेजा गया",
+  "moisture": "नमी",
+  "yourPrice": "आपकी कीमत",
+  "theirOffer": "उनका ऑफ़र",
+  "belowPrice": "{percent}% आपकी माँगी हुई कीमत से कम (₹{diff} कम)",
+  "reject": "ऑफ़र अस्वीकृत करें",
+  "accept": "ऑफ़र स्वीकार करें",
+  "statusAccepted": "✓ आपने यह ऑफ़र स्वीकार किया",
+  "statusRejected": "✗ आपने यह ऑफ़र अस्वीकार किया",
+  "errors": {
+    "loadFailed": "मोलभाव लोड करने में विफल"
+  },
+  "toast": {
+    "accepted": "✓ मोलभाव सफलतापूर्वक स्वीकार किया गया",
+    "rejected": "✗ मोलभाव अस्वीकार किया गया",
+    "actionFailed": "कार्य विफल। कृपया पुनः प्रयास करें।"
+  },
+  "actions": {
+    "accepted": "स्वीकार किया",
+    "rejected": "अस्वीकृत"
+  },
+  "notify": {
+    "title": "मोलभाव अनुरोध {action}",
+    "message": "किसान {farmer} ने उत्पाद {item} के लिए मोलभाव अनुरोध {action} किया है।"
+  },
+  "farmerFallback": "किसान"
+}

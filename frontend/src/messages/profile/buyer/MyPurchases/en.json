@@ -1,0 +1,78 @@
+{
+  "title": "My Purchases",
+  "description": "Track and manage all your orders from local farmers",
+  "negotiations": "Negotiations",
+  "stats": {
+    "totalOrders": "Total Orders",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered"
+  },
+  "searchPlaceholder": "Search orders, buyers, or products...",
+  "filter": {
+    "all": "All Orders",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "foundResults": "Found {count} result(s)",
+  "loading": {
+    "text": "Loading your orders..."
+  },
+  "empty": {
+    "title": "No Orders Yet",
+    "desc": "Start shopping to see your orders here. Browse our marketplace and find great agricultural products from local farmers.",
+    "browse": "Browse Products"
+  },
+  "noResults": {
+    "title": "No orders found",
+    "desc": "Try adjusting your search or filter to find what you are looking for."
+  },
+  "items": "Items",
+  "orderNumber": "Order #{id}",
+  "moreItems": "+{count} more item(s)",
+  "total": "Total",
+  "payment": {
+    "label": "Payment",
+    "completed": "Completed",
+    "pending": "Pending"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "cancel": "Cancel",
+    "outForPickup": "Out for Pickup",
+    "confirmPickup": "Confirm Pickup",
+    "payNow": "Pay Now"
+  },
+  "toast": {
+    "loadFailed": "Failed to load your orders",
+    "orderStatusSuccess": "Order has successfully {status}",
+    "changeStatusFailed": "Failed to change order status",
+    "outForDelivery": "Order marked out for delivery",
+    "outForDeliveryFailed": "Failed to set out for delivery",
+    "deliveredSuccess": "Order successfully delivered",
+    "markDeliveryFailed": "Failed to mark delivery",
+    "paymentSoon": "Payment gateway coming soon!"
+  },
+  "notify": {
+    "titleStatus": "Buyer has {status} the Order",
+    "messageStatus": "buyer {buyer} has {status} order",
+    "outForPickupTitle": "Order is out for Pickup",
+    "outForPickupMessage": "Buyer {buyer} is out for Pickup",
+    "pickedUpTitle": "Order is Picked Up",
+    "pickedUpMessage": "Buyer {buyer} picked up order"
+  },
+  "status": {
+    "delivered": "Delivered",
+    "readyForPickup": "Ready for Pickup",
+    "outForDelivery": "Out for Delivery",
+    "cancelled": "Cancelled",
+    "confirmed": "Confirmed",
+    "pending": "Pending"
+  },
+  "delivery": {
+    "delivery": "Delivery",
+    "pickup": "Pickup"
+  }
+}

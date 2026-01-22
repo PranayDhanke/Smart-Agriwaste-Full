@@ -1,0 +1,25 @@
+{
+  "title": "Price Negotiation",
+  "description": "Negotiate directly with the farmer for this product",
+  "listedPrice": "Listed Price: ₹{price} / {unit}",
+  "labels": {
+    "yourOffer": "Your Offer"
+  },
+  "buttons": {
+    "submit": "Submit Negotiation",
+    "sending": "Sending..."
+  },
+  "errors": {
+    "invalidPrice": "Please enter a valid price",
+    "mustBeLower": "Negotiated price must be lower than listed price",
+    "failed": "Failed to send negotiation request"
+  },
+  "notification": {
+    "title": "New Negotiation Request",
+    "message": "Buyer {buyer} sent a negotiation request for the Product {title}."
+  },
+  "success": {
+    "sent": "Negotiation request sent to seller"
+  },
+  "buyerPlaceholder": "buyer"
+}

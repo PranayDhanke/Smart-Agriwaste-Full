@@ -1,0 +1,21 @@
+{
+  "chatTitle": "Community Chat",
+  "connected": "Connected",
+  "offline": "Offline",
+  "signedInAs": "Signed in as {username}",
+  "guest": "Guest",
+  "noMessages": "No messages yet",
+  "beFirst": "Be the first to start the conversation!",
+  "placeholder": "Type a message...",
+  "offlinePlaceholder": "Can't send while offline",
+  "signInToChat": "Sign In to Chat",
+  "sendAria": "send message",
+
+  "errors": {
+    "disconnected": "Disconnected from chat.",
+    "historyFailed": "Failed to load chat history.",
+    "sendFailed": "Message failed to send.",
+    "connectFailed": "Unable to connect to chat server.",
+    "offlineSend": "You're offline. Message won't send."
+  }
+}

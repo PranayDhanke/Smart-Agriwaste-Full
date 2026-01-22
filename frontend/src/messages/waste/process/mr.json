@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "स्मार्ट अपशिष्ट व्यवस्थापन",
+    "subtitle": "स्वयंचलित वर्गीकरणावर आधारित अपशिष्ट प्रक्रिया योजना"
+  },
+
+  "form": {
+    "wasteType": "अपशिष्टाचा प्रकार",
+    "wasteCategory": "उत्पादन श्रेणी",
+    "wasteProduct": "उत्पादन",
+    "quantity": "प्रमाण (किलोग्राम)",
+    "moisture": "ओलावा",
+    "intendedUse": "वापराचा उद्देश",
+    "contamination": "प्रदूषण",
+    "notes": "नोंदी"
+  },
+
+  "placeholders": {
+    "selectWasteType": "अपशिष्टाचा प्रकार निवडा",
+    "selectCategory": "श्रेणी निवडा",
+    "selectProduct": "उत्पादन निवडा",
+    "quantity": "उदा: 50",
+    "selectUse": "वापर निवडा",
+    "notes": "ऐच्छिक नोंदी"
+  },
+
+  "intendedUse": {
+    "compost": "खत",
+    "feed": "पशुखाद्य",
+    "sell": "विक्री",
+    "biogas" : "बायोगॅस"
+  },
+
+  "common": {
+    "yes": "होय",
+    "no": "नाही"
+  },
+
+  "actions": {
+    "showPlan": "योजना दाखवा",
+    "reset": "रीसेट",
+    "processing": "प्रक्रिया सुरू आहे..."
+  },
+
+  "result": {
+    "title": "शिफारस",
+    "benefits": "फायदे",
+    "finalOutput": "अंतिम उत्पादन",
+    "process": "प्रक्रियेची पावले",
+    "notes": "महत्त्वाच्या सूचना",
+    "notFound": "निवडलेल्या पर्यायांसाठी कोणतीही शिफारस उपलब्ध नाही"
+  }
+}

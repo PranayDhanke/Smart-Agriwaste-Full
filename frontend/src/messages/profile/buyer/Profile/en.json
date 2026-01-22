@@ -1,0 +1,33 @@
+{
+  "title": "Buyer Profile",
+  "description": "Manage your personal and contact information",
+  "loadingUser": "Loading user...",
+  "loadingBuyerData": "Loading buyer data...",
+  "buyerIdLabel": "Buyer ID:",
+  "accountInformation": "Account Information",
+  "contactPersonalDetails": "Contact & Personal Details",
+  "addressDetails": "Address Details",
+  "document": "Document",
+  "aadharDocument": "Aadhar Document",
+  "saveChanges": "Save Changes",
+  "fields": {
+    "phone": "Phone Number",
+    "aadharnumber": "Aadhar Number",
+    "state": "State",
+    "district": "District",
+    "taluka": "Taluka",
+    "village": "Village",
+    "houseBuildingName": "House/Building Name",
+    "roadarealandmarkName": "Road, Area, Landmark Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "username": "Username",
+    "emailAddress": "Email Address"
+  },
+  "enterField": "Enter {field}",
+  "toasts": {
+    "updated": "Buyer profile updated",
+    "updateFailed": "Failed to update profile. Please try again.",
+    "genericError": "Something went wrong, please try again."
+  }
+}

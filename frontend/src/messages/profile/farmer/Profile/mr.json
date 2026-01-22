@@ -1,0 +1,59 @@
+{
+  "title": "शेतकरी प्रोफाइल",
+  "subtitle": "आपली वैयक्तिक आणि शेत माहिती व्यवस्थापित करा",
+  "loadingUser": "वापरकर्ता लोड करत आहे...",
+  "loadingData": "शेतकरी डेटा लोड करत आहे...",
+  "farmerIdLabel": "शेतकरी आयडी:",
+  "account": {
+    "heading": "खाते माहिती",
+    "firstName": "पहिले नाव",
+    "lastName": "आडनाव",
+    "username": "वापरकर्तानाव",
+    "emailAddress": "ईमेल पत्ता"
+  },
+  "contact": {
+    "heading": "संपर्क आणि वैयक्तिक तपशील"
+  },
+  "fields": {
+    "phone": "फोन नंबर",
+    "aadharnumber": "आधार नंबर",
+    "state": "राज्य",
+    "district": "जिल्हा",
+    "taluka": "तालुका",
+    "village": "गाव",
+    "houseBuildingName": "घर/इमारतीचे नाव",
+    "roadarealandmarkName": "रोड, परिसर, लँडमार्क",
+    "farmNumber": "शेत क्रमांक",
+    "farmArea": "शेत क्षेत्र",
+    "farmUnit": "शेत एकक"
+  },
+  "placeholders": {
+    "phone": "फोन नंबर प्रविष्ट करा",
+    "aadharnumber": "आधार नंबर प्रविष्ट करा",
+    "state": "राज्य प्रविष्ट करा",
+    "district": "जिल्हा प्रविष्ट करा",
+    "taluka": "तालुका प्रविष्ट करा",
+    "village": "गाव प्रविष्ट करा",
+    "houseBuildingName": "घर/इमारतीचे नाव प्रविष्ट करा",
+    "roadarealandmarkName": "रोड/परिसर/लँडमार्क प्रविष्ट करा",
+    "farmNumber": "शेत क्रमांक प्रविष्ट करा",
+    "farmArea": "शेत क्षेत्र प्रविष्ट करा",
+    "farmUnit": "शेत एकक प्रविष्ट करा"
+  },
+  "farm": {
+    "heading": "शेत माहिती"
+  },
+  "documents": {
+    "heading": "दस्तऐवज",
+    "aadhar": "आधार दस्तऐवज",
+    "farm": "शेत दस्तऐवज"
+  },
+  "address": {
+    "heading": "पत्त्याची माहिती"
+  },
+  "saveChanges": "बदल जतन करा",
+  "uploadFailed": "अपलोड अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+  "profileUpdated": "प्रोफाइल अद्यतनित झाली",
+  "profileUpdateFailed": "प्रोफाइल अद्यतनित करण्यात अयशस्वी",
+  "somethingWentWrong": "काहीतरी चुकीचे झाले. कृपया पुन्हा प्रयत्न करा."
+}

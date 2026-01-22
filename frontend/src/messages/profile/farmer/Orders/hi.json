@@ -1,0 +1,74 @@
+{
+  "title": "ऑर्डर प्रबंधन",
+  "subtitle": "आने वाले ऑर्डरों को ट्रैक और प्रबंधित करें",
+  "actions": {
+    "negotiations": "मोलभाव",
+    "view": "देखें",
+    "accept": "स्वीकार करें",
+    "reject": "अस्वीकार करें",
+    "outForDelivery": "डिलीवरी के लिए भेजा गया",
+    "delivered": "डिलीवर किया गया"
+  },
+  "stats": {
+    "total": "कुल ऑर्डर",
+    "pending": "लंबित",
+    "confirmed": "की पुष्टि",
+    "delivered": "डिलीवर किए गए"
+  },
+  "search": {
+    "placeholder": "ऑर्डर, खरीदार या उत्पाद खोजें..."
+  },
+  "filters": {
+    "all": "सभी ऑर्डर",
+    "pending": "लंबित",
+    "confirmed": "कन्फर्म्ड",
+    "delivered": "डिलीवर किए गए",
+    "cancelled": "रद्द किए गए"
+  },
+  "found": "{count} परिणाम{count, plural, one {} other {s}}",
+  "loading": "आपके ऑर्डर लोड हो रहे हैं...",
+  "empty": {
+    "title": "अभी तक कोई ऑर्डर नहीं",
+    "description": "जब खरीदार आपके उत्पादों के लिए ऑर्डर करेंगे, वे यहाँ दिखाई देंगे। ऑर्डर प्राप्त करने के लिए अपने उत्पाद सूचीबद्ध करें।",
+    "noMatch": "कोई ऑर्डर आपकी खोज के अनुरूप नहीं हैं"
+  },
+  "status": {
+    "cancelled": "रद्द किया गया",
+    "delivered": "डिलीवर किया गया",
+    "outForDelivery": "डिलीवरी के लिए भेजा गया",
+    "confirmed": "कन्फर्म्ड",
+    "pending": "लंबित",
+    "waitingPickup": "पिकअप की प्रतीक्षा",
+    "complete": "पूरा"
+  },
+  "delivery": {
+    "byFarmer": "आप द्वारा डिलीवरी",
+    "pickupByBuyer": "खरीदार द्वारा पिकअप"
+  },
+  "labels": {
+    "totalEarning": "कुल आय:",
+    "buyer": "खरीदार:"
+  },
+  "payment": {
+    "verified": "भुगतान सत्यापित"
+  },
+  "toast": {
+    "orderStatusUpdated": "ऑर्डर {status} सफलतापूर्वक",
+    "outForDelivery": "ऑर्डर डिलीवरी के लिए भेजा गया",
+    "delivered": "ऑर्डर डिलीवर किया गया"
+  },
+  "errors": {
+    "loadFailed": "ऑर्डर लोड करने में त्रुटि। पृष्ठ को रिफ्रेश करें।",
+    "updateStatus": "ऑर्डर की स्थिति अपडेट करने में विफल",
+    "updateDelivery": "डिलीवरी स्थिति अपडेट करने में विफल",
+    "confirmDelivery": "डिलीवरी की पुष्टि करने में विफल"
+  },
+  "notify": {
+    "orderStatusTitle": "आपका ऑर्डर {status} है",
+    "orderStatusMessage": "किसान {farmer} ने आपका ऑर्डर {status} किया है",
+    "outForDeliveryTitle": "ऑर्डर डिलीवरी के लिए भेजा गया है",
+    "outForDeliveryMessage": "किसान {farmer} ने आपका ऑर्डर डिलीवरी के लिए भेजा है",
+    "deliveredTitle": "ऑर्डर डिलीवर हुआ",
+    "deliveredMessage": "किसान {farmer} से आपका ऑर्डर डिलीवर कर दिया गया है"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "category": {
+    "crop": {
+      "full": "Crop Waste",
+      "short": "Crop"
+    },
+    "fruit": {
+      "full": "Fruit Waste",
+      "short": "Fruit"
+    },
+    "vegetable": {
+      "full": "Vegetable Waste",
+      "short": "Vegetable"
+    }
+  },
+   "unit": {
+    "kg": "Kilogram",
+    "ton": "Ton",
+    "gram": "Gram"
+  },
+  "alerts": {
+    "added": "Added {count} unit(s) of \"{title}\" to cart",
+    "buying": "Proceeding to checkout with {count} unit(s)",
+    "shareUnsupported": "Share functionality not supported on this browser"
+  },
+  "notFound": {
+    "title": "Product Not Found",
+    "message": "The product you are looking for does not exist or has been removed."
+  },
+  "actions": {
+    "backToMarketplace": "Back to Marketplace",
+    "save": "Save",
+    "saved": "Saved",
+    "share": "Share",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now"
+  },
+  "stock": {
+    "inStock": "In Stock"
+  },
+  "price": {
+    "inclusive": "Inclusive of all taxes"
+  },
+  "info": {
+    "moisture": "Moisture",
+    "quantity": "Quantity",
+    "location": "Location",
+    "type": "Type"
+  },
+  "description": {
+    "title": "Product Description"
+  },
+  "quantity": {
+    "select": "Select Quantity",
+    "totalPrice": "Total Price"
+  },
+  "seller": {
+    "title": "Seller Information",
+    "verified": "Verified Seller",
+    "contact": "Contact Seller"
+  },
+  "important": {
+    "title": "Important Information",
+    "message": "Please verify product quality and quantity upon delivery. Contact the seller for any specific requirements or bulk orders."
+  },
+  "related": {
+    "title": "Similar Products",
+    "subtitle": "You might also be interested in these",
+    "viewAll": "View All",
+    "empty": "Related products will appear here"
+  }
+}

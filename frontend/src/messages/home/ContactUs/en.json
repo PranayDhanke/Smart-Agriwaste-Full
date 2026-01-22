@@ -1,0 +1,23 @@
+{
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We’d love to hear from you. Reach out for support, questions, or collaboration.",
+    "map": {
+      "title": "Our Location",
+      "placeholder": "🌍 Map Placeholder"
+    },
+    "form": {
+      "title": "Send us a Message",
+      "namePlaceholder": "Your Name",
+      "emailPlaceholder": "Your Email",
+      "messagePlaceholder": "Your Message",
+      "submit": "Send Message"
+    },
+    "info": {
+      "title": "Get in Touch",
+      "email": "support@agriplatform.com",
+      "phone": "+91 98765 43210",
+      "location": "Pune, Maharashtra, India"
+    }
+  }
+}

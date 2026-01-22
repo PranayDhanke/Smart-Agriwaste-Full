@@ -1,0 +1,33 @@
+{
+  "title": "खरीदार प्रोफ़ाइल",
+  "description": "अपनी व्यक्तिगत और संपर्क जानकारी प्रबंधित करें",
+  "loadingUser": "उपयोगकर्ता लोड हो रहा है...",
+  "loadingBuyerData": "खरीदार डेटा लोड हो रहा है...",
+  "buyerIdLabel": "खरीदार आईडी:",
+  "accountInformation": "खाता जानकारी",
+  "contactPersonalDetails": "संपर्क और व्यक्तिगत विवरण",
+  "addressDetails": "पता विवरण",
+  "document": "दस्तावेज़",
+  "aadharDocument": "आधार दस्तावेज़",
+  "saveChanges": "परिवर्तनों को सहेजें",
+  "fields": {
+    "phone": "फ़ोन नंबर",
+    "aadharnumber": "आधार संख्या",
+    "state": "राज्य",
+    "district": "ज़िला",
+    "taluka": "तहसील",
+    "village": "गाँव",
+    "houseBuildingName": "घर/डींग का नाम",
+    "roadarealandmarkName": "सड़क, क्षेत्र, लैंडमार्क का नाम",
+    "firstName": "प्रथम नाम",
+    "lastName": "उपनाम",
+    "username": "उपयोगकर्ता नाम",
+    "emailAddress": "ईमेल पता"
+  },
+  "enterField": "{field} दर्ज करें",
+  "toasts": {
+    "updated": "खरीदार प्रोफ़ाइल अपडेट की गई",
+    "updateFailed": "प्रोफ़ाइल अपडेट करने में विफल रहा। कृपया फिर से प्रयास करें।",
+    "genericError": "कुछ गलत हो गया, कृपया फिर से प्रयास करें।"
+  }
+}

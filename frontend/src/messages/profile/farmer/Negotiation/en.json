@@ -1,0 +1,36 @@
+{
+  "title": "Negotiation Requests",
+  "subtitle": "Review and respond to buyer offers on your agricultural waste",
+  "pending": "{count} Pending Request{count, plural, one {} other {s}}",
+  "empty": {
+    "title": "No negotiation requests yet",
+    "description": "When buyers make offers on your products, they'll appear here"
+  },
+  "productName": "Product Name",
+  "offerFrom": "Offer from",
+  "moisture": "Moisture",
+  "yourPrice": "Your Price",
+  "theirOffer": "Their Offer",
+  "belowPrice": "{percent}% below your asking price (₹{diff} less)",
+  "reject": "Reject Offer",
+  "accept": "Accept Offer",
+  "statusAccepted": "✓ You accepted this offer",
+  "statusRejected": "✗ You rejected this offer",
+  "errors": {
+    "loadFailed": "Failed to load negotiations"
+  },
+  "toast": {
+    "accepted": "✓ Negotiation accepted successfully",
+    "rejected": "✗ Negotiation rejected",
+    "actionFailed": "Action failed. Please try again."
+  },
+  "actions": {
+    "accepted": "accepted",
+    "rejected": "rejected"
+  },
+  "notify": {
+    "title": "Negotiation Request {action}",
+    "message": "Farmer {farmer} has {action} Negotiation Request for the Product {item}."
+  },
+  "farmerFallback": "Farmer"
+}

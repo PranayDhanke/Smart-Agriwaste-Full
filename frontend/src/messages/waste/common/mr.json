@@ -1,0 +1,173 @@
+{
+  "wasteTypes": {
+    "crop": "पीक अवशेष",
+    "fruit": "फळे",
+    "vegetable": "भाज्या"
+  },
+
+  "moisture": {
+    "dry": "कोरडे",
+    "semi_wet": "अर्ध-ओले",
+    "wet": "ओले"
+  },
+  "wasteCat": {
+    "crop": {
+      "grain_crop": "धान्य पिके",
+      "pulses": "कडधान्ये",
+      "oil_seeds": "तेलबिया",
+      "commercial": "व्यावसायिक पिके",
+      "fodder": "चारा पिके",
+      "plantation": "लागवड पिके",
+      "horticulture": "बागायती पिके"
+    },
+    "vegetable": {
+      "leafy": "पालेभाज्या",
+      "root_bulb": "मुळ व कांदा वर्ग",
+      "fruit_vegetable": "फळभाज्या",
+      "others": "इतर भाज्या"
+    },
+    "fruit": {
+      "tropical": "उष्णकटिबंधीय फळे",
+      "citrus": "संत्रा वर्ग",
+      "temperate": "समशीतोष्ण फळे",
+      "melons": "कलिंगड वर्ग"
+    }
+  },
+  "productSet": {
+    "crop": {
+      "grain_crop": {
+        "wheat": "गहू",
+        "rice": "भात (तांदूळ)",
+        "maize": "मका",
+        "jowar": "ज्वारी",
+        "bajra": "बाजरी",
+        "ragi": "नाचणी",
+        "barley": "जव",
+        "oats": "ओट्स"
+      },
+
+      "pulses": {
+        "toor": "तूर / अरहर",
+        "moong": "मूग",
+        "udad": "उडीद",
+        "chana": "चना",
+        "masoor": "मसूर",
+        "rajma": "राजमा",
+        "peas": "वाटाणा",
+        "soybean": "सोयाबीन"
+      },
+
+      "oil_seeds": {
+        "soybean": "सोयाबीन",
+        "sunflower": "सूर्यफूल",
+        "groundnut": "भुईमूग",
+        "mustard": "मोहरी",
+        "sesame": "तीळ",
+        "castor": "एरंडी",
+        "safflower": "करडई",
+        "niger_seed": "रामतिळ"
+      },
+
+      "commercial": {
+        "sugarcane": "ऊस",
+        "cotton": "कापूस",
+        "tobacco": "तंबाखू",
+        "tea": "चहा",
+        "coffee": "कॉफी",
+        "rubber": "रबर",
+        "jute": "ताग"
+      },
+
+      "fodder": {
+        "berseem": "बरसीम",
+        "lucerne": "लुसर्न",
+        "napier_grass": "नेपियर गवत",
+        "sorghum_fodder": "ज्वारीचा चारा"
+      },
+
+      "plantation": {
+        "tea": "चहा",
+        "coffee": "कॉफी",
+        "coconut": "नारळ",
+        "rubber": "रबर"
+      },
+
+      "horticulture": {
+        "rose": "गुलाब",
+        "marigold": "झेंडू",
+        "jasmine": "मोगरा",
+        "sunflower": "सूर्यफूल",
+        "aloe_vera": "कोरफड",
+        "tulsi": "तुळस",
+        "ashwagandha": "अश्वगंधा"
+      }
+    },
+
+    "vegetable": {
+      "leafy": {
+        "spinach": "पालक",
+        "fenugreek": "मेथी",
+        "amaranthus": "तांदुळजा",
+        "cabbage": "कोबी",
+        "lettuce": "लेट्यूस"
+      },
+
+      "root_bulb": {
+        "potato": "बटाटा",
+        "onion": "कांदा",
+        "garlic": "लसूण",
+        "carrot": "गाजर",
+        "beetroot": "बीट",
+        "radish": "मुळा"
+      },
+
+      "fruit_vegetable": {
+        "tomato": "टोमॅटो",
+        "brinjal": "वांगी",
+        "capsicum": "ढोबळी मिरची",
+        "chillies": "मिरची",
+        "pumpkin": "भोपळा",
+        "bottle_gourd": "दुधी भोपळा",
+        "ridge_gourd": "दोडका",
+        "bitter_gourd": "कारले",
+        "cucumber": "काकडी",
+        "okra": "भेंडी"
+      },
+
+      "others": {
+        "cauliflower": "फुलकोबी",
+        "broccoli": "ब्रोकली",
+        "beans": "शेंगा",
+        "peas": "वाटाणा"
+      }
+    },
+
+    "fruit": {
+      "tropical": {
+        "mango": "आंबा",
+        "banana": "केळी",
+        "papaya": "पपई",
+        "guava": "पेरू",
+        "pineapple": "अननस",
+        "coconut": "नारळ"
+      },
+
+      "citrus": {
+        "orange": "संत्रा",
+        "lemon": "लिंबू",
+        "mosambi": "मोसंबी"
+      },
+
+      "temperate": {
+        "apple": "सफरचंद",
+        "pear": "नाशपाती",
+        "plum": "आलुबुखारा"
+      },
+
+      "melons": {
+        "watermelon": "कलिंगड",
+        "muskmelon": "खरबूज"
+      }
+    }
+  }
+}

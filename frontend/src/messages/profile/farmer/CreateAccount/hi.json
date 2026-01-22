@@ -1,0 +1,98 @@
+{
+  "loading": "लोड हो रहा है...",
+  "authRequired": {
+    "title": "प्रमाणीकरण आवश्यक",
+    "description": "इस पृष्ठ तक पहुँचने के लिए आपको साइन अप होना चाहिए",
+    "button": "साइन अप पर जाएं"
+  },
+  "header": {
+    "title": "किसान पंजीकरण",
+    "description": "स्वागत है, {firstName}! चलिए आपका प्रोफ़ाइल सेट करते हैं"
+  },
+  "steps": {
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "farmDetails": "खेत विवरण"
+  },
+  "sections": {
+    "identity": { "title": "पहचान सत्यापन" },
+    "contact": { "title": "संपर्क जानकारी" },
+    "location": { "title": "स्थान विवरण" },
+    "address": { "title": "पता विवरण" },
+    "farmDocs": { "title": "खेत दस्तावेज़" },
+    "farmArea": { "title": "खेत क्षेत्र" }
+  },
+  "fields": {
+    "aadhaarNumber": "आधार नंबर",
+    "aadhaarPhoto": "आधार कार्ड फोटो (फ़ाइल 1MB से कम होनी चाहिए)",
+    "phone": "फ़ोन नंबर",
+    "state": "राज्य",
+    "district": "ज़िला",
+    "taluka": "तालुका",
+    "village": "गाँव / शहर",
+    "houseNumber": "घर नंबर / भवन का नाम",
+    "road": "सड़क, क्षेत्र, लैंडमार्क",
+    "farmNumber": "7/12 या 8A दस्तावेज़ नंबर",
+    "farmDoc": "खेत दस्तावेज़ अपलोड करें (फ़ाइल 1MB से कम होनी चाहिए)",
+    "totalArea": "कुल क्षेत्र",
+    "unit": "इकाई"
+  },
+  "placeholders": {
+    "aadhaar": "XXXX XXXX XXXX",
+    "phone": "+91 XXXXX XXXXX",
+    "selectState": "राज्य चुनें",
+    "selectDistrict": "ज़िला चुनें",
+    "selectStateFirst": "पहले राज्य चुनें",
+    "selectTaluka": "तालुका चुनें",
+    "selectDistrictFirst": "पहले ज़िला चुनें",
+    "selectVillage": "गाँव/शहर चुनें",
+    "selectTalukaFirst": "पहले तालुका चुनें",
+    "houseBuilding": "उदा., घर नं. 123, रेज़िडेंशियल कॉम्प्लेक्स",
+    "road": "उदा., टाउन हॉल के पास, एमजी रोड",
+    "farmNumber": "अपना भू-नक्शा दस्तावेज़ नंबर दर्ज करें",
+    "totalArea": "उदा., 5.5"
+  },
+  "hints": {
+    "aadhaarFormat": "अधिकतम आकार: 5MB | फ़ॉर्मैट: JPG, PNG",
+    "farmNumber": "यह आपका आधिकारिक भूमि स्वामित्व दस्तावेज़ नंबर है",
+    "farmDoc": "अधिकतम आकार: 10MB | फ़ॉर्मैट: JPG, PNG, PDF"
+  },
+  "actions": {
+    "continue": "खेत विवरण पर जारी रखें",
+    "uploadingAadhaar": "आधार अपलोड हो रहा है...",
+    "uploadingFarmDoc": "खेत दस्तावेज़ अपलोड हो रहा है...",
+    "back": "व्यक्तिगत जानकारी पर वापस जाएं",
+    "creating": "प्रोफ़ाइल बना रहे हैं...",
+    "complete": "पंजीकरण पूर्ण करें"
+  },
+  "warnings": { "fillRequired": "कृपया सभी आवश्यक फ़ील्ड सही तरीके से भरें" },
+  "units": {
+    "hectare": "हेक्टर (ha)",
+    "acre": "एकड़",
+    "hectarePlural": "हेक्टेयर",
+    "acrePlural": "एकड़"
+  },
+  "labels": { "totalFarmArea": "कुल प्राशिक क्षेत्र:" },
+  "errors": {
+    "aadhaarRequired": "आधार आवश्यक है",
+    "aadhaarDigits": "आधार 12 अंक का होना चाहिए",
+    "phoneRequired": "फ़ोन नंबर आवश्यक है",
+    "phoneInvalid": "कृपया 10 अंकों का सही फोन नंबर दर्ज करें",
+    "farmAreaRequired": "खेत क्षेत्र आवश्यक है",
+    "farmAreaNumber": "कृपया वैध संख्या दर्ज करें",
+    "farmAreaPositive": "क्षेत्र 0 से बड़ा होना चाहिए",
+    "stateRequired": "राज्य आवश्यक है",
+    "districtRequired": "ज़िला आवश्यक है",
+    "talukaRequired": "तालुका आवश्यक है",
+    "villageRequired": "गाँव/शहर आवश्यक है",
+    "farmNumberRequired": "दस्तावेज़ संख्या आवश्यक है",
+    "aadharFileRequired": "आधार फ़ाइल आवश्यक है",
+    "aadharFileSize": "आधार फ़ाइल 1MB से कम होनी चाहिए",
+    "farmdocRequired": "खेत दस्तावेज़ आवश्यक है",
+    "farmdocSize": "खेत दस्तावेज़ 1MB से कम होना चाहिए",
+    "submitFill": "कृपया सबमिट करने से पहले सभी आवश्यक फ़ील्ड सही से भरें।",
+    "createFailed": "प्रोफ़ाइल बनाने में विफल। कृपया पुनः प्रयास करें।",
+    "somethingWrong": "कुछ गलत हुआ। कृपया पुनः प्रयास करें।"
+  },
+  "legal": { "prefix": "पंजीकरण पूरा करके, आप हमारी स्वीकार करते हैं", "and": "और" },
+  "links": { "terms": "सेवा की शर्तें", "privacy": "गोपनीयता नीति" }
+}

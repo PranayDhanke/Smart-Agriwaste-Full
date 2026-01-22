@@ -1,0 +1,45 @@
+{
+  "title": "Frequently Asked Questions",
+  "subtitle": "Everything you need to know about our agricultural waste marketplace",
+
+  "items": [
+    {
+      "question": "What is agricultural waste?",
+      "answer": "Agricultural waste includes crop residues, fruit & vegetable waste, animal manure, and agro-industry by-products that remain after farming or processing activities. These materials, when properly managed, can become valuable resources for sustainable farming practices."
+    },
+    {
+      "question": "How does the marketplace work?",
+      "answer": "Farmers can list their agricultural waste on our platform with details like type, quantity, and price. Buyers can browse listings, contact farmers directly, and make purchases. We facilitate secure transactions and provide analytics for both parties."
+    },
+    {
+      "question": "Why should we avoid burning crop residues?",
+      "answer": "Burning releases harmful greenhouse gases, reduces soil fertility, and contributes to air pollution. Instead, residues can be used for compost, biogas, animal feed, or sold through our marketplace to generate income."
+    },
+    {
+      "question": "How can agricultural waste be used for energy?",
+      "answer": "Agricultural waste like manure and crop residues can be converted into biogas or biomass energy, providing a renewable and sustainable source of power. Many buyers on our platform purchase waste specifically for energy production."
+    },
+    {
+      "question": "What types of waste can I list or buy?",
+      "answer": "You can list or purchase various types including crop residues (wheat straw, rice husk), fruit & vegetable waste, animal manure, coconut shells, sugarcane bagasse, and other organic agricultural by-products."
+    },
+    {
+      "question": "Is there a fee to use the platform?",
+      "answer": "Creating an account and browsing the marketplace is completely free. We only charge a small commission on successful transactions to maintain and improve our platform."
+    },
+    {
+      "question": "How do I ensure quality of the waste I'm buying?",
+      "answer": "All farmers are verified on our platform. You can view ratings, reviews, and detailed descriptions of each listing. We recommend communicating directly with sellers and, if possible, inspecting the waste before finalizing large purchases."
+    },
+    {
+      "question": "Can I get guidance on waste management processes?",
+      "answer": "Yes! Visit our 'Waste Management Processes' section to learn about composting, biogas production, vermicomposting, and other methods. We provide step-by-step guides for different waste types."
+    }
+  ],
+
+  "cta": {
+    "title": "Still have questions?",
+    "description": "Our team is here to help you with any queries about the platform or waste management.",
+    "button": "Visit Community Forum"
+  }
+}

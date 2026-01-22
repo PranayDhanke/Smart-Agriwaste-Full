@@ -1,0 +1,114 @@
+{
+  "backToOrders": "Back to My Orders",
+  "loadingOrder": "Loading order details...",
+  "title": "My Order Details",
+  "placedOn": "Order placed on",
+  "orderIdLabel": "Order ID:",
+  "copyOrderId": "Copy Order ID",
+  "copied": "✓ Copied!",
+  "orderStatusLabel": "Order Status",
+
+  "metrics": {
+    "orderDate": "Order Date",
+    "items": "Items",
+    "payment": "Payment",
+    "totalAmount": "Total Amount"
+  },
+
+  "payment": {
+    "paid": "Paid",
+    "pending": "Pending",
+    "verifiedTitle": "✓ Payment Verified",
+    "verifiedMessage": "Payment confirmed. Your order is being processed."
+  },
+
+  "orderInfo": {
+    "title": "Order Information",
+    "paymentMethod": "Payment Method",
+    "deliveryMethod": "Delivery Method",
+    "totalLabel": "Order Total"
+  },
+
+  "orderItems": {
+    "title": "Order Items"
+  },
+
+  "deliveryProgress": {
+    "title": "Delivery Progress"
+  },
+  "progress": {
+    "orderConfirmed": "Order Confirmed",
+    "outForDelivery": "Out for Delivery",
+    "delivered": "Delivered"
+  },
+
+  "pickupProgress": {
+    "title": "Pickup Progress"
+  },
+
+  "currentStatusLabel": "Current Status",
+  "pickup": {
+    "cancelledTitle": "Order Cancelled",
+    "cancelledMessage": "Order has been cancelled",
+    "awaitingConfirmationTitle": "⏳ Awaiting Farmer Confirmation",
+    "preparingMessage": "Farmer is preparing your items for pickup.",
+    "confirmedTitle": "⏳ Order has been confirmed",
+    "preparedMessage": "Farmer has prepared your items for pickup.",
+    "outForPickupTitle": "🎯 Out for Your Pickup",
+    "headingToFarmer": "Heading to the farmer's location to collect them.",
+    "completeTitle": "✅ Pickup Complete",
+    "locationTitle": "📍 Pickup Location Details",
+    "locationMessage": "Please coordinate with the farmer for pickup timing. Items will be ready once the farmer confirms."
+  },
+
+  "farmerInfo": {
+    "title": "Farmer Information",
+    "name": "Farmer Name",
+    "location": "Farmer Location"
+  },
+
+  "actions": {
+    "contact": "Contact",
+    "share": "Share",
+    "cancelOrder": "Cancel Order",
+    "outForPickup": "Out for Pickup",
+    "confirmPickup": "Confirm Pickup",
+    "proceedPayment": "Proceed Payment"
+  },
+
+  "delivery": {
+    "pickupByYou": "Pickup by You",
+    "deliveredByFarmer": "Delivered by Farmer"
+  },
+  "cancelled": {
+    "banner": "This order has been cancelled"
+  },
+  "completed": {
+    "banner": "Order completed successfully ✅"
+  },
+
+  "toasts": {
+    "loadFailed": "Failed to load order details",
+    "statusChanged": "Order has been {status} successfully",
+    "changeStatusFailed": "Failed to change order status",
+    "outForPickup": "Order marked as out for pickup",
+    "outForPickupFailed": "Failed to mark order out for pickup",
+    "pickupConfirmed": "Order pickup confirmed",
+    "confirmPickupFailed": "Failed to confirm pickup",
+    "comingSoon": "Coming soon"
+  },
+
+  "notifications": {
+    "farmerTitle": "Buyer has {status} the Order",
+    "farmerMessage": "Buyer {buyerName} has {status} the order",
+    "outForPickupTitle": "Order is out for Pickup",
+    "outForPickupMessage": "Buyer {buyerName} is out for pickup",
+    "pickupTitle": "Order Picked Up",
+    "pickupMessage": "Buyer {buyerName} has picked up the order"
+  },
+
+  "notFound": {
+    "title": "Order Not Found",
+    "message": "We couldn't find the order you're looking for. Please check the order ID and try again."
+  }
+}
