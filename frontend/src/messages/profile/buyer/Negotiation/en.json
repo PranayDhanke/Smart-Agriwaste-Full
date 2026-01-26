@@ -8,8 +8,8 @@
   "empty": {
     "title": "No negotiations yet",
     "desc": "Your negotiation requests will appear here"
-  },
-  "label": {
+  }, 
+  "label": { 
     "farmer": "Farmer:"
   },
   "stats": {
@@ -18,7 +18,7 @@
     "moisture": "Moisture"
   },
   "discount": {
-    "text": "You requested {percent} lower price (₹{diff} difference)"
+    "text": "You requested {percent}% lower than actual price (₹{diff} difference)"
   },
   "actions": {
     "waiting": "Waiting for farmer response",

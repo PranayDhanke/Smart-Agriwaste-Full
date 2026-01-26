@@ -21,79 +21,116 @@ export const listNegotiations = async (req: Request, res: Response) => {
 };
 
 export const getNegotiationsByFarmer = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const farmerId = req.params.id;
 
-  if (!id) {
+  if (!farmerId) {
     throw new AppError("No farmer ID provided", 400);
   }
 
-  const { cursor } = req.query;
-  const limit = Math.min(parseInt(req.query.limit as string) | 9, 50);
+  const { cursor, status, search, limit: limitRaw } = req.query;
 
-  const query = cursor
-    ? { farmerId: id, _id: { $lt: cursor } }
-    : { farmerId: id };
+  const limit = Math.min(Number(limitRaw) || 5, 50);
 
-  const negotationData = await negotiation
-    .find(query)
+  const baseFilter: any = { farmerId };
+
+  if (search) {
+    baseFilter.$or = [
+      { "item.title.en": { $regex: search, $options: "i" } },
+      { buyerName: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  /* 🔢 GLOBAL STATS (no cursor!) */
+  const [pending, accepted, rejected] = await Promise.all([
+    negotiation.countDocuments({ ...baseFilter, status: "pending" }),
+    negotiation.countDocuments({ ...baseFilter, status: "accepted" }),
+    negotiation.countDocuments({ ...baseFilter, status: "rejected" }),
+  ]);
+
+  /* 🧠 PAGINATED QUERY (with status + cursor) */
+  const pageFilter: any = { ...baseFilter };
+
+  if (status) pageFilter.status = status;
+  if (cursor) pageFilter._id = { $lt: cursor };
+
+  const negotiations = await negotiation
+    .find(pageFilter)
     .sort({ _id: -1 })
     .limit(limit + 1);
 
-  const hasNext = negotationData.length > limit;
-  if (hasNext) negotationData.pop();
-
-  if (!negotationData) {
-    throw new AppError("No negotiation data found for this farmer", 404);
-  }
+  const hasNext = negotiations.length > limit;
+  if (hasNext) negotiations.pop();
 
   res.status(200).json({
     success: true,
-    data: negotationData,
+    data: negotiations,
+    stats: {
+      pending,
+      accepted,
+      rejected,
+      total: pending + accepted + rejected,
+    },
     pagination: {
-      nextCursor: hasNext
-        ? negotationData[negotationData.length - 1]._id
-        : null,
-      limit,
       hasNext,
+      nextCursor: hasNext ? negotiations[negotiations.length - 1]._id : null,
+      limit,
     },
   });
 };
 
 export const getNegotiationsByBuyer = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const buyerId = req.params.id;
 
-  if (!id) {
-    throw new AppError("No buyer ID provided", 400);
+  if (!buyerId) {
+    throw new AppError("No farmer ID provided", 400);
   }
 
-  const { cursor } = req.query;
-  const limit = Math.min(parseInt(req.query.limit as string) | 9, 50);
+  const { cursor, status, search, limit: limitRaw } = req.query;
 
-  const query = cursor
-    ? { buyerId: id, _id: { $lt: cursor } }
-    : { buyerId: id };
+  const limit = Math.min(Number(limitRaw) || 5, 50);
 
-  const negotationData = await negotiation
-    .find(query)
+  const baseFilter: any = { buyerId };
+
+  if (search) {
+    baseFilter.$or = [
+      { "item.title.en": { $regex: search, $options: "i" } },
+      { buyerName: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  /* 🔢 GLOBAL STATS (no cursor!) */
+  const [pending, accepted, rejected] = await Promise.all([
+    negotiation.countDocuments({ ...baseFilter, status: "pending" }),
+    negotiation.countDocuments({ ...baseFilter, status: "accepted" }),
+    negotiation.countDocuments({ ...baseFilter, status: "rejected" }),
+  ]);
+
+  /* 🧠 PAGINATED QUERY (with status + cursor) */
+  const pageFilter: any = { ...baseFilter };
+
+  if (status) pageFilter.status = status;
+  if (cursor) pageFilter._id = { $lt: cursor };
+
+  const negotiations = await negotiation
+    .find(pageFilter)
     .sort({ _id: -1 })
     .limit(limit + 1);
 
-  if (!negotationData) {
-    throw new AppError("No negotiation data found for this buyer", 404);
-  }
-
-  const hasNext = negotationData.length > limit;
-  if (hasNext) negotationData.pop();
-
+  const hasNext = negotiations.length > limit;
+  if (hasNext) negotiations.pop();
   res.status(200).json({
     success: true,
-    data: negotationData,
+    data: negotiations,
+    stats: {
+      pending,
+      accepted,
+      rejected,
+      total: pending + accepted + rejected,
+    },
     pagination: {
-      nextCursor: hasNext
-        ? negotationData[negotationData.length - 1]._id
-        : null,
-      limit,
       hasNext,
+      nextCursor: hasNext ? negotiations[negotiations.length - 1]._id : null,
+      limit,
     },
   });
 };

@@ -45,12 +45,16 @@ export interface Negotiation {
 }
 
 export interface NegotiationListResponse {
-  success: boolean;
   data: Negotiation[];
+  stats: {
+    pending: number;
+    accepted: number;
+    rejected: number;
+    total: number;
+  };
   pagination: {
-    nextCursor: string | null;
-    limit: number;
     hasNext: boolean;
+    nextCursor?: string;
+    limit: number;
   };
 }
-

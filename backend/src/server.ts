@@ -1,5 +1,4 @@
 import app from "./app";
-import { getMessages } from "./controllers/messages.controller";
 import { mongoConnect } from "./lib/db";
 import { initSocket } from "./lib/socket";
 import http from "http";

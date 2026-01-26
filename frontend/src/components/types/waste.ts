@@ -15,6 +15,13 @@ export interface Address {
   village: string;
 }
 
+export interface seller {
+  farmerId: string;
+  name: string;
+  phone: string;
+  email: string;
+}
+
 export interface Waste {
   _id: string;
   title: TranslatedString;
@@ -28,12 +35,7 @@ export interface Waste {
   imageUrl: string;
   unit: string;
   isActive: boolean;
-  seller: {
-    farmerId: string;
-    name: string;
-    phone: string;
-    email: string;
-  };
+  seller: seller;
   address: Address;
   createdAt?: string;
 }

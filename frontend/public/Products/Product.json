@@ -1,137 +1,137 @@
 {
   "crop": {
     "grain_crop": [
-      "wheat",
-      "rice",
-      "maize",
-      "jowar",
-      "bajra",
-      "ragi",
-      "barley",
-      "oats"
+      { "name": "wheat", "icon": "🌾" },
+      { "name": "rice", "icon": "🍚" },
+      { "name": "maize", "icon": "🌽" },
+      { "name": "jowar", "icon": "🌾" },
+      { "name": "bajra", "icon": "🌾" },
+      { "name": "ragi", "icon": "🌾" },
+      { "name": "barley", "icon": "🌾" },
+      { "name": "oats", "icon": "🌾" }
     ],
 
     "pulses": [
-      "toor",
-      "moong",
-      "udad",
-      "chana",
-      "masoor",
-      "rajma",
-      "peas",
-      "soybean"
+      { "name": "toor", "icon": "🫘" },
+      { "name": "moong", "icon": "🫘" },
+      { "name": "udad", "icon": "🫘" },
+      { "name": "chana", "icon": "🫘" },
+      { "name": "masoor", "icon": "🫘" },
+      { "name": "rajma", "icon": "🫘" },
+      { "name": "peas", "icon": "🟢" },
+      { "name": "soybean", "icon": "🫘" }
     ],
 
     "oil_seeds": [
-      "soybean",
-      "sunflower",
-      "groundnut",
-      "mustard",
-      "sesame",
-      "castor",
-      "safflower",
-      "niger_seed"
+      { "name": "soybean", "icon": "🫛" },
+      { "name": "sunflower", "icon": "🌻" },
+      { "name": "groundnut", "icon": "🥜" },
+      { "name": "mustard", "icon": "🌼" },
+      { "name": "sesame", "icon": "⚪" },
+      { "name": "castor", "icon": "🌱" },
+      { "name": "safflower", "icon": "🌼" },
+      { "name": "niger_seed", "icon": "🌱" }
     ],
 
     "commercial": [
-      "sugarcane",
-      "cotton",
-      "tobacco",
-      "tea",
-      "coffee",
-      "rubber",
-      "jute"
+      { "name": "sugarcane", "icon": "🍬" },
+      { "name": "cotton", "icon": "☁️" },
+      { "name": "tobacco", "icon": "🍃" },
+      { "name": "tea", "icon": "🍵" },
+      { "name": "coffee", "icon": "☕" },
+      { "name": "rubber", "icon": "🌳" },
+      { "name": "jute", "icon": "🧵" }
     ],
 
     "fodder": [
-      "berseem",
-      "lucerne",
-      "napier_grass",
-      "sorghum_fodder"
+      { "name": "berseem", "icon": "🌿" },
+      { "name": "lucerne", "icon": "🌿" },
+      { "name": "napier_grass", "icon": "🌱" },
+      { "name": "sorghum_fodder", "icon": "🌾" }
     ],
 
     "plantation": [
-      "tea",
-      "coffee",
-      "coconut",
-      "rubber"
+      { "name": "tea", "icon": "🍵" },
+      { "name": "coffee", "icon": "☕" },
+      { "name": "coconut", "icon": "🥥" },
+      { "name": "rubber", "icon": "🌳" }
     ],
 
     "horticulture": [
-      "rose",
-      "marigold",
-      "jasmine",
-      "sunflower",
-      "aloe_vera",
-      "tulsi",
-      "ashwagandha"
+      { "name": "rose", "icon": "🌹" },
+      { "name": "marigold", "icon": "🌼" },
+      { "name": "jasmine", "icon": "🌸" },
+      { "name": "sunflower", "icon": "🌻" },
+      { "name": "aloe_vera", "icon": "🌵" },
+      { "name": "tulsi", "icon": "🌿" },
+      { "name": "ashwagandha", "icon": "🌿" }
     ]
   },
 
   "vegetable": {
     "leafy": [
-      "spinach",
-      "fenugreek",
-      "amaranthus",
-      "cabbage",
-      "lettuce"
+      { "name": "spinach", "icon": "🥬" },
+      { "name": "fenugreek", "icon": "🌿" },
+      { "name": "amaranthus", "icon": "🌿" },
+      { "name": "cabbage", "icon": "🥬" },
+      { "name": "lettuce", "icon": "🥬" }
     ],
 
     "root_bulb": [
-      "potato",
-      "onion",
-      "garlic",
-      "carrot",
-      "beetroot",
-      "radish"
+      { "name": "potato", "icon": "🥔" },
+      { "name": "onion", "icon": "🧅" },
+      { "name": "garlic", "icon": "🧄" },
+      { "name": "carrot", "icon": "🥕" },
+      { "name": "beetroot", "icon": "🍠" },
+      { "name": "radish", "icon": "🌱" }
     ],
 
     "fruit_vegetable": [
-      "tomato",
-      "brinjal",
-      "capsicum",
-      "chillies",
-      "pumpkin",
-      "bottle_gourd",
-      "ridge_gourd",
-      "bitter_gourd",
-      "cucumber",
-      "okra"
+      { "name": "tomato", "icon": "🍅" },
+      { "name": "brinjal", "icon": "🍆" },
+      { "name": "capsicum", "icon": "🫑" },
+      { "name": "chillies", "icon": "🌶️" },
+      { "name": "pumpkin", "icon": "🎃" },
+      { "name": "bottle_gourd", "icon": "🥒" },
+      { "name": "ridge_gourd", "icon": "🥒" },
+      { "name": "bitter_gourd", "icon": "🥒" },
+      { "name": "cucumber", "icon": "🥒" },
+      { "name": "okra", "icon": "🌱" }
     ],
 
     "others": [
-      "cauliflower",
-      "broccoli",
-      "beans",
-      "peas"
+      { "name": "cauliflower", "icon": "🥦" },
+      { "name": "broccoli", "icon": "🥦" },
+      { "name": "beans", "icon": "🫘" },
+      { "name": "peas", "icon": "🟢" }
     ]
   },
 
   "fruit": {
     "tropical": [
-      "mango",
-      "banana",
-      "papaya",
-      "guava",
-      "pineapple",
-      "coconut"
+      { "name": "mango", "icon": "🥭" },
+      { "name": "banana", "icon": "🍌" },
+      { "name": "papaya", "icon": "🍈" },
+      { "name": "guava", "icon": "🍏" },
+      { "name": "pineapple", "icon": "🍍" },
+      { "name": "coconut", "icon": "🥥" }
     ],
 
     "citrus": [
-      "orange",
-      "lemon",
-      "mosambi"
+      { "name": "orange", "icon": "🍊" },
+      { "name": "lemon", "icon": "🍋" },
+      { "name": "mosambi", "icon": "🍊" }
     ],
 
     "temperate": [
-      "apple",
-      "pear",
-      "plum"
+      { "name": "apple", "icon": "🍎" },
+      { "name": "pear", "icon": "🍐" },
+      { "name": "plum", "icon": "🍑" }
     ],
 
     "melons": [
-      "watermelon",
-      "muskmelon"
+      { "name": "watermelon", "icon": "🍉" },
+      { "name": "muskmelon", "icon": "🍈" }
     ]
   }
 }

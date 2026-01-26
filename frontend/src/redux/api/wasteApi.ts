@@ -15,6 +15,7 @@ export const wasteApi = baseApi.injectEndpoints({
         url: `/waste/get-wastes`,
         params: { cursor, limit },
       }),
+
       providesTags: (result) =>
         result
           ? [
@@ -79,9 +80,7 @@ export const wasteApi = baseApi.injectEndpoints({
         url: `/waste/delete/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [
-        { type: "Waste", id: "FARMER_LIST" },
-      ],
+      invalidatesTags: [{ type: "Waste", id: "FARMER_LIST" }],
     }),
   }),
   overrideExisting: false,

@@ -8,6 +8,8 @@ import { LocalizationResource } from "@clerk/types";
 import { AuthProvider } from "@/components/Extra/AuthProvider";
 import Footer from "@/components/page/home/Footer";
 import Header from "@/components/page/Header/Header";
+import OneSignalProvider from "@/components/provider/OneSignalProvider";
+import FloatingCart from "@/components/page/marketplace/FlotingCart";
 
 export default function Providers({
   children,
@@ -23,9 +25,11 @@ export default function Providers({
         publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       >
         <Toaster position="top-center" />
+        <OneSignalProvider />
         <Header />
         <AuthProvider />
         {children}
+        <FloatingCart />
         <Footer />
       </ClerkProvider>
     </Provider>

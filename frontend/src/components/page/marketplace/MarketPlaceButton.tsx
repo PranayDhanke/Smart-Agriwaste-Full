@@ -3,14 +3,19 @@ import React, { useState } from "react";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 
 import { toast } from "sonner";
-import { useTranslations } from "use-intl";
+import { useLocale, useTranslations } from "use-intl";
 import { Waste } from "@/components/types/waste";
 import { Button } from "@/components/ui/button";
 import NegotiationPanel from "./NegotiationPanel";
 import { Link } from "@/i18n/navigation";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/features/cartSlice";
+import { CartItem } from "@/components/types/order";
 
 const MarketPlaceButton = ({ p }: { p: Waste }) => {
+  const locale = useLocale() as "en" | "mr" | "hi";
   const { user } = useUser();
+  const dispatch = useDispatch();
   const role = user?.unsafeMetadata.role;
 
   const t = useTranslations("marketplace.Marketplace");
@@ -21,7 +26,28 @@ const MarketPlaceButton = ({ p }: { p: Waste }) => {
   };
 
   const handleAddToCart = (item: Waste) => {
-    toast.success(`${item.title} added to cart`);
+    const u: CartItem = {
+      description: item.description,
+      image: item.imageUrl,
+      maxQuantity: item.quantity,
+      moisture: item.moisture,
+      price: item.price,
+      prodId: item._id,
+      quantity: 1,
+      sellerInfo: {
+        address: item.address,
+        seller: {
+          farmerName: item.seller.name,
+          ...item.seller,
+        },
+      },
+      title: item.title,
+      unit: item.unit,
+      wasteProduct: item.wasteProduct,
+      wasteType: item.wasteType,
+    };
+    dispatch(addToCart(u));
+    toast.success(`${item.title[locale]} added to cart`);
   };
   return (
     <div className=" flex items-center justify-between">

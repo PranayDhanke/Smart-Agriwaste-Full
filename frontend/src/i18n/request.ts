@@ -41,7 +41,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       profile: {
         buyer: {
           CreateAccount: (await import(`../messages/profile/buyer/CreateAccount/${locale}.json`)).default,
-          Negotions: (await import(`../messages/profile/buyer/Negotions/${locale}.json`)).default,
+          Negotiation: (await import(`../messages/profile/buyer/Negotiation/${locale}.json`)).default,
           MyPurchases: (await import(`../messages/profile/buyer/MyPurchases/${locale}.json`)).default,
           Profile: (await import(`../messages/profile/buyer/Profile/${locale}.json`)).default,
           SinglePurchase: (await import(`../messages/profile/buyer/SinglePurchase/${locale}.json`)).default,

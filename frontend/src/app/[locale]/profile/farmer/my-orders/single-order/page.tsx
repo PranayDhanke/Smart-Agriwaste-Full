@@ -1,14 +1,9 @@
-import SingleOrder from "@/modules/profile/farmer/SingleOrder";
-import { connection } from "next/server";
-import React from "react";
+import React from 'react'
 
-const page = async () => {
-  await connection();
+const page = () => {
   return (
-    <div>
-      <SingleOrder />
-    </div>
-  );
-};
+    <div>page</div>
+  )
+}
 
-export default page;
+export default page

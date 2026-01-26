@@ -34,15 +34,21 @@ import {
 import { WasteType } from "@/components/types/waste";
 import { uploadImage } from "@/utils/imagekit";
 import { useCreateWasteMutation } from "@/redux/api/wasteApi";
-import { use, useEffect, useState } from "react";
+import { ReactElement, use, useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useLazyGetProfileQuery } from "@/redux/api/authApi";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 export default function ListWaste() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const { address, user: farmerUser } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const {
     register,
@@ -59,20 +65,6 @@ export default function ListWaste() {
   if (isLoaded && !user) {
     router.push("/sign-in");
   }
-
-  const [
-    getProfile,
-    { data, isLoading: laoding, isFetching, isSuccess: success },
-  ] = useLazyGetProfileQuery();
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!user?.id) return;
-
-    const role = user?.unsafeMetadata?.role;
-    if (!role) return;
-
-    getProfile({ id: user.id, role: role as string });
-  }, [isLoaded, user?.id, user?.unsafeMetadata?.role]);
 
   const [file, setFile] = useState<File | null>(null);
 
@@ -96,16 +88,18 @@ export default function ListWaste() {
   };
 
   const onSubmit = async (wasteData: wasteFormDataType) => {
-    if (!data?.accountdata) {
-      toast.error("Profile not loaded yet. Please wait.");
+    if (!address && !farmerUser) {
+      toast.error(
+        "Error while loading the farmer data please refresh the page",
+      );
       return;
     }
-
     if (!file) {
       toast.error("Please select an image first");
       return;
     }
-    toast.loading(t("messages.uploadingImage"));
+
+    const toastId = toast.loading(t("messages.uploadingImage"));
 
     const upload = await uploadImage(
       file,
@@ -118,29 +112,20 @@ export default function ListWaste() {
       return;
     }
 
-    if (upload) {
-      toast.dismiss();
-    }
+    toast.dismiss(toastId);
 
     createWaste({
-      address: {
-        district: data?.accountdata.district,
-        houseBuildingName: data?.accountdata.houseBuildingName,
-        roadarealandmarkName: data?.accountdata.roadarealandmarkName,
-        state: data?.accountdata.state,
-        taluka: data?.accountdata.taluka,
-        village: data?.accountdata.village,
-      },
       description: wasteData.description,
       imageUrl: upload,
       moisture: wasteData.moisture,
       price: wasteData.price,
       quantity: wasteData.quantity,
+      address: address,
       seller: {
-        email: data?.accountdata.email,
-        farmerId: data?.accountdata.farmerId,
-        name: user?.fullName || "",
-        phone: data?.accountdata.phone,
+        email: farmerUser?.email,
+        phone: farmerUser?.phone,
+        name: farmerUser?.name,
+        farmerId: farmerUser?.id,
       },
       title: wasteData.title,
       unit: wasteData.unit,
@@ -194,9 +179,14 @@ export default function ListWaste() {
     </div>
   );
 
-  if (!user) return <p className="text-center py-10">Loading User...</p>;
-  if (isFetching && laoding && !success)
-    return <p className="text-center py-10">Fetching data </p>;
+  if (!isLoaded || !address || !farmerUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin mr-2" />
+        <span>Loading profile...</span>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -386,38 +376,31 @@ export default function ListWaste() {
                       >
                         Select product <span className="text-red-500">*</span>
                       </Label>
-                      <Select
-                        value={formValues.wasteProduct}
-                        onValueChange={(value) =>
-                          setValue("wasteProduct", value, {
-                            shouldValidate: true,
-                          })
-                        }
-                      >
-                        <SelectTrigger
-                          id="wasteProduct"
-                          className={`h-12 text-base rounded-lg border-2 transition-all ${
-                            formValues.wasteProduct
-                              ? "border-green-300 bg-green-50/30"
-                              : "border-gray-200"
-                          } ${errors.wasteProduct ? "border-red-500" : ""}`}
-                        >
-                          <SelectValue placeholder="Choose a product" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {selectedWasteType &&
-                            formValues.wasteCategory &&
-                            (productCategoryMap as any)[selectedWasteType][
-                              formValues.wasteCategory
-                            ].map((item: string) => (
-                              <SelectItem key={item} value={item}>
-                                {c(
-                                  `productSet.${selectedWasteType}.${formValues.wasteCategory}.${item}`,
-                                )}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {(productCategoryMap as any)[watch("wasteType")][
+                          watch("wasteCategory")
+                        ].map((item: { name: string; icon: ReactElement }) => (
+                          <button
+                            key={item.name}
+                            type="button"
+                            onClick={() => setValue("wasteProduct", item.name)}
+                            className={`p-3 rounded-lg border-2 transition-all text-xs sm:text-sm font-medium flex flex-col items-center gap-2 ${
+                              formValues.wasteProduct === item.name
+                                ? "border-green-500 bg-green-50 shadow-md"
+                                : "border-gray-200 bg-white hover:border-green-300"
+                            }`}
+                          >
+                            <span className="text-2xl">{item.icon}</span>
+                            <span className="text-gray-900">
+                              {c(
+                                `productSet.${watch("wasteType")}.${watch(
+                                  "wasteCategory",
+                                )}.${item.name}`,
+                              )}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                       {errors.wasteProduct && (
                         <p className="text-sm text-red-500 flex items-center gap-1">
                           <AlertCircle className="w-4 h-4" />{" "}

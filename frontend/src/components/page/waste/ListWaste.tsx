@@ -18,7 +18,7 @@ import { useLazyGetWastesByFarmerQuery } from "@/redux/api/wasteApi";
 const PAGE_SIZE = 12;
 
 export default function MyListing() {
-  const { isLoaded, user } = useUser();
+  const { isLoaded, user, isSignedIn } = useUser();
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<WasteType | "all">("all");
 
@@ -35,23 +35,28 @@ export default function MyListing() {
 
   const cursor = cursorMap[page];
 
-  const [getWastesByFarmer, { data, isFetching, isLoading, isSuccess }] =
+  const [getWastesByFarmer, { data, isFetching, isLoading, isUninitialized }] =
     useLazyGetWastesByFarmerQuery();
 
   useEffect(() => {
-    if (isLoaded && user?.id) {
-      getWastesByFarmer({
-        farmerId: user.id,
-        cursor,
-        limit: PAGE_SIZE,
-      });
+    if (!isLoaded || !user?.id) return;
+
+    if (isUninitialized || page === 1 || cursor) {
+      getWastesByFarmer(
+        {
+          farmerId: user.id,
+          cursor,
+          limit: PAGE_SIZE,
+        },
+        true,
+      );
     }
-  }, [user?.id, isLoaded]);
+  }, [isLoaded, user?.id, page, cursor, isUninitialized, getWastesByFarmer]);
 
   useEffect(() => {
-    const nextCursor = data?.pagination?.nextCursor ?? undefined;
+    const nextCursor = data?.pagination?.nextCursor;
 
-    if (data?.pagination?.hasNext && nextCursor) {
+    if (data?.pagination?.hasNext && nextCursor && !cursorMap[page + 1]) {
       setCursorMap((prev) => ({
         ...prev,
         [page + 1]: nextCursor,
@@ -59,7 +64,7 @@ export default function MyListing() {
     }
   }, [data, page]);
 
-  const filteredListings = data?.wastedata.filter((item) => {
+  const filteredListings = data?.wastedata?.filter((item) => {
     const title = item.title?.[locale] || "";
     const matchesSearch = title.toLowerCase().includes(search.toLowerCase());
     const matchesType =
@@ -67,7 +72,22 @@ export default function MyListing() {
     return matchesSearch && matchesType;
   });
 
-  if (isLoading) return <p>loading...</p>;
+  if (!user && !isLoaded && !isSignedIn) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      </div>
+    );
+  }
+
+  if (isLoading || isFetching) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      </div>
+    );
+  }
+
   return (
     <main className=" bg-gradient-to-br from-gray-50 to-green-50/30 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
@@ -79,7 +99,6 @@ export default function MyListing() {
           </h1>
           <p className="text-gray-600">{t("subtitle")}</p>
         </div>
-
         {/* Search Bar */}
         <div className="mb-4">
           <div className="relative">
@@ -100,7 +119,6 @@ export default function MyListing() {
             )}
           </div>
         </div>
-
         {/* Type Filters */}
         <div className="flex gap-2 mb-6">
           {(["all", "crop", "vegetable", "fruit"] as const).map((type) => (
@@ -114,7 +132,6 @@ export default function MyListing() {
             </Button>
           ))}
         </div>
-
         {/* Results Count */}
         <div className="mb-4">
           <p className="text-sm text-gray-600">
@@ -123,19 +140,16 @@ export default function MyListing() {
             </span>{" "}
             {t("subs.of")}{" "}
             <span className="font-semibold">
-              {data?.wastedata.length || "0"}
+              {data?.wastedata?.length || "0"}
             </span>{" "}
             {t("subs.listing")}
           </p>
         </div>
-
-        {isSuccess && (
-          <ListingsGrid
-            isMarketPlace={false}
-            loading={isFetching}
-            wastes={filteredListings}
-          />
-        )}
+        <ListingsGrid
+          isMarketPlace={false}
+          loading={isFetching || !user || !isLoaded || isLoading}
+          wastes={filteredListings}
+        />
 
         <section className="p-10">
           <WastePagination

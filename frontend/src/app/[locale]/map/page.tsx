@@ -1,8 +1,11 @@
+import Map from '@/components/common/Map'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+        <Map />
+    </div>
   )
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ReactElement, ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -288,29 +288,25 @@ export default function Process() {
                                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                     {(ProductList as any)[watch("wasteType")][
                                       watch("wasteCategory")
-                                    ].map((item: string) => (
+                                    ].map((item:{name:string , icon:ReactElement}) => (
                                       <button
-                                        key={item}
+                                        key={item.name}
                                         type="button"
                                         onClick={() => field.onChange(item)}
                                         className={`p-3 rounded-lg border-2 transition-all text-xs sm:text-sm font-medium flex flex-col items-center gap-2 ${
-                                          field.value === item
+                                          field.value === item.name
                                             ? "border-green-500 bg-green-50 shadow-md"
                                             : "border-gray-200 bg-white hover:border-green-300"
                                         }`}
                                       >
                                         <span className="text-2xl">
-                                          {item === "rice"
-                                            ? "🍚"
-                                            : item === "wheat"
-                                              ? "🌾"
-                                              : "🥕"}
+                                         {item.icon}
                                         </span>
                                         <span className="text-gray-900">
                                           {c(
                                             `productSet.${watch("wasteType")}.${watch(
                                               "wasteCategory",
-                                            )}.${item}`,
+                                            )}.${item.name}`,
                                           )}
                                         </span>
                                       </button>

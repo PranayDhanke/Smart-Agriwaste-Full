@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"agri-api/config"
@@ -22,10 +23,9 @@ func main() {
 
 	router := gin.Default()
 
-	// ✅ CORS CONFIGURATION
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"http://localhost:3000", // Next.js frontend
+			"http://localhost:3000",
 		},
 		AllowMethods: []string{
 			"GET", "POST", "PUT", "DELETE", "OPTIONS",
@@ -44,5 +44,11 @@ func main() {
 
 	routes.RegisterRoutes(router)
 
-	router.Run(":4000")
+	// ✅ IMPORTANT FOR AZURE
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4000" // local development
+	}
+
+	router.Run(":" + port)
 }

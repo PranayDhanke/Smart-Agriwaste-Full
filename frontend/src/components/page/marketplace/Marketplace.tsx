@@ -31,7 +31,7 @@ import {
 import { FilterState, Waste, WasteType } from "@/components/types/waste";
 import ListingsGrid from "@/components/common/list/Listing";
 import { useGetWastesQuery } from "@/redux/api/wasteApi";
-import WastePagination from "@/components/common/Pagination";
+import Paginations from "@/components/common/Pagination";
 const categoryMeta: Record<
   WasteType,
   { label: string; icon: JSX.Element; color: string; bgColor: string }
@@ -395,7 +395,7 @@ export default function Marketplace() {
         />
       </section>
       <section className="p-10">
-        <WastePagination
+        <Paginations
           page={page}
           onPageChange={setPage}
           hasNext={!!data?.pagination?.hasNext}

@@ -8,13 +8,25 @@ export const negotiationApi = baseApi.injectEndpoints({
     /* ---------- QUERIES ---------- */
 
     // Farmer negotiations (cursor pagination)
+    // Farmer negotiations (cursor pagination + filters)
     getNegotiationsByFarmer: builder.query<
       NegotiationListResponse,
-      { farmerId: string; cursor?: string; limit?: number }
+      {
+        farmerId: string;
+        cursor?: string;
+        limit?: number;
+        status?: "pending" | "accepted" | "rejected";
+        search?: string;
+      }
     >({
-      query: ({ farmerId, cursor, limit = 9 }) => ({
+      query: ({ farmerId, cursor, limit = 5, status, search }) => ({
         url: `/negotiation/get-negotiation/farmer/${farmerId}`,
-        params: { cursor, limit },
+        params: {
+          cursor,
+          limit,
+          status,
+          search,
+        },
       }),
       providesTags: (result) =>
         result
@@ -31,16 +43,22 @@ export const negotiationApi = baseApi.injectEndpoints({
     // Buyer negotiations (cursor pagination)
     getNegotiationsByBuyer: builder.query<
       NegotiationListResponse,
-      { buyerId: string; cursor?: string; limit?: number }
+      {
+        buyerId: string;
+        cursor?: string;
+        limit?: number;
+        status?: "pending" | "accepted" | "rejected";
+        search?: string;
+      }
     >({
-      query: ({ buyerId, cursor, limit = 9 }) => ({
+      query: ({ buyerId, cursor, limit = 5, status, search }) => ({
         url: `/negotiation/get-negotiation/buyer/${buyerId}`,
-        params: { cursor, limit },
+        params: { cursor, limit, status, search },
       }),
       providesTags: (result) =>
         result
           ? [
-              ...result.data.map((n) => ({
+              ...result?.data?.map((n) => ({
                 type: "Negotiation" as const,
                 id: n._id,
               })),
@@ -92,8 +110,8 @@ export const negotiationApi = baseApi.injectEndpoints({
 ======================= */
 
 export const {
-  useGetNegotiationsByFarmerQuery,
-  useGetNegotiationsByBuyerQuery,
+  useLazyGetNegotiationsByFarmerQuery,
+  useLazyGetNegotiationsByBuyerQuery,
   useCreateNegotiationMutation,
   useUpdateNegotiationStatusMutation,
 } = negotiationApi;

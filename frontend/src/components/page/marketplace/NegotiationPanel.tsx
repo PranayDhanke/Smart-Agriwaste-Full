@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
@@ -31,7 +31,8 @@ const NegotiationPanel = ({
   const [price, setPrice] = useState<number | "">("");
   const t = useTranslations("marketplace.NegotiationPanel");
   const { user } = useUser();
-  const [createNegotiation, { isLoading }] = useCreateNegotiationMutation();
+  const [createNegotiation, { isLoading, isSuccess }] =
+    useCreateNegotiationMutation();
   const [sendNotification] = useSendNotificationMutation();
 
   const handleSubmit = async () => {
@@ -74,19 +75,25 @@ const NegotiationPanel = ({
           },
         },
       }).unwrap();
-      sendNotification({
-        data: {
-          userId: item.seller.farmerId.replace("fam_", "user_"), // farmer receives notification
-          title: "New Negotiation Request",
-          message: `Buyer ${user?.fullName} sent a negotiation request for the Product ${item.title}`,
-          type: "negotiation",
-        },
-      }).unwrap();
-      toast.success("Negotiation request sent successfully");
     } catch {
       toast.error("Failed to send negotiation");
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      sendNotification({
+        data: {
+          userId: item.seller.farmerId,
+          title: "New Negotiation Request",
+          message: `Buyer ${user?.fullName} sent a negotiation request for the Product ${item.title.en}`,
+          type: "negotiation",
+        },
+      }).unwrap();
+      toast.success("Negotiation request sent successfully");
+
+    }
+  }, [isSuccess]);
 
   return (
     <Card

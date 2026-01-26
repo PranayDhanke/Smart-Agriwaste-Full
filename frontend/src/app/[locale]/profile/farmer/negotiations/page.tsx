@@ -1,10 +1,9 @@
-import Negotiation from '@/modules/profile/farmer/Negotiation'
-import React from 'react'
+import FarmerNegotiation from "@/components/page/Negotiation/farmer/FarmerNegotiation"
 
 const page = () => {
   return (
     <div>
-        <Negotiation />
+        <FarmerNegotiation />
     </div>
   )
 }

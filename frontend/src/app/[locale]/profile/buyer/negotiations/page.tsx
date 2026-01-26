@@ -1,10 +1,9 @@
-import Negotions from "@/modules/profile/buyer/Negotions";
-import React from "react";
+import BuyerNegotiationsPage from "@/components/page/Negotiation/buyer/BuyerNegotiation";
 
 const page = () => {
   return (
     <div>
-      <Negotions />
+      <BuyerNegotiationsPage />
     </div>
   );
 };
