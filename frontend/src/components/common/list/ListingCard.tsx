@@ -74,7 +74,7 @@ export default function ListingCard({
           </h3>
           <p className="text-xs text-gray-500">
             {c(
-              `productSet.${item.wasteType}.${item.wasteCategory}.${item.wasteProduct}`,
+              `productSet.${item.wasteProduct}`,
             )}
           </p>
         </div>

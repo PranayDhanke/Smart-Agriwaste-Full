@@ -1,61 +1,37 @@
 "use client";
 
-import React, { ReactElement, ReactNode, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
-import {
-  Recycle,
-  Sun,
-  Droplet,
-  Loader,
-  ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  Zap,
-} from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
 import {
   processFormDataType,
   processSchema,
 } from "@/components/types/zod/process.zod";
-import { WasteType } from "@/components/types/waste";
-import ProductList from "@/../public/Products/Product.json";
 import { useLazyGetRecommendationsQuery } from "@/redux/api/agriApi";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import Image from "next/image";
-import VoiceInput from "@/components/provider/VoiceInput";
+  AlertCircle,
+  CheckCircle,
+  ChevronRight,
+  Droplet,
+  DropletOff,
+  Loader,
+  Recycle,
+  Sun,
+  Zap,
+} from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+
+import ProductList from "@/../public/Products/Product.json";
+import { ProcessSelectInput } from "@/components/common/form/ProcessSelectInput";
+import { SelectInput } from "@/components/common/form/SelectInput";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
 export default function Process() {
   const [result, setResult] = useState<any>(null);
-  const [step, setStep] = useState(1); // Step indicator
+  const [step, setStep] = useState(1);
   const locale = useLocale() as "en" | "mr" | "hi";
   const t = useTranslations("process");
   const c = useTranslations("wasteCommon");
@@ -65,8 +41,22 @@ export default function Process() {
   });
 
   const { control, handleSubmit, watch, setValue, reset } = form;
+  const wasteType = watch("wasteType")
+  const wasteCategory = watch("wasteCategory")
 
-  const [getRecommendations, { isLoading, isError, isSuccess, error, data }] =
+  useEffect(() => {
+    if (!wasteType) return;
+
+    setValue("wasteCategory", "");
+    setValue("wasteProduct", "");
+  }, [wasteType, setValue]);
+  useEffect(() => {
+    if (!wasteCategory) return;
+
+    setValue("wasteProduct", "");
+  }, [wasteCategory, setValue]);
+
+  const [getRecommendations, { isLoading, isError, error, data }] =
     useLazyGetRecommendationsQuery();
 
   const onSubmit = async (formData: processFormDataType) => {
@@ -118,6 +108,13 @@ export default function Process() {
       ))}
     </div>
   );
+
+  const CategoryObject =
+    wasteType &&
+    Object.keys((ProductList as any)?.[wasteType] ?? {}).map((item) => ({
+      value: item,
+      label: c(`wasteCat.${item}`),
+    }));
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
@@ -176,145 +173,63 @@ export default function Process() {
                       {/* Step 1: Waste Type Selection */}
                       {step === 1 && (
                         <div className="space-y-6 animate-fadeIn">
-                          <FormField
+                          <ProcessSelectInput
+                            isProduct={false}
                             control={control}
+                            label={`${t("form.wasteType")} *`}
                             name="wasteType"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-base font-semibold text-gray-900 mb-3 block">
-                                  {t("form.wasteType")} *
-                                </FormLabel>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                  {[
-                                    {
-                                      value: "crop",
-                                      emoji: "🌾",
-                                      label: c("wasteTypes.crop"),
-                                    },
-                                    {
-                                      value: "vegetable",
-                                      emoji: "🥬",
-                                      label: c("wasteTypes.vegetable"),
-                                    },
-                                    {
-                                      value: "fruit",
-                                      emoji: "🍎",
-                                      label: c("wasteTypes.fruit"),
-                                    },
-                                  ].map((type) => (
-                                    <button
-                                      key={type.value}
-                                      type="button"
-                                      onClick={() => {
-                                        field.onChange(type.value);
-                                        setValue("wasteCategory", "");
-                                        setValue("wasteProduct", "");
-                                      }}
-                                      className={`p-4 rounded-xl border-2 transition-all font-semibold text-sm flex flex-col items-center gap-2 ${
-                                        field.value === type.value
-                                          ? "border-green-500 bg-green-50 shadow-lg scale-105"
-                                          : "border-gray-200 bg-white hover:border-green-300 hover:shadow-md"
-                                      }`}
-                                    >
-                                      <span className="text-3xl">
-                                        {type.emoji}
-                                      </span>
-                                      <span className="text-gray-900">
-                                        {type.label}
-                                      </span>
-                                    </button>
-                                  ))}
-                                </div>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                            option={[
+                              {
+                                value: "crop",
+                                icon: "🌾",
+                                name: c("wasteTypes.crop"),
+                              },
+                              {
+                                value: "vegetable",
+                                icon: "🥬",
+                                name: c("wasteTypes.vegetable"),
+                              },
+                              {
+                                value: "fruit",
+                                icon: "🍎",
+                                name: c("wasteTypes.fruit"),
+                              },
+                            ]}
+                            classNames="grid grid-cols-1 sm:grid-cols-3 gap-3"
+                            key={wasteType}
                           />
 
-                          {watch("wasteType") && (
-                            <FormField
+                          {wasteType && (
+                            <SelectInput
                               control={control}
+                              label={`${t("form.wasteCategory")} *`}
                               name="wasteCategory"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-base font-semibold text-gray-900 mb-3 block">
-                                    {t("form.wasteCategory")} *
-                                  </FormLabel>
-                                  <Select
-                                    value={field.value}
-                                    onValueChange={(v) => {
-                                      field.onChange(v);
-                                      setValue("wasteProduct", "");
-                                    }}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 focus:border-green-500">
-                                        <SelectValue
-                                          placeholder={t(
-                                            "placeholders.selectCategory",
-                                          )}
-                                        />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {watch("wasteType") &&
-                                        Object.keys(
-                                          (ProductList as any)[
-                                            watch("wasteType")
-                                          ],
-                                        ).map((item: string) => (
-                                          <SelectItem key={item} value={item}>
-                                            {c(
-                                              `wasteCat.${watch("wasteType")}.${item}`,
-                                            )}
-                                          </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
+                              placeholder={t("placeholders.selectCategory")}
+                              classname={`w-full text-base rounded-lg border-2 transition-all ${
+                                wasteCategory
+                                  ? "border-green-300 bg-green-50/30"
+                                  : "border-gray-200"
+                              }`}
+                              option={CategoryObject as []}
+                              disabled={!wasteType}
+                              key={wasteCategory}
                             />
                           )}
 
-                          {watch("wasteCategory") && (
-                            <FormField
+                          {wasteType && wasteCategory && (
+                            <ProcessSelectInput
+                              isProduct={true}
                               control={control}
+                              label={`${t("form.wasteProduct")} *`}
+                              classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
                               name="wasteProduct"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-base font-semibold text-gray-900 mb-3 block">
-                                    {t("form.wasteProduct")} *
-                                  </FormLabel>
-                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                    {(ProductList as any)[watch("wasteType")][
-                                      watch("wasteCategory")
-                                    ].map((item:{name:string , icon:ReactElement}) => (
-                                      <button
-                                        key={item.name}
-                                        type="button"
-                                        onClick={() => field.onChange(item)}
-                                        className={`p-3 rounded-lg border-2 transition-all text-xs sm:text-sm font-medium flex flex-col items-center gap-2 ${
-                                          field.value === item.name
-                                            ? "border-green-500 bg-green-50 shadow-md"
-                                            : "border-gray-200 bg-white hover:border-green-300"
-                                        }`}
-                                      >
-                                        <span className="text-2xl">
-                                         {item.icon}
-                                        </span>
-                                        <span className="text-gray-900">
-                                          {c(
-                                            `productSet.${watch("wasteType")}.${watch(
-                                              "wasteCategory",
-                                            )}.${item.name}`,
-                                          )}
-                                        </span>
-                                      </button>
-                                    ))}
-                                  </div>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
+                              option={
+                                (ProductList as any)?.[wasteType]?.[
+                                  wasteCategory
+                                ]
+                              }
+                              disabled={!wasteType && !wasteCategory}
+                              key={wasteCategory + wasteType}
                             />
                           )}
 
@@ -333,112 +248,61 @@ export default function Process() {
                       {/* Step 2: Moisture & Intended Use */}
                       {step === 2 && (
                         <div className="space-y-6 animate-fadeIn">
-                          <FormField
+                          <ProcessSelectInput
+                            classNames="grid grid-cols-1 sm:grid-cols-3 gap-3"
                             control={control}
+                            isProduct={false}
+                            label={`💧 ${t("form.moisture")} *`}
                             name="moisture"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-base font-semibold text-gray-900 mb-4 block">
-                                  💧 {t("form.moisture")} *
-                                </FormLabel>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                  {[
-                                    {
-                                      value: "dry",
-                                      icon: Sun,
-                                      label: c("moisture.dry"),
-                                    },
-                                    {
-                                      value: "semi_wet",
-                                      icon: Droplet,
-                                      label: c("moisture.semi_wet"),
-                                    },
-                                    {
-                                      value: "wet",
-                                      icon: Droplet,
-                                      label: c("moisture.wet"),
-                                    },
-                                  ].map((m) => {
-                                    const Icon = m.icon;
-                                    return (
-                                      <button
-                                        key={m.value}
-                                        type="button"
-                                        onClick={() => field.onChange(m.value)}
-                                        className={`p-4 rounded-xl border-2 transition-all font-semibold flex flex-col items-center gap-3 ${
-                                          field.value === m.value
-                                            ? "border-blue-500 bg-blue-50 shadow-lg"
-                                            : "border-gray-200 bg-white hover:border-blue-300"
-                                        }`}
-                                      >
-                                        <Icon
-                                          className={`w-8 h-8 ${field.value === m.value ? "text-blue-600" : "text-gray-600"}`}
-                                        />
-                                        <span className="text-sm text-gray-900">
-                                          {m.label}
-                                        </span>
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                            option={[
+                              {
+                                value: "dry",
+                                icon: <Sun />,
+                                name: c("moisture.dry"),
+                              },
+                              {
+                                value: "semi_wet",
+                                icon: <DropletOff />,
+                                name: c("moisture.semi_wet"),
+                              },
+                              {
+                                value: "wet",
+                                icon: <Droplet />,
+                                name: c("moisture.wet"),
+                              },
+                            ]}
+                            key={watch("moisture")}
                           />
 
-                          <FormField
+                          <ProcessSelectInput
+                            classNames="grid grid-cols-2 sm:grid-cols-2 gap-3"
                             control={control}
+                            isProduct={false}
+                            label={`🎯 ${t("form.intendedUse")} *`}
                             name="intendedUse"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-base font-semibold text-gray-900 mb-4 block">
-                                  🎯 {t("form.intendedUse")} *
-                                </FormLabel>
-                                <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
-                                  {[
-                                    {
-                                      value: "compost",
-                                      emoji: "🌱",
-                                      label: t("intendedUse.compost"),
-                                    },
-                                    {
-                                      value: "feed",
-                                      emoji: "🐄",
-                                      label: t("intendedUse.feed"),
-                                    },
-                                    {
-                                      value: "sell",
-                                      emoji: "💰",
-                                      label: t("intendedUse.sell"),
-                                    },
-                                    {
-                                      value: "biogas",
-                                      emoji: "⚡",
-                                      label: t("intendedUse.biogas"),
-                                    },
-                                  ].map((use) => (
-                                    <button
-                                      key={use.value}
-                                      type="button"
-                                      onClick={() => field.onChange(use.value)}
-                                      className={`p-3 rounded-lg border-2 transition-all font-semibold text-xs sm:text-sm flex flex-col items-center gap-2 ${
-                                        field.value === use.value
-                                          ? "border-purple-500 bg-purple-50 shadow-md"
-                                          : "border-gray-200 bg-white hover:border-purple-300"
-                                      }`}
-                                    >
-                                      <span className="text-2xl">
-                                        {use.emoji}
-                                      </span>
-                                      <span className="text-gray-900 text-center">
-                                        {use.label}
-                                      </span>
-                                    </button>
-                                  ))}
-                                </div>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                            option={[
+                              {
+                                value: "compost",
+                                icon: "🌱",
+                                name: t("intendedUse.compost"),
+                              },
+                              {
+                                value: "feed",
+                                icon: "🐄",
+                                name: t("intendedUse.feed"),
+                              },
+                              {
+                                value: "sell",
+                                icon: "💰",
+                                name: t("intendedUse.sell"),
+                              },
+                              {
+                                value: "biogas",
+                                icon: "⚡",
+                                name: t("intendedUse.biogas"),
+                              },
+                            ]}
+                            key={watch("intendedUse")}
                           />
 
                           <div className="flex gap-3 pt-4">

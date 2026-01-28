@@ -1,28 +1,31 @@
 import { z } from "zod";
 
 export const wasteFormSchema = z.object({
-  title: z.string().min(1, "title is required"),
+  title: z.string().min(1, "Title is required"),
 
   wasteType: z
-    .enum(["crop", "fruit", "vegetable", ""])
-    .refine((v) => v !== "", { message: "waste type is required" }),
+    .enum(["crop", "fruit", "vegetable"])
+    .refine(Boolean, { message: "Waste type is required" }),
 
-  wasteCategory: z.string().min(1, "waste Category is required"),
+  wasteCategory: z.string().min(1, "Waste category is required"),
 
-  wasteProduct: z.string().min(1, "waste product is required"),
+  wasteProduct: z.string().min(1, "Waste product is required"),
 
-  description: z.string().min(1, "description is required"),
+  description: z.string().optional(),
 
-  quantity: z.coerce.number().int().min(1, "quantity is required"),
+  quantity: z.number()
+    .min(1, "Quantity must be greater than 0"),
 
-  moisture: z.string().min(1, "moisture is required"),
+  moisture: z
+    .enum(["dry", "semiwet", "wet"])
+    .refine(Boolean, { message: "Moisture is required" }),
 
-  price: z.coerce.number().int().min(1, "price is required"),
-
+  price: z.number()
+    .min(1, "Price must be greater than 0"),
 
   unit: z
-    .enum(["kg", "ton", "gram", ""])
-    .refine((v) => v !== "", { message: "unit is required" }),
+    .enum(["kg", "ton", "gram"])
+    .refine(Boolean, { message: "Unit is required" }),
 });
 
 export type wasteFormDataType = z.infer<typeof wasteFormSchema>;

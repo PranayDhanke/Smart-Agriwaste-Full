@@ -41,17 +41,19 @@ export default function MyListing() {
   useEffect(() => {
     if (!isLoaded || !user?.id) return;
 
+    const id = user.id
+
     if (isUninitialized || page === 1 || cursor) {
       getWastesByFarmer(
         {
-          farmerId: user.id,
+          farmerId: id,
           cursor,
           limit: PAGE_SIZE,
         },
         true,
       );
     }
-  }, [isLoaded, user?.id, page, cursor, isUninitialized, getWastesByFarmer]);
+  }, [isLoaded, user?.id, cursor, isUninitialized, getWastesByFarmer]);
 
   useEffect(() => {
     const nextCursor = data?.pagination?.nextCursor;
