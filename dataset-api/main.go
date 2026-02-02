@@ -26,6 +26,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:3000",
+			"https://smart-agriwaste.vercel.app"
 		},
 		AllowMethods: []string{
 			"GET", "POST", "PUT", "DELETE", "OPTIONS",
@@ -47,7 +48,7 @@ func main() {
 	// ✅ IMPORTANT FOR AZURE
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "4000" // local development
+		port = "8080" // local development
 	}
 
 	router.Run(":" + port)

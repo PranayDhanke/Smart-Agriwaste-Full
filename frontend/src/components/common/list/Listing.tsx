@@ -13,7 +13,7 @@ interface Props {
 
 export default function ListingsGrid({
   wastes = [],
-  loading,
+  loading, 
   isMarketPlace,
 }: Props) {
   if (loading) {
