@@ -150,8 +150,7 @@ export default function ListWaste() {
       console.log(error);
     }
   }, [isSuccess, isError]);
-  const a = 10;
-
+  
   const selectedWasteType = watch("wasteType");
   const selectedWasteCategory = watch("wasteCategory");
 

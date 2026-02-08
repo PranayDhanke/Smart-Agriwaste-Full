@@ -31,6 +31,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
 
+app.use(clerkMiddleware())
+
 //routes
 app.use("/api/imagekit", imagekitRoute);
 app.use("/api/webhooks", webhookRoute);

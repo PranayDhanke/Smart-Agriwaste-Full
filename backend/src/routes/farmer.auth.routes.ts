@@ -10,10 +10,9 @@ import { requireAuth } from "@clerk/express";
 const router = Router();
 
 router.post("/create-account", asyncHandler(createFarmerAccount));
-router.get("/get-account/:id", requireAuth(), asyncHandler(getFarmerAccount));
+router.get("/get-account/:id", asyncHandler(getFarmerAccount));
 router.put(
   "/update-account/:id",
-  requireAuth(),
   asyncHandler(updateFarmerAccount)
 );
 

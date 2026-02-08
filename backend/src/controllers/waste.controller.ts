@@ -4,9 +4,9 @@ import { translateText } from "../lib/azureTranslation";
 import { AppError } from "../utils/AppError";
 
 export const addWaste = async (req: Request, res: Response) => {
+
   const data = await req.body;
 
-  console.log(data);
 
   if (!data) {
     throw new AppError("Waste data not found", 500);
@@ -31,6 +31,7 @@ export const addWaste = async (req: Request, res: Response) => {
 };
 
 export const getWastebyId = async (req: Request, res: Response) => {
+
   const id = req.params.id;
 
   if (!id) {

@@ -35,7 +35,7 @@ export default function MyListing() {
 
   const cursor = cursorMap[page];
 
-  const [getWastesByFarmer, { data, isFetching, isLoading, isUninitialized }] =
+  const [getWastesByFarmer, { data, isFetching, isLoading, isUninitialized  }] =
     useLazyGetWastesByFarmerQuery();
 
   useEffect(() => {
@@ -49,8 +49,8 @@ export default function MyListing() {
           farmerId: id,
           cursor,
           limit: PAGE_SIZE,
+          
         },
-        true,
       );
     }
   }, [isLoaded, user?.id, cursor, isUninitialized, getWastesByFarmer]);

@@ -12,11 +12,11 @@ import { requireAuth } from "@clerk/express";
 
 const router = Router();
 
-router.post("/create-waste", requireAuth(), asyncHandler(addWaste));
+router.post("/create-waste", asyncHandler(addWaste));
 router.get("/get-wastes", asyncHandler(getWaste));
 router.get("/get-single/:id", asyncHandler(getSingleWaste));
-router.get("/get-waste/:id", requireAuth(), asyncHandler(getWastebyId));
-router.put("/update-waste/:id", requireAuth(), asyncHandler(updateWaste));
-router.delete("/delete/:id", requireAuth(), asyncHandler(deleteWaste));
+router.get("/get-waste/:id", asyncHandler(getWastebyId));
+router.put("/update-waste/:id", asyncHandler(updateWaste));
+router.delete("/delete/:id",  asyncHandler(deleteWaste));
 
 export default router;

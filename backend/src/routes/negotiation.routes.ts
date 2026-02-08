@@ -13,17 +13,14 @@ const router = Router();
 router.post("/add-negotiation", requireAuth(), asyncHandler(listNegotiations));
 router.get(
   "/get-negotiation/farmer/:id",
-  requireAuth(),
   asyncHandler(getNegotiationsByFarmer),
 );
 router.get(
   "/get-negotiation/buyer/:id",
-  requireAuth(),
   asyncHandler(getNegotiationsByBuyer),
 );
 router.patch(
   "/update-status",
-  requireAuth(),
   asyncHandler(updateNegotiationStatus),
 );
 

@@ -10,12 +10,11 @@ import {
 
 const router = Router();
 
-router.post("/send-notification", requireAuth(), asyncHandler(sendNotification));
-router.get("/get-notification/:id", requireAuth(), asyncHandler(getNotification));
-router.patch("/read-notification/:id", requireAuth(), asyncHandler(updateRead));
+router.post("/send-notification",  asyncHandler(sendNotification));
+router.get("/get-notification/:id", asyncHandler(getNotification));
+router.patch("/read-notification/:id", asyncHandler(updateRead));
 router.delete(
   "/delete-notification/:id",
-  requireAuth(),
   asyncHandler(deleteNotification),
 );
 

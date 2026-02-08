@@ -14,24 +14,23 @@ import {
 
 const router = Router();
 
-router.post("/create-order", requireAuth(), asyncHandler(addOrder));
-router.get("/get-order/farmer/:id", requireAuth(), asyncHandler(getOrderFarmer));
-router.get("/get-order/buyer/:id", requireAuth(), asyncHandler(getOrderBuyer));
-router.get("/get-order/:id", requireAuth(), asyncHandler(viewOrder));
+router.post("/create-order", asyncHandler(addOrder));
+router.get("/get-order/farmer/:id", asyncHandler(getOrderFarmer));
+router.get("/get-order/buyer/:id", asyncHandler(getOrderBuyer));
+router.get("/get-order/:id", asyncHandler(viewOrder));
 router.patch(
   "/confirm-order/:orderId",
-  requireAuth(),
+
   asyncHandler(confirmOrder),
 );
-router.patch("/cancel-order/:orderId", requireAuth(), asyncHandler(cancelOrder));
+router.patch("/cancel-order/:orderId", asyncHandler(cancelOrder));
 router.patch(
   "/confirm-delivery/:id",
-  requireAuth(),
+
   asyncHandler(confirmDelivery),
 );
 router.patch(
   "/setoutFor-delivered/:id",
-  requireAuth(),
   asyncHandler(setOutForDelivery),
 );
 
