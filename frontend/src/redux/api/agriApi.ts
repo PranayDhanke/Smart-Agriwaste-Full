@@ -18,7 +18,7 @@ interface recommendationResult {
 export const agriApi = createApi({
   reducerPath: "agriApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:4000",
+    baseUrl: "https://smartagriwastedataset.lemonmoss-6d514309.centralindia.azurecontainerapps.io",
   }),
   tagTypes: ["Agri"],
   endpoints: (builder) => ({
