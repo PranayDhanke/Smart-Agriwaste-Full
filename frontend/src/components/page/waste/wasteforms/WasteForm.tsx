@@ -412,7 +412,7 @@ export default function ListWaste() {
                             label: "☀️ Dry",
                           },
                           {
-                            value: "semiwet",
+                            value: "semi_wet",
                             label: "🌤️ Semi-wet",
                           },
                           {
