@@ -12,8 +12,10 @@ const CreateAccountRedirect = () => {
   const t = useTranslations("extra");
 
   useEffect(() => {
-    router.push(`/create-account/${clerkRole}`);
-  }, [clerkRole, router]);
+    if (user) {
+      router.push(`/create-account/${clerkRole}`);
+    }
+  }, [clerkRole, router , user]);
   return (
     <div className="h-screen animate-collapsible-up">
       {t("CreateAccountRedirect.loading")}
