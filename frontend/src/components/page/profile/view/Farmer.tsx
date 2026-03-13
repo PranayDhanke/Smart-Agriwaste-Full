@@ -3,24 +3,23 @@
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations, useLocale } from "next-intl";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { useTranslations } from "next-intl";
+import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { useLazyGetProfileQuery } from "@/redux/api/authApi";
+import {
+  useLazyGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/redux/api/authApi";
+import { FormInput } from "@/components/common/form/FormInput";
+import { SelectInput } from "@/components/common/form/SelectInput";
+import { uploadImage } from "@/utils/imagekit";
 
 const formSchema = z.object({
   phone: z.string().optional(),
@@ -57,14 +56,14 @@ const fieldLabels: Record<string, string> = {
 
 export default function Profile() {
   const { user, isLoaded } = useUser();
-  const router = useRouter();
   const t = useTranslations("profile.farmer.Profile");
-  const locale = useLocale();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
+
+  const { control, handleSubmit } = form;
 
   const [aadharPreview, setAadharPreview] = useState<string | null>(null);
   const [farmDocPreview, setFarmDocPreview] = useState<string | null>(null);
@@ -82,6 +81,7 @@ export default function Profile() {
   const role = user ? user.unsafeMetadata.role : "";
   const [getProfile, { data: profiledata, isFetching, isLoading, isSuccess }] =
     useLazyGetProfileQuery();
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
   // Fetch data from API when component mounts
 
@@ -115,6 +115,7 @@ export default function Profile() {
         farmDocUrl: data.farmDocUrl || "",
       });
 
+
       if (data.aadharUrl) setAadharPreview(data.aadharUrl);
       if (data.farmDocUrl) setFarmDocPreview(data.farmDocUrl);
     }
@@ -139,20 +140,7 @@ export default function Profile() {
   };
 
   const uploadToImageKit = async (file: File, folder: string) => {
-    const formdata = new FormData();
-    formdata.append("file", file);
-    formdata.append("id", farmerId);
-    formdata.append("folder", folder);
-
-    const res = await axios.post("/api/upload", formdata);
-
-    if (!res.data || !res.data.url) {
-      toast.error(t("uploadFailed"));
-    }
-
-    const url: string = res.data.url;
-
-    return url;
+    return uploadImage(file, folder);
   };
 
   const onSubmit = async () => {
@@ -170,19 +158,19 @@ export default function Profile() {
       }
 
       // IMPORTANT: read the latest form values (includes urls we set above)
-      const payload = form.getValues; // or: { ...values, aadharUrl: ..., farmDocUrl: ... }
+      const payload = form.getValues();
 
       // Optional: validate farmerId
       if (!farmerId) throw new Error("Missing farmerId");
 
-      const res = await axios.put(
-        `/api/profile/farmer/update/${farmerId}`,
-        payload,
-      );
+      const res = await updateProfile({
+        userId: farmerId,
+        role: role as string,
+        data: payload,
+      });
 
-      if (res.status >= 200 && res.status < 300) {
+      if ("data" in res) {
         toast.success(t("profileUpdated"));
-        // do any post-success actions (navigate/refresh)
       } else {
         toast.error(t("profileUpdateFailed"));
       }
@@ -206,11 +194,8 @@ export default function Profile() {
         </CardHeader>
         {isSuccess && (
           <CardContent className="pt-6">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
+            <FormProvider {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 {/* Farmer ID */}
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                   <p className="text-sm">
@@ -219,7 +204,7 @@ export default function Profile() {
                     </span>
                     {"   "}
                     <span className="text-gray-700">
-                      {farmerId.replace("user_", "fam_")}
+                      {farmerId}
                     </span>
                   </p>
                 </div>
@@ -281,39 +266,21 @@ export default function Profile() {
                     {t("contact.heading")}
                   </h3>
                   <div className="grid md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
+                    <FormInput
+                      control={control}
                       name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-700">
-                            {t("fields.phone")}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder={t("placeholders.phone")}
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                      label={t("fields.phone")}
+                      type="tel"
+                      placeholder={t("placeholders.phone")}
+                      classname="h-10"
                     />
-                    <FormField
-                      control={form.control}
+                    <FormInput
+                      control={control}
                       name="aadharnumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-700">
-                            {t("fields.aadharnumber")}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder={t("placeholders.aadharnumber")}
-                              {...field}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                      label={t("fields.aadharnumber")}
+                      type="text"
+                      placeholder={t("placeholders.aadharnumber")}
+                      classname="h-10"
                     />
                   </div>
                 </div>
@@ -326,33 +293,54 @@ export default function Profile() {
                     {t("address.heading")}
                   </h3>
                   <div className="grid md:grid-cols-2 gap-6">
-                    {[
-                      "state",
-                      "district",
-                      "taluka",
-                      "village",
-                      "houseBuildingName",
-                      "roadarealandmarkName",
-                    ].map((key) => (
-                      <FormField
-                        key={key}
-                        control={form.control}
-                        name={key as keyof FormValues}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-700">
-                              {t(`fields.${key}`)}
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder={t(`placeholders.${key}`)}
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
+                    <FormInput
+                      control={control}
+                      name="state"
+                      label={t("fields.state")}
+                      type="text"
+                      placeholder={t("placeholders.state")}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="district"
+                      label={t("fields.district")}
+                      type="text"
+                      placeholder={t("placeholders.district")}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="taluka"
+                      label={t("fields.taluka")}
+                      type="text"
+                      placeholder={t("placeholders.taluka")}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="village"
+                      label={t("fields.village")}
+                      type="text"
+                      placeholder={t("placeholders.village")}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="houseBuildingName"
+                      label={t("fields.houseBuildingName")}
+                      type="text"
+                      placeholder={t("placeholders.houseBuildingName")}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="roadarealandmarkName"
+                      label={t("fields.roadarealandmarkName")}
+                      type="text"
+                      placeholder={t("placeholders.roadarealandmarkName")}
+                      classname="h-10"
+                    />
                   </div>
                 </div>
 
@@ -364,28 +352,33 @@ export default function Profile() {
                     {t("farm.heading")}
                   </h3>
                   <div className="grid md:grid-cols-3 gap-6">
-                    {["farmNumber", "farmArea", "farmUnit"].map((key) => (
-                      <FormField
-                        key={key}
-                        control={form.control}
-                        name={key as keyof FormValues}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-gray-700">
-                              {t(`fields.${key}`)}
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder={`Enter ${fieldLabels[
-                                  key
-                                ].toLowerCase()}`}
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
+                    <FormInput
+                      control={control}
+                      name="farmNumber"
+                      label={t("fields.farmNumber")}
+                      type="text"
+                      placeholder={`Enter ${fieldLabels["farmNumber"].toLowerCase()}`}
+                      classname="h-10"
+                    />
+                    <FormInput
+                      control={control}
+                      name="farmArea"
+                      label={t("fields.farmArea")}
+                      type="number"
+                      placeholder={`Enter ${fieldLabels["farmArea"].toLowerCase()}`}
+                      classname="h-10"
+                    />
+                    <SelectInput
+                      control={control}
+                      name="farmUnit"
+                      label={t("fields.farmUnit")}
+                      option={[
+                        { label: "Hectare", value: "hectare" },
+                        { label: "Acre", value: "acre" },
+                      ]}
+                      placeholder="Select unit"
+                      classname="h-10"
+                    />
                   </div>
                 </div>
 
@@ -398,23 +391,21 @@ export default function Profile() {
                   </h3>
                   <div className="grid md:grid-cols-2 gap-8">
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="aadharUrl"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-700">
                             {t("documents.aadhar")}
                           </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="file"
-                              accept="image/*"
-                              name="aadharFile"
-                              onChange={(e) =>
-                                handleFileChange(e, setAadharPreview, field)
-                              }
-                            />
-                          </FormControl>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            name="aadharFile"
+                            onChange={(e) =>
+                              handleFileChange(e, setAadharPreview, field)
+                            }
+                          />
                           {aadharPreview && (
                             <div className="mt-3">
                               <Image
@@ -431,23 +422,21 @@ export default function Profile() {
                     />
 
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="farmDocUrl"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-700">
                             {t("documents.farm")}
                           </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="file"
-                              accept="image/*"
-                              name="farmdocFile"
-                              onChange={(e) =>
-                                handleFileChange(e, setFarmDocPreview, field)
-                              }
-                            />
-                          </FormControl>
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            name="farmdocFile"
+                            onChange={(e) =>
+                              handleFileChange(e, setFarmDocPreview, field)
+                            }
+                          />
                           {farmDocPreview && (
                             <div className="mt-3">
                               <Image
@@ -469,13 +458,14 @@ export default function Profile() {
                 <div className="flex justify-end pt-4">
                   <Button
                     type="submit"
+                    disabled={isUpdating}
                     className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-base font-semibold"
                   >
                     {t("saveChanges")}
                   </Button>
                 </div>
               </form>
-            </Form>
+            </FormProvider>
           </CardContent>
         )}
       </Card>

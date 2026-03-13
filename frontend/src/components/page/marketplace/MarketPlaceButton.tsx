@@ -49,6 +49,7 @@ const MarketPlaceButton = ({ p }: { p: Waste }) => {
     dispatch(addToCart(u));
     toast.success(`${item.title[locale]} added to cart`);
   };
+  
   return (
     <div className=" flex items-center justify-between">
       <Link href={`/marketplace/view/?product=${p._id}`}>

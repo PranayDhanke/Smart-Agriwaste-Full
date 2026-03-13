@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
 const translatedStringSchema = {
-  en: { type: String, required: true },
-  hi: { type: String, required: true },
-  mr: { type: String, required: true },
+  en: { type: String },
+  hi: { type: String },
+  mr: { type: String },
 };
 
 const OrderSchema = new Schema(
@@ -31,14 +31,14 @@ const OrderSchema = new Schema(
     items: [
       {
         prodId: { type: String, required: true },
-        title: translatedStringSchema,
+        title: { type: translatedStringSchema, required: true },
         wasteType: { type: String, required: true },
         wasteProduct: { type: String, required: true },
         moisture: { type: String, required: true },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
         unit: { type: String, required: true },
-        description: translatedStringSchema,
+        description: { type: translatedStringSchema },
         image: { type: String, required: true },
         sellerInfo: {
           seller: {
@@ -58,7 +58,7 @@ const OrderSchema = new Schema(
     ],
     status: {
       type: String,
-      enum: ["pending", "confirmed" ,"cancelled"],
+      enum: ["pending", "confirmed", "cancelled"],
       default: "pending",
     },
   },

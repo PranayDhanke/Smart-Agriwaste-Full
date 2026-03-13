@@ -34,6 +34,8 @@ import {
   updateQuantity,
 } from "@/redux/features/cartSlice";
 import { selectTotalAmount } from "@/redux/selectors/cartSelectors";
+import { useCreateOrderMutation } from "@/redux/api/orderApi";
+import { useSendNotificationMutation } from "@/redux/api/notificationAPi";
 
 type FarmerOrderGroup = {
   items: CartItem[];
@@ -69,15 +71,18 @@ export default function CartDrawer() {
     selectTotalAmount(state),
   );
 
+  const { address, user } = useSelector((state: RootState) => state.auth);
+
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
   const { cart } = useSelector((state: RootState) => state.cart);
   const t = useTranslations("marketplace.CartDrawer");
 
   const [deliveryMethod, setDeliveryMethod] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(true);
 
-  const { user } = useUser();
-
   const [loading, setloading] = useState(false);
+
+  const [sendNotification] = useSendNotificationMutation();
 
   const proceedOrder = async () => {
     if (!deliveryMethod) {
@@ -85,38 +90,49 @@ export default function CartDrawer() {
       return;
     }
 
-    //     const groupedByFarmer = groupItemsByFarmer(cart);
+    const groupedByFarmer = groupItemsByFarmer(cart);
 
-    //     // 3️⃣ Create orders per farmer
-    //     const orders = Object.entries(groupedByFarmer).map(([farmerId, items]) => ({
-    //       buyerId: user?.id,
-    //       farmerId,
-    //       items: items.items,
-    //       status: "pending",
-    //       hasPayment: false,
-    //       isDelivered: false,
-    //       isOutForDelivery: false,
-    //       totalAmount: items.totalAmount,
-    //       paymentId: "",
-    //       deliveryMode: deliveryMethod,
-    //       buyerInfo: {
-    //         buyerName: user?.fullName,
-    //         buyerMobile: "",
-    //         address: "buyerAddress",
-    //       },
-    //     }));
+    // 3️⃣ Create orders per farmer
+    const data = Object.entries(groupedByFarmer).map(([farmerId, items]) => ({
+      buyerId: user?.id,
+      farmerId,
+      items: items.items,
+      status: "pending",
+      hasPayment: false,
+      isDelivered: false,
+      isOutForDelivery: false,
+      totalAmount: items.totalAmount,
+      paymentId: "",
+      deliveryMode: deliveryMethod,
+      buyerInfo: {
+        buyerName: user?.name,
+        buyerMobile: user?.phone,
+        address: {
+          houseBuildingName: address?.houseBuildingName,
+          roadarealandmarkName: address?.roadarealandmarkName,
+          state: address?.state,
+          district: address?.district,
+          taluka: address?.taluka,
+          village: address?.village,
+        },
+      },
+    }));
+    createOrder({ data });
 
-    //       Object.entries(groupedByFarmer).map(([farmerId]) =>
-    // {
-    //           userId: farmerId.replace("fam_", "user_"),
-    //           message: `New Order Placed by Buyer ${user?.fullName}`,
-    //           title: "New Order Placed",
-    //           type: "order",
-    //         }
-    //       );
-    //       toast.success(
-    // 5️⃣ UX feedback
-    t("success.orderPlaced");
+    Object.entries(groupedByFarmer).map(([farmerId]) => {
+      sendNotification({
+        data: {
+          userId: farmerId,
+          message: `New Order Placed by Buyer ${user?.name}`,
+          title: "New Order Placed",
+          type: "order",
+        },
+      });
+    });
+    toast.success(
+      // 5️⃣ UX feedback
+      t("success.orderPlaced"),
+    );
 
     // 6️⃣ Clear cart after successful checkout
 
@@ -187,7 +203,7 @@ export default function CartDrawer() {
                         dispatch(
                           updateQuantity({
                             prodId: item.prodId,
-                            quantity: item.quantity-1,
+                            quantity: item.quantity - 1,
                             maxQuantity: item.maxQuantity,
                           }),
                         )
@@ -214,7 +230,7 @@ export default function CartDrawer() {
                         dispatch(
                           updateQuantity({
                             prodId: item.prodId,
-                            quantity: item.quantity+1,
+                            quantity: item.quantity + 1,
                             maxQuantity: item.maxQuantity,
                           }),
                         )

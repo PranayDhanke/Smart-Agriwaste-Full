@@ -1,9 +1,5 @@
-import React from 'react'
+import FarmerOrdersPage from "@/components/page/Order/Farmer";
 
-const page = () => {
-  return (
-    <div>page</div>
-  )
+export default function Page() {
+  return <FarmerOrdersPage />;
 }
-
-export default page

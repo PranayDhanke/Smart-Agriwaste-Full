@@ -1,4 +1,4 @@
-import Profile from "@/components/page/profile/Buyer"
+import Profile from "@/components/page/profile/view/Buyer"
 
 const page = () => {
   return (

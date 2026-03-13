@@ -5,7 +5,7 @@ import type { RootState } from "../store"
 export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl:"https://smartagriwasteapi.azurewebsites.net/api",
+    baseUrl:"http://localhost:5000/api",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token
 

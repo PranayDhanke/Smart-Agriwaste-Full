@@ -74,10 +74,10 @@ export const orderApi = baseApi.injectEndpoints({
     /* -------------------- MUTATIONS -------------------- */
 
     createOrder: builder.mutation<CreateOrderResponse, any>({
-      query: (payload) => ({
+      query: (data) => ({
         url: `/order/create-order`,
         method: "POST",
-        body: payload,
+        body: data,
       }),
       invalidatesTags: [
         { type: "Order", id: "BUYER_LIST" },
