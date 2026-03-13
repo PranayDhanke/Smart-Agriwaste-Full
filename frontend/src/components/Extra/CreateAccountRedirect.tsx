@@ -1,26 +1,33 @@
 "use client";
+
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { useTranslations } from "next-intl";
 
 const CreateAccountRedirect = () => {
   const router = useRouter();
   const { user } = useUser();
+  const searchParams = useSearchParams();
 
-  const clerkRole = user?.unsafeMetadata.role;
-  const t = useTranslations("extra");
+  const roleFromUrl = searchParams.get("role") || "user";
 
   useEffect(() => {
-    if (user) {
-      router.push(`/create-account/${clerkRole}`);
-    }
-  }, [clerkRole, router , user]);
-  return (
-    <div className="h-screen animate-collapsible-up">
-      {t("CreateAccountRedirect.loading")}
-    </div>
-  );
+    const setRole = async () => {
+      if (user) {
+        await user.update({
+          unsafeMetadata: {
+            role: roleFromUrl,
+          },
+        });
+
+        router.push(`/create-account/${roleFromUrl}`);
+      }
+    };
+
+    setRole();
+  }, [user, roleFromUrl, router]);
+
+  return <div className="h-screen">Loading...</div>;
 };
 
 export default CreateAccountRedirect;
