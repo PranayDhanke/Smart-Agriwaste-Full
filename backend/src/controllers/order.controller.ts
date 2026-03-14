@@ -5,13 +5,7 @@ import orderModel from "../models/order.model";
 import mongoose from "mongoose";
 
 export const addOrder = async (req: Request, res: Response) => {
-  const data = await req.body.data;
-
-  console.log(data);
-  
-  console.log(req.body);
-  
-  
+  const data = await req.body.data;  
   
   if (!data) {
     throw new AppError("Waste data not found", 500);
@@ -21,8 +15,6 @@ export const addOrder = async (req: Request, res: Response) => {
     throw new AppError("Order data not found", 500);
   }
 
-  console.log(Array.isArray(data));
-  
 
   const createdOrders = [];
 
