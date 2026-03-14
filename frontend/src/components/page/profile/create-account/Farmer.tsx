@@ -652,7 +652,7 @@ export default function CreateAccountFarmer() {
                           control={control}
                           name="farmArea"
                           label={`${t("fields.totalArea")} *`}
-                          type="number"
+                          type="text"
                           placeholder="e.g., 5.5"
                           classname={`h-12 ${
                             errors.farmArea ? "border-red-500" : ""

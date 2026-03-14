@@ -6,26 +6,33 @@ import React, { useEffect } from "react";
 
 const CreateAccountRedirect = () => {
   const router = useRouter();
-  const { user } = useUser();
+  const { isLoaded, user } = useUser();
   const searchParams = useSearchParams();
 
-  const roleFromUrl = searchParams.get("role") || "user";
+  const role = searchParams.get("role") || "user";
+
+  let localRole = "user";
+
+  useEffect(() => {
+    localRole = localStorage.getItem("role") || "user";
+  }, [user]);
 
   useEffect(() => {
     const setRole = async () => {
-      if (user) {
+      if (!isLoaded || !user) return;
+      if (!user.unsafeMetadata?.role) {
         await user.update({
-          unsafeMetadata: {
-            role: roleFromUrl,
-          },
+          unsafeMetadata: { role: role === "user" ? localRole : role },
         });
-
-        router.push(`/create-account/${roleFromUrl}`);
       }
+
+      router.push(`/create-account/${role === "user" ? localRole : role}`);
     };
 
-    setRole();
-  }, [user, roleFromUrl, router]);
+    setTimeout(() => {
+      setRole();
+    }, 200);
+  }, [user, role, router, localRole]);
 
   return <div className="h-screen">Loading...</div>;
 };
