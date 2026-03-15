@@ -5,11 +5,11 @@ import { store } from "@/redux/store";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import { LocalizationResource } from "@clerk/types";
-import { AuthProvider } from "@/components/Extra/AuthProvider";
 import Footer from "@/components/page/home/Footer";
 import Header from "@/components/page/Header/Header";
 import OneSignalProvider from "@/components/provider/OneSignalProvider";
 import FloatingCart from "@/components/page/marketplace/FlotingCart";
+import { AuthProvider } from "@/lib/AuthProvider";
 
 export default function Providers({
   children,

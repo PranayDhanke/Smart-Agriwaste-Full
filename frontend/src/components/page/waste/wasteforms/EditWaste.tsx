@@ -1,536 +1,695 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
-
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import { Loader2, Upload, Leaf } from "lucide-react";
-import { toast } from "sonner";
-
-import { useLocale, useTranslations } from "next-intl";
 import productCategoryMap from "@/../public/Products/Product.json";
+import { FormInput } from "@/components/common/form/FormInput";
+import { ProcessSelectInput } from "@/components/common/form/ProcessSelectInput";
+import { SelectInput } from "@/components/common/form/SelectInput";
 import {
   wasteFormDataType,
   wasteFormSchema,
 } from "@/components/types/zod/waste.zod";
-import { WasteType } from "@/components/types/waste";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "@/i18n/navigation";
+import {
+  useGetSingleWasteQuery,
+  useUpdateWasteMutation,
+} from "@/redux/api/wasteApi";
+import type { RootState } from "@/redux/store";
+import { uploadImage } from "@/utils/imagekit";
+import { useUser } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CheckCircle2,
+  ChevronRight,
+  Info,
+  Leaf,
+  Loader2,
+  Upload,
+} from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
+
 export default function EditWaste() {
+  const { user, isLoaded } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const wasteId = searchParams.get("id");
+  const [step, setStep] = useState(1);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const initializedFormRef = useRef(false);
+  const previousWasteTypeRef = useRef<string | undefined>(undefined);
+  const previousWasteCategoryRef = useRef<string | undefined>(undefined);
+
+  const { address, user: farmerUser } = useSelector(
+    (state: RootState) => state.auth,
+  );
+
+  const form = useForm<wasteFormDataType>({
+    resolver: zodResolver(wasteFormSchema),
+    defaultValues: {
+      description: "",
+      moisture: undefined,
+      price: undefined,
+      quantity: undefined,
+      title: "",
+      unit: undefined,
+      wasteCategory: "",
+      wasteProduct: "",
+      wasteType: undefined,
+    },
+  });
+
+  const {
+    control,
+    watch,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { isSubmitting },
+  } = form;
+
+  const formValues = watch();
+
+  if (isLoaded && !user) {
+    router.push("/sign-in");
+  }
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const {
+    data: waste,
+    isLoading: isWasteLoading,
+    isFetching: isWasteFetching,
+    isError: isWasteError,
+  } = useGetSingleWasteQuery(wasteId || "", {
+    skip: !wasteId,
+  });
+  const [updateWaste, { isLoading: isUpdating, isSuccess, isError, error }] =
+    useUpdateWasteMutation();
 
   const t = useTranslations("waste");
   const c = useTranslations("wasteCommon");
 
-  const locale = useLocale() as "en" | "mr" | "hi";
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
-  const formdata = useForm({
-    resolver: zodResolver(wasteFormSchema),
-  });
+    if (!file) return;
 
-  const { register, handleSubmit, reset, watch, control, formState } = formdata;
-  const values = watch();
-
-  // Local state for file/image preview
-  const [newImageFile, setNewImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const selectedWasteType = watch("wasteType");
-  const selectedCategory = watch("wasteCategory");
-
-  // Load waste to edit
-  useEffect(() => {
-    if (!id) return;
-    let mounted = true;
-
-    async function fetchWaste() {
-      try {
-        const res = await axios.get(`/api/waste/singlewaste/${id}`);
-        if (!mounted) return;
-        if (res?.data?.singleWaste) {
-          const data = res.data.singleWaste;
-
-          reset({
-            ...data,
-            title: "",
-            description: "",
-            image: data.image ?? data.image ?? "",
-          });
-
-          setTimeout(() => {
-            reset({
-              ...data,
-              wasteCategory: data.wasteCategory,
-            });
-          }, 100);
-          setTimeout(() => {
-            reset({
-              ...data,
-              title: data.title[locale],
-              description: data.description[locale],
-              wasteProduct: data.wasteProduct,
-            });
-          }, 200);
-
-          setImagePreview(data.imageUrl ?? data.image ?? null);
-        } else {
-          alert(t("messages.loadNotFound"));
-        }
-      } catch {
-        alert(t("messages.loadFailed"));
-      }
-    }
-
-    fetchWaste();
-
-    return () => {
-      mounted = false;
+    setFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string);
     };
-  }, [id, reset, t]);
-
-  // Handle file selection (optional replace)
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] ?? null;
-    setNewImageFile(f);
+    reader.readAsDataURL(file);
   };
 
-  // Submit: upload image if newImageFile present, then PUT update
-  const onSubmit = async (formValues: wasteFormDataType) => {
-    if (!id) {
-      alert(t("messages.missingId"));
+  const onSubmit = async (wasteData: wasteFormDataType) => {
+    if (!address && !farmerUser) {
+      toast.error(
+        "Error while loading the farmer data please refresh the page",
+      );
+      return;
+    }
+    if (!wasteId) {
+      toast.error("Waste id is missing");
       return;
     }
 
-    setLoading(true);
+    let imageUrl = waste?.imageUrl || "";
 
-    try {
-      // If user selected a new file, upload it
-      if (newImageFile) {
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(newImageFile);
-        });
+    if (file) {
+      const toastId = toast.loading(t("messages.uploadingImage"));
 
-        toast.loading(t("messages.uploadingImage"));
+      const upload = await uploadImage(
+        file,
+        `waste_images/${user?.id}_${wasteData.wasteProduct}`,
+      );
 
-        const uploadRes = await axios.post("/api/waste/upload", {
-          base64,
-          fileName: `waste_${id}`,
-        });
-
-        if (uploadRes?.data?.url) {
-        } else {
-          throw new Error("Image upload failed");
-        }
-
+      if (!upload) {
         toast.dismiss();
+        toast.error(t("messages.genericError"));
+        return;
       }
 
-      const payload: Partial<wasteFormDataType> = {
-        ...formValues,
-      };
-
-      const updateRes = await axios.put(`/api/waste/update/${id}`, payload);
-
-      if (updateRes.status >= 200 && updateRes.status < 300) {
-        toast.success(t("messages.updateSuccess"));
-        router.push("/profile/farmer/my-listing");
-      } else {
-        toast.error(t("messages.updateFailure"));
-      }
-    } catch {
-      toast.error(t("messages.genericError"));
-    } finally {
-      setLoading(false);
+      toast.dismiss(toastId);
+      imageUrl = upload;
     }
+
+    await updateWaste({
+      id: wasteId,
+      data: {
+        description: wasteData.description,
+        imageUrl,
+        moisture: wasteData.moisture,
+        price: wasteData.price,
+        quantity: wasteData.quantity,
+        address,
+        seller: {
+          email: farmerUser?.email || "",
+          phone: farmerUser?.phone || "",
+          name: farmerUser?.name || "",
+          farmerId: farmerUser?.id || "",
+        },
+        title: wasteData.title,
+        unit: wasteData.unit,
+        wasteCategory: wasteData.wasteCategory,
+        wasteProduct: wasteData.wasteProduct,
+        wasteType: wasteData.wasteType,
+      },
+    } as any).unwrap();
+    toast.success("Listing updated successfully!");
+    setTimeout(() => {
+      router.push("/profile/farmer/my-listing");
+    }, 500);
   };
 
+  useEffect(() => {
+    if (isError) {
+      toast.error("error");
+      console.log(error);
+    }
+  }, [isSuccess, isError, error]);
+
+  useEffect(() => {
+    if (!waste) return;
+
+    reset({
+      description:
+        typeof waste.description === "string"
+          ? waste.description
+          : (waste.description?.en ?? ""),
+      moisture:
+        waste.moisture === "semi_wet"
+          ? "semiwet"
+          : (waste.moisture as wasteFormDataType["moisture"]),
+      price: waste.price,
+      quantity: waste.quantity,
+      title:
+        typeof waste.title === "string" ? waste.title : (waste.title?.en ?? ""),
+      unit: waste.unit as wasteFormDataType["unit"],
+      wasteCategory: waste.wasteCategory,
+      wasteProduct: waste.wasteProduct,
+      wasteType: waste.wasteType as wasteFormDataType["wasteType"],
+    });
+    setPreviewImage(waste.imageUrl || null);
+    initializedFormRef.current = true;
+    previousWasteTypeRef.current = waste.wasteType;
+    previousWasteCategoryRef.current = waste.wasteCategory;
+  }, [reset, waste]);
+
+  useEffect(() => {
+    if (isWasteError) {
+      toast.error("Failed to load waste details");
+    }
+  }, [isWasteError]);
+
+  const selectedWasteType = watch("wasteType");
+  const selectedWasteCategory = watch("wasteCategory");
+
+  useEffect(() => {
+    if (!selectedWasteType) return;
+    if (!initializedFormRef.current) return;
+    if (previousWasteTypeRef.current === selectedWasteType) return;
+
+    setValue("wasteCategory", "");
+    setValue("wasteProduct", "");
+    previousWasteTypeRef.current = selectedWasteType;
+    previousWasteCategoryRef.current = undefined;
+  }, [selectedWasteType, setValue]);
+  useEffect(() => {
+    if (!selectedWasteCategory) return;
+    if (!initializedFormRef.current) return;
+    if (previousWasteCategoryRef.current === selectedWasteCategory) return;
+
+    setValue("wasteProduct", "");
+    previousWasteCategoryRef.current = selectedWasteCategory;
+  }, [selectedWasteCategory, setValue]);
+
+  // Step indicator component
+  const StepIndicator = ({ currentStep }: { currentStep: number }) => (
+    <div className="flex items-center justify-between mb-8">
+      {[1, 2, 3].map((num) => (
+        <div key={num} className="flex items-center flex-1">
+          <div
+            className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all ${
+              num <= currentStep
+                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg"
+                : "bg-gray-200 text-gray-600"
+            }`}
+          >
+            {num < currentStep ? <CheckCircle2 className="w-5 h-5" /> : num}
+          </div>
+          {num < 3 && (
+            <div
+              className={`flex-1 h-1 mx-2 rounded transition-all ${
+                num < currentStep
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                  : "bg-gray-200"
+              }`}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  if (!isLoaded || !address || !farmerUser || isWasteLoading || isWasteFetching) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin mr-2" />
+        <span>Loading waste details...</span>
+      </div>
+    );
+  }
+
+  if (!wasteId || !waste) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center">
+          <p className="text-lg font-semibold text-gray-900">
+            Waste not found
+          </p>
+          <p className="mt-2 text-sm text-gray-600">
+            We could not load the waste details for editing.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const CategoryObject =
+    selectedWasteType &&
+    Object.keys((productCategoryMap as any)?.[selectedWasteType] ?? {}).map(
+      (item) => ({
+        value: item,
+        label: c(`wasteCat.${item}`),
+      }),
+    );
+
   return (
-    <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-green-50">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
+    <main className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-3 bg-green-600 rounded-xl shadow-lg">
+            <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg">
               <Leaf className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-green-900">
-                {t("pageTitleEdit")}
+              <h1 className="text-3xl sm:text-4xl font-bold text-green-900">
+                {t("pageTitle")}
               </h1>
-              <p className="text-sm text-green-700/80">
-                {t("pageSubtitleEdit")}
+              <p className="text-green-700/70 text-sm mt-1">
+                {t("pageSubtitle")}
               </p>
             </div>
           </div>
         </div>
 
-        <Card className="bg-white/90">
-          <CardHeader>
-            <CardTitle>{t("sections.wasteDetails")}</CardTitle>
+        {/* Main Form Card */}
+        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur overflow-hidden rounded-2xl">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100 px-6 sm:px-8 py-6">
+            <div>
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                {step === 1 ? "📦 " : step === 2 ? "📊 " : "🖼️ "}
+                {step === 1
+                  ? "Waste Details"
+                  : step === 2
+                    ? "Specifications"
+                    : "Product Image"}
+              </CardTitle>
+              <p className="text-sm text-gray-600 mt-2">
+                {step === 1
+                  ? "Tell us about your agricultural waste"
+                  : step === 2
+                    ? "Add quantity, price, and condition details"
+                    : "Upload a clear photo of your waste"}
+              </p>
+            </div>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Title */}
-              <div>
-                <Label htmlFor="title">{t("fields.title.label")}</Label>
-                <Input
-                  id="title"
-                  value={watch(`title`)}
-                  className="mt-2"
-                  placeholder={t("fields.title.placeholder")}
-                />
-                {formState.errors.title && (
-                  <p className="text-sm text-red-500">
-                    {formState.errors.title.message}
-                  </p>
-                )}
-              </div>
+          <CardContent className="p-6 sm:p-8">
+            <StepIndicator currentStep={step} />
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* STEP 1: Basic Information */}
+                {step === 1 && (
+                  <div className="space-y-6 animate-fadeIn">
+                    {/* Title */}
+                    <FormInput
+                      control={control}
+                      label="Give your listing a title *"
+                      name="title"
+                      placeholder="e.g., Fresh Rice Straw, Wheat Residue"
+                      type="text"
+                      classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                        formValues.price
+                          ? "border-green-300 bg-green-50/30"
+                          : "border-gray-200"
+                      } `}
+                    />
 
-              {/* Type & Product */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="wasteType">
-                    {t("fields.wasteType.label")}
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="wasteType"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={(v: WasteType) => {
-                          field.onChange(v);
-                          formdata.setValue("wasteCategory", "");
-                          formdata.setValue("wasteProduct", "");
-                        }}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="mt-2">
-                          <SelectValue
-                            placeholder={t("fields.wasteType.placeholder")}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="crop">
-                            🌾 {c("wasteTypes.crop")}
-                          </SelectItem>
-                          <SelectItem value="fruit">
-                            🍓 {c("wasteTypes.fruit")}
-                          </SelectItem>
-                          <SelectItem value="vegetable">
-                            🥬 {c("wasteTypes.vegetable")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {formState.errors.wasteType && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.wasteType.message}
-                    </p>
-                  )}
-                </div>
+                    {/* Waste Type Selection - Visual */}
+                    <ProcessSelectInput
+                      classNames="grid grid-cols-3 gap-3"
+                      control={control}
+                      isProduct={false}
+                      label="What type of waste? *"
+                      name="wasteType"
+                      option={[
+                        {
+                          value: "crop",
+                          icon: "🌾",
+                          name: c("wasteTypes.crop"),
+                        },
+                        {
+                          value: "fruit",
+                          icon: "🍓",
+                          name: c("wasteTypes.fruit"),
+                        },
+                        {
+                          value: "vegetable",
+                          icon: "🥬",
+                          name: c("wasteTypes.vegetable"),
+                        },
+                      ]}
+                    />
 
-                <div>
-                  <Label htmlFor="wasteCategory">
-                    {t("fields.wasteCategory.label")}
-                  </Label>
-                  <Controller
-                    control={control}
-                    name="wasteCategory"
-                    render={({ field }) => (
-                      <Select
-                        disabled={!selectedWasteType}
-                        onValueChange={(v: string) => {
-                          field.onChange(v);
-                          formdata.setValue("wasteProduct", "");
-                        }}
-                        value={field.value}
-                      >
-                        <SelectTrigger
-                          id="wasteCategory"
-                          className={`mt-2 ${
-                            !selectedWasteType ? "opacity-50" : ""
-                          }`}
-                        >
-                          <SelectValue
-                            placeholder={
-                              selectedWasteType
-                                ? t("fields.wasteCategory.placeholder")
-                                : t("fields.wasteCategory.disabledPlaceholder")
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {selectedWasteType &&
-                            Object.keys(
-                              (productCategoryMap as any)[selectedWasteType],
-                            ).map((item: string) => (
-                              <SelectItem key={item} value={item}>
-                                {c(`wasteCat.${selectedWasteType}.${item}`)}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {formState.errors.wasteCategory && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.wasteCategory.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Product */}
-              <div>
-                <Label htmlFor="wasteProduct">
-                  {t("fields.wasteProduct.label")}
-                </Label>
-                <Controller
-                  control={control}
-                  name="wasteProduct"
-                  render={({ field }) => (
-                    <Select
-                      disabled={!selectedWasteType || !selectedCategory}
-                      onValueChange={(v: string) => field.onChange(v)}
-                      value={field.value}
-                    >
-                      <SelectTrigger
-                        id="wasteProduct"
-                        className={`mt-2 ${
-                          !selectedWasteType ? "opacity-50" : ""
+                    {/* Category Selection */}
+                    {selectedWasteType && (
+                      <SelectInput
+                        control={control}
+                        label="Select category *"
+                        name="wasteCategory"
+                        option={CategoryObject as []}
+                        placeholder="Choose a category"
+                        classname={`w-full text-base rounded-lg border-2 transition-all ${
+                          selectedWasteCategory
+                            ? "border-green-300 bg-green-50/30"
+                            : "border-gray-200"
                         }`}
-                      >
-                        <SelectValue
-                          placeholder={
-                            selectedCategory
-                              ? t("fields.wasteProduct.placeholder")
-                              : t("fields.wasteProduct.disabledPlaceholder")
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {selectedWasteType &&
-                          selectedCategory &&
-                          (productCategoryMap as any)[selectedWasteType][
-                            selectedCategory
-                          ].map((prod: string) => (
-                            <SelectItem key={prod} value={prod}>
-                              {c(
-                                `productSet.${selectedWasteType}.${selectedCategory}.${prod}`,
-                              )}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {formState.errors.wasteProduct && (
-                  <p className="text-sm text-red-500">
-                    {formState.errors.wasteProduct.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Quantity & Unit */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="quantity">{t("fields.quantity.label")}</Label>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    {...register("quantity", { valueAsNumber: true })}
-                    className="mt-2"
-                    placeholder={t("fields.quantity.placeholder")}
-                  />
-                  {formState.errors.quantity && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.quantity.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="unit">{t("fields.unit.label")}</Label>
-                  <Controller
-                    control={control}
-                    name="unit"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={(v) => field.onChange(v)}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="mt-2" id="unit">
-                          <SelectValue
-                            placeholder={t("fields.unit.placeholder")}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="kg">{t("unit.kg")}</SelectItem>
-                          <SelectItem value="ton">{t("unit.ton")}</SelectItem>
-                          <SelectItem value="gram">{t("unit.gram")}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        disabled={!selectedWasteType}
+                      />
                     )}
-                  />
-                  {formState.errors.unit && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.unit.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Moisture & Price */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="moisture">{t("fields.moisture.label")}</Label>
-                  <Controller
-                    name="moisture"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={(v: string) => field.onChange(v)}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="mt-2" id="moisture">
-                          <SelectValue
-                            placeholder={t("fields.moisture.placeholder")}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="dry">
-                            ☀️ {c("moisture.dry")}
-                          </SelectItem>
-                          <SelectItem value="semi_wet">
-                            🌤️ {c("moisture.semiwet")}
-                          </SelectItem>
-                          <SelectItem value="wet">
-                            💧 {c("moisture.wet")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                    {selectedWasteType && selectedWasteCategory && (
+                      <ProcessSelectInput
+                        classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
+                        control={control}
+                        isProduct={true}
+                        label=" Select product *"
+                        name="wasteProduct"
+                        option={
+                          (productCategoryMap as any)?.[selectedWasteType]?.[
+                            selectedWasteCategory
+                          ]
+                        }
+                        disabled={!selectedWasteType && !selectedWasteCategory}
+                      />
                     )}
-                  />
-                  {formState.errors.moisture && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.moisture.message}
-                    </p>
-                  )}
-                </div>
 
-                <div>
-                  <Label htmlFor="price">{t("fields.price.label")}</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    {...register("price", { valueAsNumber: true })}
-                    className="mt-2"
-                    placeholder={t("fields.price.placeholder")}
-                  />
-                  {formState.errors.price && (
-                    <p className="text-sm text-red-500">
-                      {formState.errors.price.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Description */}
-              <div>
-                <Label htmlFor="description">
-                  {t("fields.description.label")}
-                </Label>
-                <Textarea
-                  id="description"
-                  {...register("description")}
-                  className="mt-2"
-                  rows={4}
-                  placeholder={t("fields.description.placeholder")}
-                />
-                {formState.errors.description && (
-                  <p className="text-sm text-red-500">
-                    {formState.errors.description.message}
-                  </p>
+                    {/* Step 1 Navigation */}
+                    {formValues.wasteProduct && formValues.title && (
+                      <Button
+                        type="button"
+                        onClick={() => setStep(2)}
+                        className="w-full h-12 mt-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
+                      >
+                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    )}
+                  </div>
                 )}
-              </div>
 
-              {/* Image Upload */}
-              <div>
-                <Label htmlFor="image">{t("fields.image.label")}</Label>
+                {/* STEP 2: Specifications */}
+                {step === 2 && (
+                  <div className="space-y-6 animate-fadeIn">
+                    {/* Quantity & Unit */}
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormInput
+                        control={control}
+                        label="Quantity *"
+                        name="quantity"
+                        placeholder="e.g., 100"
+                        type="number"
+                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                          formValues.price
+                            ? "border-green-300 bg-green-50/30"
+                            : "border-gray-200"
+                        } `}
+                      />
 
-                <div className="mt-2">
-                  {imagePreview ? (
-                    <div className="relative w-full h-64 rounded-lg overflow-hidden border">
-                      <Image
-                        src={imagePreview}
-                        alt="preview"
-                        fill
-                        style={{ objectFit: "cover" }}
+                      <SelectInput
+                        control={control}
+                        label="Unit *"
+                        name="unit"
+                        placeholder="Select unit"
+                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                          formValues.unit
+                            ? "border-green-300 bg-green-50/30"
+                            : "border-gray-200"
+                        }`}
+                        option={[
+                          { label: "📦 Kilogram (kg)", value: "kg" },
+                          { value: "ton", label: "🚛 Metric Ton" },
+                          { value: "gram", label: "⚖️ Gram (g)" },
+                        ]}
                       />
                     </div>
-                  ) : (
-                    <div className="w-full h-64 rounded-lg border-dashed border-2 border-gray-200 flex items-center justify-center">
-                      <div className="text-center">
-                        <Upload className="mx-auto mb-2" />
-                        <p className="text-sm">
-                          {t("fields.image.noImageSelected")}
-                        </p>
-                      </div>
+
+                    {/* Price & Moisture */}
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <FormInput
+                        control={control}
+                        label="Price per unit (₹) *"
+                        name="price"
+                        placeholder="e.g., 500"
+                        type="number"
+                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                          formValues.price
+                            ? "border-green-300 bg-green-50/30"
+                            : "border-gray-200"
+                        } `}
+                      />
+                      <SelectInput
+                        control={control}
+                        label="Moisture level *"
+                        name="moisture"
+                        placeholder="Select moisture"
+                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                          formValues.moisture
+                            ? "border-green-300 bg-green-50/30"
+                            : "border-gray-200"
+                        } `}
+                        option={[
+                          {
+                            value: "dry",
+                            label: "☀️ Dry",
+                          },
+                          {
+                            value: "semi_wet",
+                            label: "🌤️ Semi-wet",
+                          },
+                          {
+                            value: "wet",
+                            label: "💧 Wet",
+                          },
+                        ]}
+                      />
                     </div>
-                  )}
-                </div>
 
-                <input
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={onFileChange}
-                  className="mt-2"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  {t("fields.image.helper")}
-                </p>
-              </div>
+                    {/* Description */}
+                    <FormInput
+                      classname={`resize-none text-base rounded-lg border-2 transition-all ${
+                        formValues.description
+                          ? "border-green-300 bg-green-50/30"
+                          : "border-gray-200"
+                      } `}
+                      control={control}
+                      label="Add description (optional)"
+                      name="description"
+                      type="text"
+                      placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
+                    />
 
-              {/* Submit */}
-              <div className="pt-4">
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                      {t("buttons.saving")}
-                    </>
-                  ) : (
-                    <>
-                      <Leaf className="mr-2 h-4 w-4" /> {t("buttons.save")}
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
+                    {/* Step 2 Navigation */}
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setStep(1)}
+                        className="flex-1 h-12 rounded-lg border-2 font-semibold"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => setStep(3)}
+                        disabled={
+                          !formValues.quantity ||
+                          !formValues.price ||
+                          !formValues.moisture
+                        }
+                        className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
+                      >
+                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: Image Upload */}
+                {step === 3 && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
+                      <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-blue-800">
+                        Upload a clear, well-lit photo of your waste product.
+                        This helps buyers trust your listing.
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label
+                        htmlFor="image"
+                        className="text-base font-semibold text-gray-900"
+                      >
+                        Product Image <span className="text-red-500">*</span>
+                      </Label>
+
+                      {/* Image Preview */}
+                      {previewImage ? (
+                        <div className="relative rounded-lg overflow-hidden border-2 border-green-300 bg-green-50">
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="w-full h-64 object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewImage(null);
+                              setFile(null);
+                            }}
+                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ) : (
+                        <label htmlFor="image" className="block">
+                          <div className="relative border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg p-8 text-center cursor-pointer transition-all hover:bg-green-50">
+                            <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                            <p className="text-base font-semibold text-gray-900">
+                              Tap to upload photo
+                            </p>
+                            <p className="text-sm text-gray-600 mt-1">
+                              or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-500 mt-2">
+                              JPG, PNG up to 10MB
+                            </p>
+                          </div>
+                          <Input
+                            id="image"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      )}
+                    </div>
+
+                    {/* Step 3 Navigation */}
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setStep(2)}
+                        className="flex-1 h-12 rounded-lg border-2 font-semibold"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting || isUpdating}
+                        className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all disabled:opacity-50"
+                      >
+                        {isSubmitting || isUpdating ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Updating...
+                          </>
+                        ) : (
+                          <>
+                            <Leaf className="mr-2 h-5 w-5" />
+                            Update Listing
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </form>
+            </Form>
           </CardContent>
         </Card>
+
+        {/* Info Cards Below */}
+        <div className="grid sm:grid-cols-3 gap-4 mt-8">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div className="text-2xl mb-2">📸</div>
+            <h3 className="font-semibold text-gray-900 text-sm">
+              Quality Photos
+            </h3>
+            <p className="text-xs text-gray-600 mt-1">
+              Clear images increase buyer interest
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div className="text-2xl mb-2">💰</div>
+            <h3 className="font-semibold text-gray-900 text-sm">
+              Fair Pricing
+            </h3>
+            <p className="text-xs text-gray-600 mt-1">
+              Competitive prices attract more buyers
+            </p>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
+            <div className="text-2xl mb-2">📝</div>
+            <h3 className="font-semibold text-gray-900 text-sm">
+              Good Details
+            </h3>
+            <p className="text-xs text-gray-600 mt-1">
+              Complete information builds trust
+            </p>
+          </div>
+        </div>
       </div>
+
+      {/* CSS for animations */}
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </main>
   );
 }

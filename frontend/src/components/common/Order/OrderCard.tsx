@@ -110,15 +110,6 @@ export default function OrderCard({ order, isFarmer }: Props) {
                   : t(`status.${status === "confirmed" && order.deliveryMode === "PICKUPBYBUYER" && !order.isDelivered ? "confirmed" : status}`)}
               </Badge>
               <Badge variant="outline">
-                {order.hasPayment
-                  ? isFarmer
-                    ? t("payment.verified")
-                    : t("payment.completed")
-                  : isFarmer
-                    ? "Payment Pending"
-                    : t("payment.pending")}
-              </Badge>
-              <Badge variant="outline">
                 {order.deliveryMode === "DELIVERYBYFARMER"
                   ? isFarmer
                     ? t("delivery.byFarmer")

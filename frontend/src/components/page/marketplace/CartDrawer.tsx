@@ -137,6 +137,8 @@ export default function CartDrawer() {
     // 6️⃣ Clear cart after successful checkout
 
     dispatch(clearCart());
+
+    
   };
 
   /* ---------------- Empty State ---------------- */

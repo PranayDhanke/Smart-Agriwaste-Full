@@ -35,13 +35,13 @@ export default function SignedInActions({ id }: { id: string }) {
   const unread = useSelector(selectUnreadNotificationCount(id));
 
   return (
-    <>
+    <div className="flex items-center gap-1 sm:gap-2">
       {/* Role CTA */}
       {role === "farmer" && (
         <Link href="/profile/farmer/list-waste">
           <Button
             size="sm"
-            className="hidden md:flex bg-green-600 hover:bg-green-700"
+            className="hidden lg:inline-flex bg-green-600 hover:bg-green-700"
           >
             <Plus className="mr-1" />
             {t("auth.listWaste")}
@@ -54,7 +54,7 @@ export default function SignedInActions({ id }: { id: string }) {
         onClick={() => setNotificationOpen(true)}
         variant="ghost"
         size="icon"
-        className="relative"
+        className="relative shrink-0"
       >
         <Bell />
         {unread > 0 && (
@@ -81,6 +81,6 @@ export default function SignedInActions({ id }: { id: string }) {
         onOpenChange={setNotificationOpen}
         userId={user?.id as string}
       />
-    </>
+    </div>
   );
 }

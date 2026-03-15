@@ -1,8 +1,11 @@
+import FarmerOrderView from '@/components/page/Order/FarmerSingleOrder'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <FarmerOrderView />
+    </div>
   )
 }
 

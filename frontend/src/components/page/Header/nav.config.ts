@@ -1,6 +1,7 @@
 import {
   Home,
   IndianRupee,
+  List,
   Package,
   ShoppingCart,
   TrendingUp,
@@ -13,7 +14,7 @@ export type Role = "farmer" | "buyer" | "guest";
 export interface NavItem {
   key: string;
   href: string;
-  icon:  JSX.ElementType;
+  icon: JSX.ElementType;
 }
 
 export const NAVIGATION: Record<Role, NavItem[]> = {
@@ -38,6 +39,7 @@ export const NAVIGATION: Record<Role, NavItem[]> = {
       icon: TrendingUp,
     },
     { key: "nav.community", href: "/community", icon: User },
+    { key: "nav.Nego", href: "/profile/farmer/negotiations", icon: List },
   ],
 
   buyer: [
@@ -48,6 +50,7 @@ export const NAVIGATION: Record<Role, NavItem[]> = {
       href: "/profile/buyer/my-purchases",
       icon: Package,
     },
+    { key: "nav.Nego", href: "/profile/buyer/negotiations", icon: List },
     { key: "nav.community", href: "/community", icon: User },
   ],
 };
