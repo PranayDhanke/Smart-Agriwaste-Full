@@ -9,6 +9,7 @@ export const authApi = baseApi.injectEndpoints({
       { id: string; role: string }
     >({
       query: ({ id, role }) => `/${role}/get-account/${id}`,
+      providesTags: (_result, _error, { id }) => [{ type: "Profile", id }],
     }),
     createProfile: builder.mutation({
       query: ({ role, data }) => ({
@@ -16,9 +17,10 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: (_result, _error, data) => [
-        { type: "Profile", id: data.userId },
-      ],
+      invalidatesTags: (_result, _error, { data }) => {
+        const profileId = data.buyerId ?? data.farmerId;
+        return profileId ? [{ type: "Profile", id: profileId }] : [];
+      },
     }),
     updateProfile: builder.mutation({
       query: ({ userId, role, data }) => ({

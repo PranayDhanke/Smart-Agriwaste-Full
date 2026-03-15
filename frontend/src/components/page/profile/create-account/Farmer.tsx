@@ -38,7 +38,10 @@ import {
   farmerAccountSchema,
 } from "@/components/types/zod/farmerAccount.zod";
 import { uploadImage } from "@/utils/imagekit";
-import { useCreateProfileMutation } from "@/redux/api/authApi";
+import {
+  useCreateProfileMutation,
+  useLazyGetProfileQuery,
+} from "@/redux/api/authApi";
 import { FormInput } from "@/components/common/form/FormInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
 
@@ -93,6 +96,7 @@ export default function CreateAccountFarmer() {
   }, [role, router]);
 
   const [createProfile, { isLoading }] = useCreateProfileMutation();
+  const [getProfile] = useLazyGetProfileQuery();
 
   const uploadToImageKit = async (file: File, folder: string) => {
     return uploadImage(file, folder);
@@ -181,6 +185,7 @@ export default function CreateAccountFarmer() {
       };
 
       await createProfile({ role, data: payload }).unwrap();
+      await getProfile({ id: user.id, role }).unwrap();
 
       toast.success("Profile created successfully");
       router.replace("/");

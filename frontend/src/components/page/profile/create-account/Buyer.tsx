@@ -34,7 +34,10 @@ import {
   buyerAccountSchema,
 } from "@/components/types/zod/buyerAccount.zod";
 import { uploadImage } from "@/utils/imagekit";
-import { useCreateProfileMutation } from "@/redux/api/authApi";
+import {
+  useCreateProfileMutation,
+  useLazyGetProfileQuery,
+} from "@/redux/api/authApi";
 import { FormInput } from "@/components/common/form/FormInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
 
@@ -52,6 +55,7 @@ export default function CreateAccount() {
   const Address: AddressType = addressJson;
 
   const [createProfile, { isLoading }] = useCreateProfileMutation();
+  const [getProfile] = useLazyGetProfileQuery();
 
   const methods = useForm<BuyerAccountForm>({
     resolver: zodResolver(buyerAccountSchema),
@@ -136,6 +140,7 @@ export default function CreateAccount() {
       };
 
       await createProfile({ role, data: payload }).unwrap();
+      await getProfile({ id: user.id, role }).unwrap();
 
       toast.success("Profile created successfully");
       router.replace("/");

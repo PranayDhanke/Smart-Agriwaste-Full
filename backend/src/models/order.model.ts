@@ -13,8 +13,27 @@ const OrderSchema = new Schema(
     isDelivered: { type: Boolean, required: true, default: false },
     farmerId: { type: String, required: true },
     isOutForDelivery: { type: Boolean, required: true, default: false },
+    subTotalAmount: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
+    deliveryCharge: { type: Number, required: true, default: 0 },
     deliveryMode: { type: String, required: true },
+    pricingStatus: {
+      type: String,
+      enum: [
+        "not_required",
+        "pending_farmer_input",
+        "pending_buyer_review",
+        "accepted",
+        "rejected",
+      ],
+      default: "not_required",
+    },
+    deliverySecretCode: { type: String, required: true },
+    deliveryCodeRecipient: {
+      type: String,
+      enum: ["buyer", "farmer"],
+      required: true,
+    },
     paymentId: { type: String, required: false },
     buyerInfo: {
       buyerMobile: { type: String, required: true },

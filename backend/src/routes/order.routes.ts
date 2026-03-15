@@ -8,7 +8,9 @@ import {
   confirmOrder,
   getOrderBuyer,
   getOrderFarmer,
+  reviewOrderPrice,
   setOutForDelivery,
+  setDeliveryCharge,
   viewOrder,
 } from "../controllers/order.controller";
 
@@ -23,6 +25,8 @@ router.patch(
 
   asyncHandler(confirmOrder),
 );
+router.patch("/delivery-charge/:orderId", asyncHandler(setDeliveryCharge));
+router.patch("/review-price/:orderId", asyncHandler(reviewOrderPrice));
 router.patch("/cancel-order/:orderId", asyncHandler(cancelOrder));
 router.patch(
   "/confirm-delivery/:id",

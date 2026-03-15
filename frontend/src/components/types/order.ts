@@ -61,7 +61,17 @@ export interface Order {
 
   deliveryMode: "PICKUPBYBUYER" | "DELIVERYBYFARMER";
 
+  subTotalAmount: number;
   totalAmount: number;
+  deliveryCharge: number;
+  pricingStatus:
+    | "not_required"
+    | "pending_farmer_input"
+    | "pending_buyer_review"
+    | "accepted"
+    | "rejected";
+  deliverySecretCode: string;
+  deliveryCodeRecipient: "buyer" | "farmer";
 
   status: "pending" | "confirmed" | "cancelled";
 

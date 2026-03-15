@@ -90,13 +90,14 @@ export default function OrderCard({ order, isFarmer }: Props) {
   };
 
   const handleConfirmDelivery = async () => {
-    try {
-      await confirmDelivery(order._id).unwrap();
-      toast.success(isFarmer ? t("toast.delivered") : t("toast.deliveredSuccess"));
-    } catch {
-      toast.error(isFarmer ? t("errors.confirmDelivery") : t("toast.markDeliveryFailed"));
-    }
+    toast.info("Open the order details page to confirm with the secret code.");
   };
+
+  const requiresPricingStep =
+    isFarmer &&
+    order.status === "pending" &&
+    order.deliveryMode === "DELIVERYBYFARMER" &&
+    !["accepted", "not_required"].includes(order.pricingStatus);
 
   return (
     <Card className="border-gray-200 shadow-sm transition hover:shadow-md">
@@ -168,7 +169,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
             </Link>
           </Button>
 
-          {isFarmer && order.status === "pending" ? (
+          {isFarmer && order.status === "pending" && !requiresPricingStep ? (
             <>
               <Button disabled={disableActions} onClick={handleConfirmOrder}>
                 <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -183,6 +184,12 @@ export default function OrderCard({ order, isFarmer }: Props) {
                 {t("actions.reject")}
               </Button>
             </>
+          ) : null}
+
+          {requiresPricingStep ? (
+            <Badge variant="outline">
+              Delivery pricing needs review in details
+            </Badge>
           ) : null}
 
           {!isFarmer && order.status === "pending" ? (

@@ -95,7 +95,7 @@ export default function BuyerOrdersPage() {
             <div className="rounded-lg bg-amber-100 px-4 py-2 font-medium text-amber-800">
               {stats.pending} {t("filter.pending")}
             </div>
-          ) : null}
+          ) : null} 
         </div>
 
         <OrderContainer

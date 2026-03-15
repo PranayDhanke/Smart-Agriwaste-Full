@@ -111,12 +111,45 @@ export const orderApi = baseApi.injectEndpoints({
       ],
     }),
 
-    confirmDelivery: builder.mutation<void, string>({
-      query: (id) => ({
+    setDeliveryCharge: builder.mutation<
+      { message: string; order: Order },
+      { orderId: string; deliveryCharge: number }
+    >({
+      query: ({ orderId, deliveryCharge }) => ({
+        url: `/order/delivery-charge/${orderId}`,
+        method: "PATCH",
+        body: { deliveryCharge },
+      }),
+      invalidatesTags: (_, __, { orderId }) => [
+        { type: "Order", id: orderId },
+        { type: "Order", id: "BUYER_LIST" },
+        { type: "Order", id: "FARMER_LIST" },
+      ],
+    }),
+
+    reviewOrderPrice: builder.mutation<
+      { message: string; order: Order },
+      { orderId: string; action: "accept" | "reject" }
+    >({
+      query: ({ orderId, action }) => ({
+        url: `/order/review-price/${orderId}`,
+        method: "PATCH",
+        body: { action },
+      }),
+      invalidatesTags: (_, __, { orderId }) => [
+        { type: "Order", id: orderId },
+        { type: "Order", id: "BUYER_LIST" },
+        { type: "Order", id: "FARMER_LIST" },
+      ],
+    }),
+
+    confirmDelivery: builder.mutation<void, { id: string; secretCode: string }>({
+      query: ({ id, secretCode }) => ({
         url: `/order/confirm-delivery/${id}`,
         method: "PATCH",
+        body: { secretCode },
       }),
-      invalidatesTags: (_, __, id) => [{ type: "Order", id }],
+      invalidatesTags: (_, __, { id }) => [{ type: "Order", id }],
     }),
 
     setOutForDelivery: builder.mutation<void, string>({
@@ -136,6 +169,8 @@ export const {
   useCreateOrderMutation,
   useConfirmOrderMutation,
   useCancelOrderMutation,
+  useSetDeliveryChargeMutation,
+  useReviewOrderPriceMutation,
   useConfirmDeliveryMutation,
   useSetOutForDeliveryMutation,
 } = orderApi;

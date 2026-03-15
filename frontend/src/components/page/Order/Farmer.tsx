@@ -16,7 +16,7 @@ function getDisplayStatus(order: Order) {
   return order.status;
 }
 
-export default function FarmerOrdersPage() {
+export default function FarmerOrdersPage() { 
   const t = useTranslations("profile.farmer.Orders");
   const { user } = useUser();
   const [page, setPage] = useState(1);

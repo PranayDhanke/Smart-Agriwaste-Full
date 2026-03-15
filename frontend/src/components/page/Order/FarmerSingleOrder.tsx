@@ -35,6 +35,7 @@ import {
   useCancelOrderMutation,
   useConfirmDeliveryMutation,
   useConfirmOrderMutation,
+  useSetDeliveryChargeMutation,
   useSetOutForDeliveryMutation,
   useViewOrderQuery,
 } from "@/redux/api/orderApi";
@@ -51,14 +52,18 @@ const FarmerOrderView = () => {
     isLoading,
     isFetching,
   } = useViewOrderQuery(orderid as string, {
-    skip: !orderid,
+    skip: !orderid, 
   });
   const [confirmOrder, { isLoading: isConfirming }] = useConfirmOrderMutation();
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
   const [confirmDelivery, { isLoading: isConfirmingDelivery }] =
     useConfirmDeliveryMutation();
+  const [setDeliveryCharge, { isLoading: isSavingDeliveryCharge }] =
+    useSetDeliveryChargeMutation();
   const [setOutForDeliveryMutation, { isLoading: isSettingOut }] =
     useSetOutForDeliveryMutation();
+  const [deliveryChargeInput, setDeliveryChargeInput] = useState("");
+  const [secretCodeInput, setSecretCodeInput] = useState("");
 
   const buyerInfo = order?.buyerInfo.buyerName;
   const buyerAddress = order?.buyerInfo.address;
@@ -67,6 +72,21 @@ const FarmerOrderView = () => {
   const isPending = order?.status === "pending";
   const isConfirmed = order?.status === "confirmed";
   const isCancelled = order?.status === "cancelled";
+  const pricingStatus = order?.pricingStatus ?? "pending_farmer_input";
+  const deliveryCodeRecipient =
+    order?.deliveryCodeRecipient ??
+    (isPickupByBuyer ? "farmer" : isDeliveryByFarmer ? "buyer" : undefined);
+  const canSetDeliveryCharge =
+    isDeliveryByFarmer && isPending && pricingStatus === "pending_farmer_input";
+  const awaitingBuyerPriceApproval =
+    isDeliveryByFarmer && pricingStatus === "pending_buyer_review";
+  const canConfirmPendingOrder =
+    isPending &&
+    (!isDeliveryByFarmer ||
+      pricingStatus === "accepted" ||
+      pricingStatus === "not_required");
+  const showFarmerSecretCode =
+    isPickupByBuyer && deliveryCodeRecipient === "farmer";
   const canCancel =
     !isCancelled && !order?.isDelivered && !order?.isOutForDelivery;
 
@@ -128,7 +148,19 @@ const FarmerOrderView = () => {
   const [sendNotification] = useSendNotificationMutation();
   const loading = isLoading || (isFetching && !order);
   const isMutating =
-    isConfirming || isCancelling || isConfirmingDelivery || isSettingOut;
+    isConfirming ||
+    isCancelling ||
+    isConfirmingDelivery ||
+    isSettingOut ||
+    isSavingDeliveryCharge;
+
+  React.useEffect(() => {
+    if (order?.deliveryCharge !== undefined) {
+      setDeliveryChargeInput(
+        order.deliveryCharge > 0 ? String(order.deliveryCharge) : "",
+      );
+    }
+  }, [order?.deliveryCharge]);
 
   const changeOrderStatus = async (
     id: string,
@@ -191,7 +223,15 @@ const FarmerOrderView = () => {
     farmerName: string,
   ) => {
     try {
-      await confirmDelivery(id).unwrap();
+      if (!secretCodeInput.trim()) {
+        toast.error("Enter the 6-digit delivery code shared by the buyer.");
+        return;
+      }
+
+      await confirmDelivery({
+        id,
+        secretCode: secretCodeInput.trim(),
+      }).unwrap();
       toast.success(t("toast.delivered"));
       sendNotification({
         data: {
@@ -206,8 +246,30 @@ const FarmerOrderView = () => {
     }
   };
 
-  const totalEarning =
-    order?.items.reduce((sum, i) => sum + i.price * i.quantity, 0) || 0;
+  const submitDeliveryCharge = async () => {
+    if (!order?._id) return;
+
+    const deliveryCharge = Number(deliveryChargeInput);
+
+    if (Number.isNaN(deliveryCharge) || deliveryCharge < 0) {
+      toast.error("Enter a valid delivery charge.");
+      return;
+    }
+
+    try {
+      await setDeliveryCharge({
+        orderId: order._id,
+        deliveryCharge,
+      }).unwrap();
+      toast.success("Delivery charge sent to buyer for approval.");
+    } catch {
+      toast.error("Failed to send delivery charge.");
+    }
+  };
+
+  const totalEarning = order?.totalAmount || 0;
+  const subTotalAmount = order?.subTotalAmount || 0;
+  const deliveryCharge = order?.deliveryCharge || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-6 px-4">
@@ -651,6 +713,22 @@ const FarmerOrderView = () => {
               </Card>
             )}
 
+            {showFarmerSecretCode && !order.isDelivered && (
+              <Card className="border border-blue-200 bg-blue-50 shadow-sm">
+                <CardContent className="space-y-3 pt-5">
+                  <p className="text-sm font-semibold text-blue-900">
+                    Pickup verification code
+                  </p>
+                  <p className="text-sm text-blue-800">
+                    Share this 6-digit code with the buyer only when the pickup is completed.
+                  </p>
+                  <div className="rounded-lg border border-blue-300 bg-white px-4 py-3 text-center text-2xl font-bold tracking-[0.35em] text-blue-700">
+                    {order.deliverySecretCode}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Pickup by Buyer Info Card */}
             {isPickupByBuyer && (
               <Card
@@ -775,6 +853,26 @@ const FarmerOrderView = () => {
                           ? t("delivery.pickupByBuyer")
                           : t("delivery.byFarmer")}
                       </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase">
+                      Price Breakdown
+                    </p>
+                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm dark:border-gray-700 dark:bg-gray-700/30">
+                      <div className="flex items-center justify-between">
+                        <span>Products</span>
+                        <span>Rs. {subTotalAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span>Delivery charge</span>
+                        <span>Rs. {deliveryCharge.toLocaleString("en-IN")}</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between font-semibold">
+                        <span>Total</span>
+                        <span>Rs. {totalEarning.toLocaleString("en-IN")}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -907,7 +1005,41 @@ const FarmerOrderView = () => {
 
               {canCancel && (
                 <>
-                  {!isConfirmed && (
+                  {canSetDeliveryCharge && (
+                    <div className="flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+                      <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                        Add your delivery charge before confirming this order.
+                      </p>
+                      <div className="flex flex-col gap-3 sm:flex-row">
+                        <input
+                          type="number"
+                          min="0"
+                          value={deliveryChargeInput}
+                          onChange={(e) => setDeliveryChargeInput(e.target.value)}
+                          placeholder="Delivery charge"
+                          className="h-11 rounded-md border border-blue-300 bg-white px-3 text-sm outline-none focus:border-blue-500"
+                        />
+                        <Button
+                          size="lg"
+                          disabled={isMutating}
+                          onClick={submitDeliveryCharge}
+                          className="h-11 bg-blue-600 text-white hover:bg-blue-700"
+                        >
+                          Send charge to buyer
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {awaitingBuyerPriceApproval && (
+                    <Card className="w-full border border-amber-200 bg-amber-50 shadow-sm dark:border-amber-800 dark:bg-amber-900/20">
+                      <CardContent className="py-3 text-sm font-medium text-amber-800 dark:text-amber-200">
+                        Waiting for buyer to approve the delivery charge before you can confirm this order.
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {!isConfirmed && canConfirmPendingOrder && (
                     <Button
                       size="lg"
                       disabled={isMutating}
@@ -969,21 +1101,34 @@ const FarmerOrderView = () => {
               {isDeliveryByFarmer &&
                 order.isOutForDelivery &&
                 !order.isDelivered && (
-                  <Button
-                    size="lg"
-                    disabled={isMutating}
-                    onClick={() =>
-                      conformDelivery(
-                        order._id,
-                        order.buyerId,
-                        order.items[0].sellerInfo.seller.farmerName,
-                      )
-                    }
-                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white shadow-lg hover:shadow-xl transition-all h-11"
-                  >
-                    <CheckCircle className="h-5 w-5" />
-                    {t("actions.confirmDelivery")}
-                  </Button>
+                  <div className="flex w-full flex-col gap-3 sm:w-auto">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={secretCodeInput}
+                      onChange={(e) =>
+                        setSecretCodeInput(e.target.value.replace(/\D/g, "").slice(0, 6))
+                      }
+                      placeholder="Enter 6-digit buyer code"
+                      className="h-11 rounded-md border border-emerald-300 bg-white px-3 text-sm outline-none focus:border-emerald-500"
+                    />
+                    <Button
+                      size="lg"
+                      disabled={isMutating}
+                      onClick={() =>
+                        conformDelivery(
+                          order._id,
+                          order.buyerId,
+                          order.items[0].sellerInfo.seller.farmerName,
+                        )
+                      }
+                      className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white shadow-lg hover:shadow-xl transition-all h-11"
+                    >
+                      <CheckCircle className="h-5 w-5" />
+                      {t("actions.confirmDelivery")}
+                    </Button>
+                  </div>
                 )}
             </div>
           </>

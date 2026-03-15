@@ -55,6 +55,7 @@ export function AuthProvider() {
         taluka: data.accountdata.taluka,
         village: data.accountdata.village,
       };
+      
       const authUser: User = {
         email: data.accountdata.email,
         id: user.id,
