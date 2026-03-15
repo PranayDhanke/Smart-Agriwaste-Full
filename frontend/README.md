@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend
 
-## Getting Started
+Next.js 16 frontend for Smart Agriwaste.
 
-First, run the development server:
+## What It Includes
+
+- Farmer and buyer dashboards
+- Waste listing and editing flows
+- Marketplace browsing
+- Negotiation and order management
+- Recommendation flow powered by the dataset API
+- Authentication with Clerk
+- Notifications and realtime chat
+- Multilingual UI with `next-intl`
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Redux Toolkit + RTK Query
+- Tailwind CSS
+- Clerk
+- Socket.IO client
+- Leaflet / React Leaflet
+- OneSignal
+
+## Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env` file in `frontend/`.
+
+3. Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+- `npm run dev` - start development server
+- `npm run build` - production build
+- `npm run start` - run production build
+- `npm run lint` - run ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Required Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+NEXT_PUBLIC_AGRI_API_URL=http://localhost:8080
 
-## Deploy on Vercel
+NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=
+NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=
+NEXT_PUBLIC_IMAGEKIT_AUTH_ENDPOINT=http://localhost:5000/api/imagekit/auth
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+NEXT_PUBLIC_ONESIGNAL_APP_ID=
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Service Dependencies
+
+The frontend talks to:
+
+- Backend API for auth, profile, waste, order, negotiation, and notification flows
+- Dataset API for recommendation data
+- Backend Socket.IO server for realtime features
+
+## Key App Areas
+
+- `src/app/` - App Router pages and providers
+- `src/components/` - shared UI and page-level components
+- `src/redux/` - store, slices, selectors, RTK Query APIs
+- `src/i18n/` - localized routing and message loading
+- `public/` - static assets
+
+## Runtime API Configuration
+
+The app supports runtime endpoint configuration through:
+
+- `NEXT_PUBLIC_API_BASE_URL`
+- `NEXT_PUBLIC_SOCKET_URL`
+- `NEXT_PUBLIC_AGRI_API_URL`
+
+Setting these explicitly is recommended for local development.
+
+## Notes
+
+- The app uses localized routes through `next-intl`.
+- Clerk is required for sign-in, sign-up, and profile-aware navigation.
+- Image uploads and push notifications depend on matching backend/service credentials.

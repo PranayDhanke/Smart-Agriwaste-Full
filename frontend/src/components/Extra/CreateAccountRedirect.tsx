@@ -26,7 +26,7 @@ const CreateAccountRedirect = () => {
         });
       }
 
-      router.push(`/create-account/${role === "user" ? localRole : role}`);
+      router.replace(`/create-account/${role === "user" ? localRole : role}`);
     };
 
     setTimeout(() => {

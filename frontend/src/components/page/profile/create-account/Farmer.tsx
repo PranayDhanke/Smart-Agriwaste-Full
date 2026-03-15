@@ -157,7 +157,7 @@ export default function CreateAccountFarmer() {
       createProfile({ role, data: payload }).then(() => {
         toast.success("suceess");
         toast.dismiss();
-        router.push("/");
+        router.replace("/");
       });
     } catch (err) {
       toast.error("Something went wrong. Please try again.");
