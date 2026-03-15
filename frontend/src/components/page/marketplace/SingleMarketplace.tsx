@@ -31,6 +31,10 @@ import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Waste, WasteType } from "@/components/types/waste";
 import { useGetSingleWasteQuery } from "@/redux/api/wasteApi";
+import { CartItem } from "@/components/types/order";
+import { addToCart } from "@/redux/features/cartSlice";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
 
 const categoryMeta: Record<
   WasteType,
@@ -77,28 +81,37 @@ export default function SingleMarketplace() {
 
   const id = searchParams.get("product");
 
+  const dispatch = useDispatch();
+
   const { user } = useUser();
 
   const role = user?.unsafeMetadata.role;
 
   const { data, isFetching } = useGetSingleWasteQuery(id || "");
 
-  const handleAddToCart = () => {
-    if (data) {
-      alert(
-        t("alerts.added", {
-          count: String(quantity),
-          title: data.title[locale],
-        }),
-      );
-    }
-  };
-
-  const handleBuyNow = () => {
-    if (data) {
-      alert(t("alerts.buying", { count: String(quantity) }));
-      // Navigate to checkout page
-    }
+  const handleAddToCart = (item: Waste) => {
+    const u: CartItem = {
+      description: item.description,
+      image: item.imageUrl,
+      maxQuantity: item.quantity,
+      moisture: item.moisture,
+      price: item.price,
+      prodId: item._id,
+      quantity: 1,
+      sellerInfo: {
+        address: item.address,
+        seller: {
+          farmerName: item.seller.name,
+          ...item.seller,
+        },
+      },
+      title: item.title,
+      unit: item.unit,
+      wasteProduct: item.wasteProduct,
+      wasteType: item.wasteType,
+    };
+    dispatch(addToCart(u));
+    toast.success(`${item.title[locale]} added to cart`);
   };
 
   const handleShare = () => {
@@ -383,17 +396,10 @@ export default function SingleMarketplace() {
                     variant="outline"
                     size="lg"
                     className="flex-1 h-12 bg-white hover:bg-gray-50 border-gray-300"
-                    onClick={handleAddToCart}
+                    onClick={() => handleAddToCart(data)}
                   >
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     {t("actions.addToCart")}
-                  </Button>
-                  <Button
-                    size="lg"
-                    className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-white"
-                    onClick={handleBuyNow}
-                  >
-                    {t("actions.buyNow")}
                   </Button>
                 </div>
               </>

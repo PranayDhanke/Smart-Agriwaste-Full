@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Card,
@@ -15,10 +15,14 @@ import { Button } from "@/components/ui/button";
 import { IndianRupee, Handshake } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
-import axios from "axios";
 import { Waste } from "@/components/types/waste";
 import { useCreateNegotiationMutation } from "@/redux/api/negotiationApi";
 import { useSendNotificationMutation } from "@/redux/api/notificationAPi";
+
+type MutationError = {
+  data?: { message?: string };
+  error?: string;
+};
 
 const NegotiationPanel = ({
   item,
@@ -31,11 +35,15 @@ const NegotiationPanel = ({
   const [price, setPrice] = useState<number | "">("");
   const t = useTranslations("marketplace.NegotiationPanel");
   const { user } = useUser();
-  const [createNegotiation, { isLoading, isSuccess }] =
-    useCreateNegotiationMutation();
+  const [createNegotiation, { isLoading }] = useCreateNegotiationMutation();
   const [sendNotification] = useSendNotificationMutation();
 
   const handleSubmit = async () => {
+    if (!user?.id) {
+      toast.error(t("errors.failed"));
+      return;
+    }
+
     if (!price || price <= 0) {
       toast.error(t("errors.invalidPrice"));
       return;
@@ -45,11 +53,12 @@ const NegotiationPanel = ({
       toast.error(t("errors.mustBeLower"));
       return;
     }
+
     try {
-      createNegotiation({
+      await createNegotiation({
         data: {
-          buyerId: user?.id,
-          buyerName: user?.fullName || "buyer",
+          buyerId: user.id,
+          buyerName: user.fullName || t("buyerPlaceholder"),
           farmerId: item.seller.farmerId,
           negotiatedPrice: price,
           status: "pending",
@@ -60,7 +69,6 @@ const NegotiationPanel = ({
             wasteProduct: item.wasteProduct,
             moisture: item.moisture,
             quantity: 1,
-            maxQuantity: item.quantity,
             price: item.price,
             unit: item.unit,
             description: item.description,
@@ -75,25 +83,30 @@ const NegotiationPanel = ({
           },
         },
       }).unwrap();
-    } catch {
-      toast.error("Failed to send negotiation");
-    }
-  };
 
-  useEffect(() => {
-    if (isSuccess) {
-      sendNotification({
+      await sendNotification({
         data: {
           userId: item.seller.farmerId,
-          title: "New Negotiation Request",
-          message: `Buyer ${user?.fullName} sent a negotiation request for the Product ${item.title.en}`,
+          title: t("notification.title"),
+          message: t("notification.message", {
+            buyer: user.fullName || t("buyerPlaceholder"),
+            title: item.title[locale],
+          }),
           type: "negotiation",
         },
       }).unwrap();
-      toast.success("Negotiation request sent successfully");
 
+      toast.success(t("success.sent"));
+      onClose();
+    } catch (error: unknown) {
+      const mutationError = error as MutationError;
+      const message =
+        mutationError.data?.message ||
+        mutationError.error ||
+        t("errors.failed");
+      toast.error(message);
     }
-  }, [isSuccess]);
+  };
 
   return (
     <Card
@@ -139,7 +152,9 @@ const NegotiationPanel = ({
               min={1}
               max={item.price - 1}
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) =>
+                setPrice(e.target.value === "" ? "" : Number(e.target.value))
+              }
               className="pl-8"
             />
           </div>

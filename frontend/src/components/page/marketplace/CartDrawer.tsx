@@ -137,8 +137,6 @@ export default function CartDrawer() {
     // 6️⃣ Clear cart after successful checkout
 
     dispatch(clearCart());
-
-    
   };
 
   /* ---------------- Empty State ---------------- */
@@ -248,7 +246,7 @@ export default function CartDrawer() {
                   size="icon"
                   variant="ghost"
                   className="text-muted-foreground hover:text-red-500"
-                  onClick={() => removeFromCart(item.prodId)}
+                  onClick={() => dispatch(removeFromCart(item.prodId))}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

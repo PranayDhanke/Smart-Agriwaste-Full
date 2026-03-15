@@ -1,7 +1,7 @@
 // redux/api/negotiationApi.ts
 import { NegotiationListResponse } from "@/components/types/negotiation";
 import { baseApi } from "./baseApi";
-import { Negotiation } from "@/components/types/order";
+import { Negotiation } from "@/components/types/negotiation";
 
 export const negotiationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
