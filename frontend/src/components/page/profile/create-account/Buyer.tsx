@@ -89,35 +89,74 @@ export default function CreateAccount() {
     return uploadImage(file, folder);
   };
 
+  const email = user?.primaryEmailAddress?.emailAddress || "";
+  const fallbackUsername = user?.username || email.split("@")[0] || user?.id || "";
+  const fallbackFirstName =
+    user?.firstName || user?.fullName?.split(" ")[0] || "Buyer";
+  const fallbackLastName =
+    user?.lastName ||
+    user?.fullName?.split(" ").slice(1).join(" ") ||
+    "User";
+
   const onSubmit = async (data: BuyerAccountForm) => {
-    let aadharUrl = "";
-    if (data.aadhar) {
-      toast.loading("Uploading Aadhaar...");
-      aadharUrl = await uploadToImageKit(data.aadhar, "aadhar");
+    if (!user?.id || role !== "buyer") {
+      toast.error("Unable to create buyer account right now.");
+      return;
     }
 
-    const payload = {
-      buyerId: user!.id,
-      firstName: user!.firstName || "",
-      lastName: user!.lastName || "",
-      username: user!.username || "",
-      email: user!.primaryEmailAddress?.emailAddress || "",
-      phone: data.phone.replace(/\D/g, ""),
-      aadharnumber: data.aadharnumber.replace(/\s/g, ""),
-      state: data.state,
-      district: data.district,
-      taluka: data.taluka,
-      village: data.village,
-      houseBuildingName: data.houseBuildingName,
-      roadarealandmarkName: data.roadarealandmarkName,
-      aadharUrl,
-    };
+    const uploadToastId = data.aadhar
+      ? toast.loading("Uploading Aadhaar...")
+      : undefined;
 
-    createProfile({ role, data: payload }).then(() => {
-      toast.success("suceess");
-      toast.dismiss();
+    try {
+      let aadharUrl = "";
+      if (data.aadhar) {
+        aadharUrl = await uploadToImageKit(data.aadhar, "aadhar");
+      }
+
+      if (uploadToastId) {
+        toast.dismiss(uploadToastId);
+      }
+
+      const payload = {
+        buyerId: user.id,
+        firstName: fallbackFirstName,
+        lastName: fallbackLastName,
+        username: fallbackUsername,
+        email,
+        phone: data.phone.replace(/\D/g, ""),
+        aadharnumber: data.aadharnumber.replace(/\s/g, ""),
+        state: data.state,
+        district: data.district,
+        taluka: data.taluka,
+        village: data.village,
+        houseBuildingName: data.houseBuildingName,
+        roadarealandmarkName: data.roadarealandmarkName,
+        aadharUrl,
+      };
+
+      await createProfile({ role, data: payload }).unwrap();
+
+      toast.success("Profile created successfully");
       router.replace("/");
-    });
+    } catch (error: unknown) {
+      if (uploadToastId) {
+        toast.dismiss(uploadToastId);
+      }
+
+      const message =
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof error.data === "object" &&
+        error.data !== null &&
+        "message" in error.data &&
+        typeof error.data.message === "string"
+          ? error.data.message
+          : "Failed to create buyer account";
+
+      toast.error(message);
+    }
   };
 
   if (!isLoaded) {

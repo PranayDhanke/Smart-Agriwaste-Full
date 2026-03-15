@@ -98,6 +98,15 @@ export default function CreateAccountFarmer() {
     return uploadImage(file, folder);
   };
 
+  const email = user?.primaryEmailAddress?.emailAddress || "";
+  const fallbackUsername = user?.username || email.split("@")[0] || user?.id || "";
+  const fallbackFirstName =
+    user?.firstName || user?.fullName?.split(" ")[0] || "Farmer";
+  const fallbackLastName =
+    user?.lastName ||
+    user?.fullName?.split(" ").slice(1).join(" ") ||
+    "User";
+
   const step1Fields: (keyof FarmerAccountForm)[] = [
     "aadharnumber",
     "aadhar",
@@ -116,26 +125,43 @@ export default function CreateAccountFarmer() {
   };
 
   const onSubmit = async (data: FarmerAccountForm) => {
+    if (!user?.id || role !== "farmer") {
+      toast.error("Unable to create farmer account right now.");
+      return;
+    }
+
+    const aadharToastId = data.aadhar
+      ? toast.loading("Uploading Aadhaar...")
+      : undefined;
+    const farmDocToastId = data.farmdoc
+      ? toast.loading("Uploading Farm Document...")
+      : undefined;
+
     try {
       let aadharUrl = "";
       let farmDocUrl = "";
 
       if (data.aadhar) {
-        toast.loading("Uploading Aadhaar...");
         aadharUrl = await uploadToImageKit(data.aadhar, "aadhar");
       }
 
       if (data.farmdoc) {
-        toast.loading("Uploading Farm Document...");
         farmDocUrl = await uploadToImageKit(data.farmdoc, "farmdoc");
       }
 
+      if (aadharToastId) {
+        toast.dismiss(aadharToastId);
+      }
+      if (farmDocToastId) {
+        toast.dismiss(farmDocToastId);
+      }
+
       const payload = {
-        farmerId: user!.id,
-        firstName: user!.firstName || "",
-        lastName: user!.lastName || "",
-        username: user!.username || "",
-        email: user!.primaryEmailAddress?.emailAddress || "",
+        farmerId: user.id,
+        firstName: fallbackFirstName,
+        lastName: fallbackLastName,
+        username: fallbackUsername,
+        email,
 
         phone: data.phone.replace(/\D/g, ""),
         aadharnumber: data.aadharnumber.replace(/\s/g, ""),
@@ -154,13 +180,30 @@ export default function CreateAccountFarmer() {
         farmDocUrl,
       };
 
-      createProfile({ role, data: payload }).then(() => {
-        toast.success("suceess");
-        toast.dismiss();
-        router.replace("/");
-      });
-    } catch (err) {
-      toast.error("Something went wrong. Please try again.");
+      await createProfile({ role, data: payload }).unwrap();
+
+      toast.success("Profile created successfully");
+      router.replace("/");
+    } catch (error: unknown) {
+      if (aadharToastId) {
+        toast.dismiss(aadharToastId);
+      }
+      if (farmDocToastId) {
+        toast.dismiss(farmDocToastId);
+      }
+
+      const message =
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error &&
+        typeof error.data === "object" &&
+        error.data !== null &&
+        "message" in error.data &&
+        typeof error.data.message === "string"
+          ? error.data.message
+          : "Failed to create farmer account";
+
+      toast.error(message);
     }
   };
 
