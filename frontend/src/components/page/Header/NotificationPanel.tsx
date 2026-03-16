@@ -21,6 +21,7 @@ import { Notification } from "@/components/types/notification";
 import { connectSocketForUser } from "@/lib/socket";
 import { useDispatch } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
+import type { AppDispatch } from "@/redux/store";
 
 interface NotificationPanelProps {
   open: boolean;
@@ -34,7 +35,7 @@ export default function NotificationPanel({
   userId,
 }: NotificationPanelProps) {
   const t = useTranslations("extra");
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [socketNotifications, setSocketNotifications] = useState<Notification[]>([]);
 
   const { data, isFetching } = useGetNotificationsQuery(
