@@ -77,6 +77,7 @@ export default function ListWaste() {
     useCreateWasteMutation();
 
   const t = useTranslations("waste");
+  const wf = useTranslations("wasteForms.WasteForm");
   const c = useTranslations("wasteCommon");
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,7 +199,7 @@ export default function ListWaste() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin mr-2" />
-        <span>Loading profile...</span>
+        <span>{wf("loading.loadingProfile")}</span>
       </div>
     );
   }
@@ -237,19 +238,19 @@ export default function ListWaste() {
           <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100 px-6 sm:px-8 py-6">
             <div>
               <CardTitle className="text-2xl font-bold text-gray-900">
-                {step === 1 ? "📦 " : step === 2 ? "📊 " : "🖼️ "}
+                {step === 1 ? wf('stepEmojis.step1') : step === 2 ? wf('stepEmojis.step2') : wf('stepEmojis.step3')}
                 {step === 1
-                  ? "Waste Details"
+                  ? wf('stepTitles.step1')
                   : step === 2
-                    ? "Specifications"
-                    : "Product Image"}
+                    ? wf('stepTitles.step2')
+                    : wf('stepTitles.step3')}
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
                 {step === 1
-                  ? "Tell us about your agricultural waste"
+                  ? wf('stepDescriptions.step1')
                   : step === 2
-                    ? "Add quantity, price, and condition details"
-                    : "Upload a clear photo of your waste"}
+                    ? wf('stepDescriptions.step2')
+                    : wf('stepDescriptions.step3')}
               </p>
             </div>
           </CardHeader>
@@ -264,9 +265,9 @@ export default function ListWaste() {
                     {/* Title */}
                     <FormInput
                       control={control}
-                      label="Give your listing a title *"
+                      label={wf('form.titleLabel')}
                       name="title"
-                      placeholder="e.g., Fresh Rice Straw, Wheat Residue"
+                      placeholder={wf('form.titlePlaceholder')}
                       type="text"
                       classname={`h-12 text-base rounded-lg border-2 transition-all ${
                         formValues.price
@@ -280,7 +281,7 @@ export default function ListWaste() {
                       classNames="grid grid-cols-3 gap-3"
                       control={control}
                       isProduct={false}
-                      label="What type of waste? *"
+                      label={wf('form.wasteTypeLabel')}
                       name="wasteType"
                       option={[
                         {
@@ -305,10 +306,10 @@ export default function ListWaste() {
                     {selectedWasteType && (
                       <SelectInput
                         control={control}
-                        label="Select category *"
+                        label={wf('form.categoryLabel')}
                         name="wasteCategory"
                         option={CategoryObject as []}
-                        placeholder="Choose a category"
+                        placeholder={wf('form.categoryPlaceholder')}
                         classname={`w-full text-base rounded-lg border-2 transition-all ${
                           selectedWasteCategory
                             ? "border-green-300 bg-green-50/30"
@@ -322,7 +323,7 @@ export default function ListWaste() {
                         classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
                         control={control}
                         isProduct={true}
-                        label=" Select product *"
+                        label={wf('form.productLabel')}
                         name="wasteProduct"
                         option={
                           (productCategoryMap as any)?.[selectedWasteType]?.[
@@ -340,7 +341,7 @@ export default function ListWaste() {
                         onClick={() => setStep(2)}
                         className="w-full h-12 mt-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {wf('buttons.continue')} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     )}
                   </div>
@@ -353,9 +354,9 @@ export default function ListWaste() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <FormInput
                         control={control}
-                        label="Quantity *"
+                        label={wf('form.quantityLabel')}
                         name="quantity"
-                        placeholder="e.g., 100"
+                        placeholder={wf('form.quantityPlaceholder')}
                         type="number"
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.price
@@ -366,18 +367,18 @@ export default function ListWaste() {
 
                       <SelectInput
                         control={control}
-                        label="Unit *"
+                        label={wf('form.unitLabel')}
                         name="unit"
-                        placeholder="Select unit"
+                        placeholder={wf('form.unitPlaceholder')}
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.unit
                             ? "border-green-300 bg-green-50/30"
                             : "border-gray-200"
                         }`}
                         option={[
-                          { label: "📦 Kilogram (kg)", value: "kg" },
-                          { value: "ton", label: "🚛 Metric Ton" },
-                          { value: "gram", label: "⚖️ Gram (g)" },
+                          { label: wf('units.kg'), value: "kg" },
+                          { value: "ton", label: wf('units.ton') },
+                          { value: "gram", label: wf('units.gram') },
                         ]}
                       />
                     </div>
@@ -386,9 +387,9 @@ export default function ListWaste() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <FormInput
                         control={control}
-                        label="Price per unit (₹) *"
+                        label={wf('form.priceLabel')}
                         name="price"
-                        placeholder="e.g., 500"
+                        placeholder={wf('form.pricePlaceholder')}
                         type="number"
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.price
@@ -398,9 +399,9 @@ export default function ListWaste() {
                       />
                       <SelectInput
                         control={control}
-                        label="Moisture level *"
+                        label={wf('form.moistureLabel')}
                         name="moisture"
-                        placeholder="Select moisture"
+                        placeholder={wf('form.moisturePlaceholder')}
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.moisture
                             ? "border-green-300 bg-green-50/30"
@@ -409,15 +410,15 @@ export default function ListWaste() {
                         option={[
                           {
                             value: "dry",
-                            label: "☀️ Dry",
+                            label: wf('moisture.dry'),
                           },
                           {
                             value: "semi_wet",
-                            label: "🌤️ Semi-wet",
+                            label: wf('moisture.semiWet'),
                           },
                           {
                             value: "wet",
-                            label: "💧 Wet",
+                            label: wf('moisture.wet'),
                           },
                         ]}
                       />
@@ -431,10 +432,10 @@ export default function ListWaste() {
                           : "border-gray-200"
                       } `}
                       control={control}
-                      label="Add description (optional)"
+                      label={wf('form.descriptionLabel')}
                       name="description"
                       type="text"
-                      placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
+                      placeholder={wf('form.descriptionPlaceholder')}
                     />
 
                     {/* Step 2 Navigation */}
@@ -445,7 +446,7 @@ export default function ListWaste() {
                         onClick={() => setStep(1)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {wf('buttons.back')}
                       </Button>
                       <Button
                         type="button"
@@ -457,7 +458,7 @@ export default function ListWaste() {
                         }
                         className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {wf('buttons.continue')} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     </div>
                   </div>
@@ -469,8 +470,7 @@ export default function ListWaste() {
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
                       <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-blue-800">
-                        Upload a clear, well-lit photo of your waste product.
-                        This helps buyers trust your listing.
+                        {wf('form.imageHint')}
                       </p>
                     </div>
 
@@ -479,7 +479,7 @@ export default function ListWaste() {
                         htmlFor="image"
                         className="text-base font-semibold text-gray-900"
                       >
-                        Product Image <span className="text-red-500">*</span>
+                        {wf('form.imageLabel')} <span className="text-red-500">*</span>
                       </Label>
 
                       {/* Image Preview */}
@@ -506,13 +506,13 @@ export default function ListWaste() {
                           <div className="relative border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg p-8 text-center cursor-pointer transition-all hover:bg-green-50">
                             <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
                             <p className="text-base font-semibold text-gray-900">
-                              Tap to upload photo
+                              {wf('uploads.fileText')}
                             </p>
                             <p className="text-sm text-gray-600 mt-1">
-                              or drag and drop
+                              {wf('uploads.dragDrop')}
                             </p>
                             <p className="text-xs text-gray-500 mt-2">
-                              JPG, PNG up to 10MB
+                              {wf('uploads.fileFormats')}
                             </p>
                           </div>
                           <Input
@@ -534,7 +534,7 @@ export default function ListWaste() {
                         onClick={() => setStep(2)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {wf('buttons.back')}
                       </Button>
                       <Button
                         type="submit"
@@ -544,12 +544,12 @@ export default function ListWaste() {
                         {isSubmitting || isLoading ? (
                           <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Publishing...
+                            {wf('loading.publishing')}
                           </>
                         ) : (
                           <>
                             <Leaf className="mr-2 h-5 w-5" />
-                            Publish Listing
+                            {wf('buttons.publishListing')}
                           </>
                         )}
                       </Button>
@@ -566,28 +566,28 @@ export default function ListWaste() {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📸</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Quality Photos
+              {wf('infoCards.qualityPhotos')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Clear images increase buyer interest
+              {wf('infoCards.qualityPhotosDesc')}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">💰</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Fair Pricing
+              {wf('infoCards.fairPricing')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Competitive prices attract more buyers
+              {wf('infoCards.fairPricingDesc')}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📝</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Good Details
+              {wf('infoCards.goodDetails')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Complete information builds trust
+              {wf('infoCards.goodDetailsDesc')}
             </p>
           </div>
         </div>

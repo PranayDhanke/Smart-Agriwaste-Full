@@ -25,7 +25,7 @@ const ListWasteButtons = ({ item }: { item: Waste }) => {
 
   const handleDelete = async (id: string) => {
     deleteWaste(id).then(() => {
-      toast.success("deleted suceesfully");
+      toast.success(t("messages.deleteSuccess"));
     });
   };
 
@@ -53,18 +53,18 @@ const ListWasteButtons = ({ item }: { item: Waste }) => {
             <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
               <Trash2Icon />
             </AlertDialogMedia>
-            <AlertDialogTitle>Delete Waste?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialog.title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete this Waste
+              {t("dialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+            <AlertDialogCancel variant="outline">{t("dialog.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => handleDelete(item._id)}
             >
-              Delete
+              {t("dialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

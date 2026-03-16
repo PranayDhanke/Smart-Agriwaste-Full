@@ -18,10 +18,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
         contact: (await import(`../messages/home/ContactUs/${locale}.json`)).default,
       },
       header: (await import(`../messages/header/${locale}.json`)).default,
-      community: {
-        ...(await import(`../messages/community/${locale}.json`)).default,
-        discussion: (await import(`../messages/community/Discussion/${locale}.json`)).default,
-      },
+
       extra: {
         CreateAccountRedirect: (await import(`../messages/extra/CreateAccountRedirect/${locale}.json`)).default,
         EnablePermission: (await import(`../messages/extra/EnablePermission/${locale}.json`)).default,
@@ -31,6 +28,15 @@ export default getRequestConfig(async ({ requestLocale }) => {
       },
       faq: (await import(`../messages/home/FAQ/${locale}.json`)).default,
       footer: (await import(`../messages/footer/${locale}.json`)).default,
+      analytics: (await import(`../messages/analytics/${locale}.json`)).default,
+      
+      community: {
+        ...(await import(`../messages/community/${locale}.json`)).default,
+        ...(await import(`../messages/community/CommunityFeed/${locale}.json`)).default,
+      },
+
+    
+       
       marketplace: {
         Marketplace: (await import(`../messages/marketplace/Marketplace/${locale}.json`)).default,
         CartDrawer: (await import(`../messages/marketplace/CartDrawer/${locale}.json`)).default,
@@ -61,6 +67,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
       myListing:(await import(`../messages/waste/listing/${locale}.json`)).default,
       process:(await import(`../messages/waste/process/${locale}.json`)).default,
       wasteCommon:(await import(`../messages/waste/common/${locale}.json`)).default,
+      wasteForms:{
+        EditWaste:(await import(`../messages/waste/wasteforms/EditWaste/${locale}.json`)).default,
+        WasteForm:(await import(`../messages/waste/wasteforms/WasteForm/${locale}.json`)).default,
+      },
 
     },
   };

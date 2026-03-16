@@ -29,10 +29,10 @@ export default function NegotiationFilters({
   const t = useTranslations("profile.farmer.Negotiation");
 
   const filterTabs = [
-    { id: "all", label: "All Negotiations", count: stats.pending + stats.accepted + stats.rejected },
-    { id: "pending", label: "Pending", count: stats.pending, color: "text-amber-600" },
-    { id: "accepted", label: "Accepted", count: stats.accepted, color: "text-green-600" },
-    { id: "rejected", label: "Rejected", count: stats.rejected, color: "text-red-600" },
+    { id: "all", label: t("filters.all"), count: stats.pending + stats.accepted + stats.rejected },
+    { id: "pending", label: t("filters.pending"), count: stats.pending, color: "text-amber-600" },
+    { id: "accepted", label: t("filters.accepted"), count: stats.accepted, color: "text-green-600" },
+    { id: "rejected", label: t("filters.rejected"), count: stats.rejected, color: "text-red-600" },
   ];
 
   return (
@@ -58,7 +58,7 @@ export default function NegotiationFilters({
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder={`Search by product or ${isFarmer ? "Farmer" : "Buyer"} name...`}
+          placeholder={t("filters.searchPlaceholder", { userType: isFarmer ? "Buyer" : "Farmer" })}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10 pr-10"

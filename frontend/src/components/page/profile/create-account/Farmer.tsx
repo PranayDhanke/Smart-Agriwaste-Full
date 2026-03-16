@@ -234,16 +234,16 @@ export default function CreateAccountFarmer() {
               <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
             <h2 className="text-xl font-semibold text-gray-900">
-              Authentication Required
+              {t("farmer.authRequired")}
             </h2>
             <p className="text-gray-600">
-              You must be signed in to access this page
+              {t("farmer.mustBeSignedIn")}
             </p>
             <Button
               onClick={() => router.push("/sign-up?role=farmer")}
               className="w-full bg-green-600 hover:bg-green-700"
             >
-              Go to Sign Up
+              {t("farmer.goToSignUp")}
             </Button>
           </div>
         </Card>
@@ -304,7 +304,7 @@ export default function CreateAccountFarmer() {
                     step >= 1 ? "text-white" : "text-green-200"
                   }`}
                 >
-                  Personal Info
+                  {t("farmer.personalInfo")}
                 </span>
               </div>
               {/* Step 2 */}
@@ -323,7 +323,7 @@ export default function CreateAccountFarmer() {
                     step === 2 ? "text-white" : "text-green-200"
                   }`}
                 >
-                  Farm Details
+                  {t("farmer.farmDetails")}
                 </span>
               </div>
             </div>
@@ -385,7 +385,7 @@ export default function CreateAccountFarmer() {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Upload className="h-3.5 w-3.5" />
-                        Aadhaar Card Photo{" "}
+                        {t("farmer.aadharCardPhoto")}{" "}
                         <span className="text-red-500">*</span>
                       </Label>
                       <div className="relative">
@@ -419,7 +419,7 @@ export default function CreateAccountFarmer() {
                         </p>
                       )}
                       <p className="text-xs text-gray-500">
-                        Max size: 1MB | Formats: JPG, PNG
+                        {t("farmer.fileConstraints")}
                       </p>
                     </div>
                   </div>
@@ -610,7 +610,7 @@ export default function CreateAccountFarmer() {
                       onClick={handleNextStep}
                       className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white h-14 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
                     >
-                      Continue to Farm Details
+                      {t("farmer.continueToFarmDetails")}
                       <CheckCircle2 className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
@@ -646,7 +646,7 @@ export default function CreateAccountFarmer() {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Upload className="h-3.5 w-3.5" />
-                        Upload Farm Document{" "}
+                        {t("farmer.uploadFarmDocument")}{" "}
                         <span className="text-red-500">*</span>
                       </Label>
                       <div className="relative">
@@ -794,25 +794,25 @@ export default function CreateAccountFarmer() {
                       {isLoading || isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Creating Profile...
+                          {t("farmer.creatingProfile")}
                         </>
                       ) : (
                         <>
                           <CheckCircle2 className="mr-2 h-5 w-5" />
-                          Complete Registration
+                          {t("farmer.completeRegistration")}
                         </>
                       )}
                     </Button>
                   </div>
 
                   <p className="text-center text-xs text-gray-500 pt-2">
-                    By completing registration, you agree to our{" "}
+                    {t("farmer.agreeToTerms")}{" "}
                     <span className="text-green-600 underline cursor-pointer">
-                      Terms of Service
+                      {t("farmer.termsOfService")}
                     </span>{" "}
-                    and{" "}
+                    {t("farmer.and")}{" "}
                     <span className="text-green-600 underline cursor-pointer">
-                      Privacy Policy
+                      {t("farmer.privacyPolicy")}
                     </span>
                   </p>
                 </div>

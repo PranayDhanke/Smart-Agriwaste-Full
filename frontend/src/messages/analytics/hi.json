@@ -1,0 +1,41 @@
+{
+  "dashboard": {
+    "farmerHeading": "किसान विश्लेषण",
+    "buyerHeading": "खरीदार विश्लेषण",
+    "farmerValueLabel": "राजस्व ट्रैक किया गया",
+    "buyerValueLabel": "खरीदारी ट्रैक की गई",
+    "subtitle": "आदेश और बातचीत एक नज़र में",
+    "description": "ट्रैक करें कि कितनी बातचीत सक्रिय हैं, आदेश कैसे आगे बढ़ रहे हैं, और आपके बाजार गतिविधि के माध्यम से कितना मूल्य प्रवाहित हो रहा है।",
+    "loading": "विश्लेषण लोड हो रहा है...",
+    "metrics": {
+      "totalNegotiations": "कुल बातचीत",
+      "pendingNow": "अभी लंबित",
+      "totalOrders": "कुल आदेश",
+      "confirmed": "पुष्टि हुई",
+      "deliveredOrders": "पहुंचाए गए आदेश",
+      "outForDelivery": "डिलीवरी के लिए बाहर"
+    },
+    "sections": {
+      "negotiationAnalytics": "बातचीत विश्लेषण",
+      "orderAnalytics": "आदेश विश्लेषण",
+      "recentNegotiations": "हाल की बातचीत",
+      "recentOrders": "हाल के आदेश"
+    },
+    "statuses": {
+      "pending": "लंबित",
+      "accepted": "स्वीकार किया गया",
+      "rejected": "अस्वीकार किया गया",
+      "confirmed": "पुष्टि हुई",
+      "cancelled": "रद्द किया गया",
+      "delivered": "पहुंचाया गया"
+    },
+    "noData": {
+      "noNegotiations": "अभी तक कोई बातचीत नहीं।",
+      "noOrders": "अभी तक कोई आदेश नहीं।"
+    },
+    "labels": {
+      "offer": "ऑफर:",
+      "total": "कुल:"
+    }
+  }
+}

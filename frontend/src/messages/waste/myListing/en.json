@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "dialog": {
+    "title": "Delete Waste?",
+    "description": "This will permanently delete this waste listing.",
+    "cancel": "Cancel",
+    "confirm": "Delete"
+  },
+  "messages": {
+    "deleteSuccess": "Waste deleted successfully!",
+    "deleteError": "Failed to delete waste. Please try again."
+  }
+}

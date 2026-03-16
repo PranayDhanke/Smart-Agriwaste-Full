@@ -81,6 +81,12 @@
     "deliveredByFarmer": "शेतकरी द्वारे डिलिव्हर"
   },
 
+  "status": {
+    "pending": "प्रलंबित",
+    "confirmed": "पुष्टी झाली",
+    "cancelled": "रद्द केले"
+  },
+
   "cancelled": {
     "banner": "हा ऑर्डर रद्द केला गेला आहे"
   },
@@ -100,8 +106,8 @@
   },
 
   "notifications": {
-    "farmerTitle": "खरेदीदाराने ऑर्डर {status}",
-    "farmerMessage": "खरेदीदार {buyerName} ने ऑर्डर {status}",
+    "farmerTitle": "खरेदीदाराने ऑर्डर {status} केला",
+    "farmerMessage": "खरेदीदार {buyerName} ने ऑर्डर {status} केला",
     "outForPickupTitle": "ऑर्डर पिकअपसाठी बाहेर आहे",
     "outForPickupMessage": "खरेदीदार {buyerName} पिकअपसाठी बाहेर आहे",
     "pickupTitle": "ऑर्डर उचलले गेले",

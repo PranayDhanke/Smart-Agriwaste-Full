@@ -80,6 +80,13 @@
     "pickupByYou": "Pickup by You",
     "deliveredByFarmer": "Delivered by Farmer"
   },
+
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled"
+  },
+
   "cancelled": {
     "banner": "This order has been cancelled"
   },

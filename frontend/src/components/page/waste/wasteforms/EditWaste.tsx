@@ -95,6 +95,7 @@ export default function EditWaste() {
     useUpdateWasteMutation();
 
   const t = useTranslations("waste");
+  const wf = useTranslations("wasteForms.EditWaste");
   const c = useTranslations("wasteCommon");
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -264,7 +265,7 @@ export default function EditWaste() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin mr-2" />
-        <span>Loading waste details...</span>
+        <span>{wf("loading.loadingWasteDetails")}</span>
       </div>
     );
   }
@@ -274,10 +275,10 @@ export default function EditWaste() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-lg font-semibold text-gray-900">
-            Waste not found
+            {wf('messages.wasteNotFound')}
           </p>
           <p className="mt-2 text-sm text-gray-600">
-            We could not load the waste details for editing.
+            {wf('messages.wasteNotFoundDesc')}
           </p>
         </div>
       </div>
@@ -318,19 +319,19 @@ export default function EditWaste() {
           <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100 px-6 sm:px-8 py-6">
             <div>
               <CardTitle className="text-2xl font-bold text-gray-900">
-                {step === 1 ? "📦 " : step === 2 ? "📊 " : "🖼️ "}
+                {step === 1 ? t('stepEmojis.step1') : step === 2 ? t('stepEmojis.step2') : t('stepEmojis.step3')}
                 {step === 1
-                  ? "Waste Details"
+                  ? t('stepTitles.step1')
                   : step === 2
-                    ? "Specifications"
-                    : "Product Image"}
+                    ? t('stepTitles.step2')
+                    : t('stepTitles.step3')}
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
                 {step === 1
-                  ? "Tell us about your agricultural waste"
+                  ? t('stepDescriptions.step1')
                   : step === 2
-                    ? "Add quantity, price, and condition details"
-                    : "Upload a clear photo of your waste"}
+                    ? t('stepDescriptions.step2')
+                    : t('stepDescriptions.step3')}
               </p>
             </div>
           </CardHeader>
@@ -345,9 +346,9 @@ export default function EditWaste() {
                     {/* Title */}
                     <FormInput
                       control={control}
-                      label="Give your listing a title *"
+                      label={t('form.titleLabel')}
                       name="title"
-                      placeholder="e.g., Fresh Rice Straw, Wheat Residue"
+                      placeholder={t('form.titlePlaceholder')}
                       type="text"
                       classname={`h-12 text-base rounded-lg border-2 transition-all ${
                         formValues.price
@@ -361,7 +362,7 @@ export default function EditWaste() {
                       classNames="grid grid-cols-3 gap-3"
                       control={control}
                       isProduct={false}
-                      label="What type of waste? *"
+                      label={t('form.wasteTypeLabel')}
                       name="wasteType"
                       option={[
                         {
@@ -386,10 +387,10 @@ export default function EditWaste() {
                     {selectedWasteType && (
                       <SelectInput
                         control={control}
-                        label="Select category *"
+                        label={t('form.categoryLabel')}
                         name="wasteCategory"
                         option={CategoryObject as []}
-                        placeholder="Choose a category"
+                        placeholder={t('form.categoryPlaceholder')}
                         classname={`w-full text-base rounded-lg border-2 transition-all ${
                           selectedWasteCategory
                             ? "border-green-300 bg-green-50/30"
@@ -403,7 +404,7 @@ export default function EditWaste() {
                         classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
                         control={control}
                         isProduct={true}
-                        label=" Select product *"
+                        label={t('form.productLabel')}
                         name="wasteProduct"
                         option={
                           (productCategoryMap as any)?.[selectedWasteType]?.[
@@ -421,7 +422,7 @@ export default function EditWaste() {
                         onClick={() => setStep(2)}
                         className="w-full h-12 mt-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {t('buttons.continue')} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     )}
                   </div>
@@ -434,9 +435,9 @@ export default function EditWaste() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <FormInput
                         control={control}
-                        label="Quantity *"
+                        label={t('form.quantityLabel')}
                         name="quantity"
-                        placeholder="e.g., 100"
+                        placeholder={t('form.quantityPlaceholder')}
                         type="number"
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.price
@@ -447,18 +448,18 @@ export default function EditWaste() {
 
                       <SelectInput
                         control={control}
-                        label="Unit *"
+                        label={t('form.unitLabel')}
                         name="unit"
-                        placeholder="Select unit"
+                        placeholder={t('form.unitPlaceholder')}
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.unit
                             ? "border-green-300 bg-green-50/30"
                             : "border-gray-200"
                         }`}
                         option={[
-                          { label: "📦 Kilogram (kg)", value: "kg" },
-                          { value: "ton", label: "🚛 Metric Ton" },
-                          { value: "gram", label: "⚖️ Gram (g)" },
+                          { label: t('units.kg'), value: "kg" },
+                          { value: "ton", label: t('units.ton') },
+                          { value: "gram", label: t('units.gram') },
                         ]}
                       />
                     </div>
@@ -467,9 +468,9 @@ export default function EditWaste() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <FormInput
                         control={control}
-                        label="Price per unit (₹) *"
+                        label={t('form.priceLabel')}
                         name="price"
-                        placeholder="e.g., 500"
+                        placeholder={t('form.pricePlaceholder')}
                         type="number"
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.price
@@ -479,9 +480,9 @@ export default function EditWaste() {
                       />
                       <SelectInput
                         control={control}
-                        label="Moisture level *"
+                        label={t('form.moistureLabel')}
                         name="moisture"
-                        placeholder="Select moisture"
+                        placeholder={t('form.moisturePlaceholder')}
                         classname={`h-12 text-base rounded-lg border-2 transition-all ${
                           formValues.moisture
                             ? "border-green-300 bg-green-50/30"
@@ -490,15 +491,15 @@ export default function EditWaste() {
                         option={[
                           {
                             value: "dry",
-                            label: "☀️ Dry",
+                            label: t('moisture.dry'),
                           },
                           {
                             value: "semi_wet",
-                            label: "🌤️ Semi-wet",
+                            label: t('moisture.semiWet'),
                           },
                           {
                             value: "wet",
-                            label: "💧 Wet",
+                            label: t('moisture.wet'),
                           },
                         ]}
                       />
@@ -512,10 +513,10 @@ export default function EditWaste() {
                           : "border-gray-200"
                       } `}
                       control={control}
-                      label="Add description (optional)"
+                      label={t('form.descriptionLabel')}
                       name="description"
                       type="text"
-                      placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
+                      placeholder={t('form.descriptionPlaceholder')}
                     />
 
                     {/* Step 2 Navigation */}
@@ -526,7 +527,7 @@ export default function EditWaste() {
                         onClick={() => setStep(1)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {t('buttons.back')}
                       </Button>
                       <Button
                         type="button"
@@ -538,7 +539,7 @@ export default function EditWaste() {
                         }
                         className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {t('buttons.continue')} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     </div>
                   </div>
@@ -550,8 +551,7 @@ export default function EditWaste() {
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
                       <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-blue-800">
-                        Upload a clear, well-lit photo of your waste product.
-                        This helps buyers trust your listing.
+                        {t('form.imageHint')}
                       </p>
                     </div>
 
@@ -560,7 +560,7 @@ export default function EditWaste() {
                         htmlFor="image"
                         className="text-base font-semibold text-gray-900"
                       >
-                        Product Image <span className="text-red-500">*</span>
+                        {t('form.imageLabel')} <span className="text-red-500">*</span>
                       </Label>
 
                       {/* Image Preview */}
@@ -587,13 +587,13 @@ export default function EditWaste() {
                           <div className="relative border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg p-8 text-center cursor-pointer transition-all hover:bg-green-50">
                             <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
                             <p className="text-base font-semibold text-gray-900">
-                              Tap to upload photo
+                              {t('uploads.fileText')}
                             </p>
                             <p className="text-sm text-gray-600 mt-1">
-                              or drag and drop
+                              {t('uploads.dragDrop')}
                             </p>
                             <p className="text-xs text-gray-500 mt-2">
-                              JPG, PNG up to 10MB
+                              {t('uploads.fileFormats')}
                             </p>
                           </div>
                           <Input
@@ -615,7 +615,7 @@ export default function EditWaste() {
                         onClick={() => setStep(2)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {t('buttons.back')}
                       </Button>
                       <Button
                         type="submit"
@@ -625,12 +625,12 @@ export default function EditWaste() {
                         {isSubmitting || isUpdating ? (
                           <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Updating...
+                            {t('loading.updating')}
                           </>
                         ) : (
                           <>
                             <Leaf className="mr-2 h-5 w-5" />
-                            Update Listing
+                            {t('buttons.updateListing')}
                           </>
                         )}
                       </Button>
@@ -647,28 +647,28 @@ export default function EditWaste() {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📸</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Quality Photos
+              {t('infoCards.qualityPhotos')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Clear images increase buyer interest
+              {t('infoCards.qualityPhotosDesc')}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">💰</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Fair Pricing
+              {t('infoCards.fairPricing')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Competitive prices attract more buyers
+              {t('infoCards.fairPricingDesc')}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📝</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Good Details
+              {t('infoCards.goodDetails')}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Complete information builds trust
+              {t('infoCards.goodDetailsDesc')}
             </p>
           </div>
         </div>

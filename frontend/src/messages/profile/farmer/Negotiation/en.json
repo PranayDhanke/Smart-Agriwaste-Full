@@ -6,6 +6,13 @@
     "title": "No negotiation requests yet",
     "description": "When buyers make offers on your products, they'll appear here"
   },
+  "filters": {
+    "all": "All Negotiations",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "searchPlaceholder": "Search by product or {userType} name..."
+  },
   "productName": "Product Name",
   "offerFrom": "Offer from",
   "moisture": "Moisture",

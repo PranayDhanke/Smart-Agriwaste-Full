@@ -94,5 +94,22 @@
     "somethingWrong": "Something went wrong. Please try again."
   },
   "legal": { "prefix": "By completing registration, you agree to our", "and": "and" },
-  "links": { "terms": "Terms of Service", "privacy": "Privacy Policy" }
+  "links": { "terms": "Terms of Service", "privacy": "Privacy Policy" },
+  "farmer": {
+    "authRequired": "Authentication Required",
+    "mustBeSignedIn": "You must be signed in to access this page",
+    "goToSignUp": "Go to Sign Up",
+    "personalInfo": "Personal Info",
+    "farmDetails": "Farm Details",
+    "aadharCardPhoto": "Aadhaar Card Photo *",
+    "fileConstraints": "Max size: 1MB | Formats: JPG, PNG",
+    "continueToFarmDetails": "Continue to Farm Details",
+    "uploadFarmDocument": "Upload Farm Document *",
+    "creatingProfile": "Creating Profile...",
+    "completeRegistration": "Complete Registration",
+    "agreeToTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy"
+  }
 }

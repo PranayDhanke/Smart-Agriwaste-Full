@@ -1,0 +1,74 @@
+{
+  "stepTitles": {
+    "step1": "कचरा तपशील",
+    "step2": "विशेषताएं",
+    "step3": "उत्पाद प्रतिमा"
+  },
+  "stepDescriptions": {
+    "step1": "आपल्या कृषी कचऱ्याबद्दल आमला सांगा",
+    "step2": "प्रमाण, किंमत आणि स्थिती तपशील जोडा",
+    "step3": "आपल्या कचऱ्याचा स्पष्ट फोटो अपलोड करा"
+  },
+  "stepEmojis": {
+    "step1": "📦",
+    "step2": "📊",
+    "step3": "🖼️"
+  },
+  "form": {
+    "titleLabel": "आपल्या यादीसाठी शीर्षक द्या *",
+    "titlePlaceholder": "उदा., ताजी तांदूळ चारा, गहू अवशेष",
+    "wasteTypeLabel": "कचरे चा प्रकार कोणता आहे? *",
+    "categoryLabel": "श्रेणी निवडा *",
+    "categoryPlaceholder": "एक श्रेणी निवडा",
+    "productLabel": "उत्पाद निवडा *",
+    "quantityLabel": "प्रमाण *",
+    "quantityPlaceholder": "उदा., 100",
+    "unitLabel": "युनिट *",
+    "unitPlaceholder": "युनिट निवडा",
+    "priceLabel": "प्रति युनिट किंमत (₹) *",
+    "pricePlaceholder": "उदा., 500",
+    "moistureLabel": "आर्द्रता स्तर *",
+    "moisturePlaceholder": "आर्द्रता निवडा",
+    "descriptionLabel": "वर्णन जोडा (वैकल्पिक)",
+    "descriptionPlaceholder": "खरेदीदारांना कचरे च्या गुणवत्ता, उद्भव, संचयन परिस्थितीबद्दल अधिक सांगा...",
+    "imageLabel": "उत्पाद प्रतिमा *",
+    "imageHint": "आपल्या कचऱ्याचा स्पष्ट, चांगल्या प्रकाशात असलेला फोटो अपलोड करा. यास खरेदीदारांना आपल्या यादीवर विश्वास ठेवण्यास मदत होते."
+  },
+  "uploads": {
+    "fileText": "फोटो अपलोड करण्यासाठी टॅप करा",
+    "dragDrop": "किंवा ड्रॅग आणि ड्रॉप करा",
+    "fileFormats": "JPG, PNG 10MB पर्यंत"
+  },
+  "units": {
+    "kg": "📦 किलोग्राम (kg)",
+    "ton": "🚛 मेट्रिक टन",
+    "gram": "⚖️ ग्राम (g)"
+  },
+  "moisture": {
+    "dry": "☀️ कोरड",
+    "semiWet": "🌤️ अर्ध-ओला",
+    "wet": "💧 ओला"
+  },
+  "buttons": {
+    "continue": "पुढे जा",
+    "back": "परत",
+    "publishListing": "यादी प्रकाशित करा"
+  },
+  "loading": {
+    "loadingProfile": "प्रोफाइल लोड होत आहे...",
+    "publishing": "प्रकाशित होत आहे..."
+  },
+  "messages": {
+    "imageUploadError": "शेतकरी डेटा लोड करताना त्रुटी कृपया पृष्ठ रीफ्रेश करा",
+    "selectImageError": "कृपया प्रथम प्रतिमा निवडा",
+    "publishSuccess": "यादी यशस्वीरित्या तयार झाली!"
+  },
+  "infoCards": {
+    "qualityPhotos": "गुणवत्ता फोटो",
+    "qualityPhotosDesc": "स्पष्ट प्रतिमा खरेदीदाराची रुची वाढवते",
+    "fairPricing": "न्याय्य किंमत",
+    "fairPricingDesc": "प्रतिस्पर्धी किंमत अधिक खरेदीदारांना आकर्षित करते",
+    "goodDetails": "चांगले तपशील",
+    "goodDetailsDesc": "संपूर्ण माहिती विश्वास तयार करते"
+  }
+}

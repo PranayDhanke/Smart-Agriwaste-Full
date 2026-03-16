@@ -94,5 +94,22 @@
     "somethingWrong": "कुछ गलत हुआ। कृपया पुनः प्रयास करें।"
   },
   "legal": { "prefix": "पंजीकरण पूरा करके, आप हमारी स्वीकार करते हैं", "and": "और" },
-  "links": { "terms": "सेवा की शर्तें", "privacy": "गोपनीयता नीति" }
+  "links": { "terms": "सेवा की शर्तें", "privacy": "गोपनीयता नीति" },
+  "farmer": {
+    "authRequired": "प्रमाणीकरण आवश्यक",
+    "mustBeSignedIn": "इस पृष्ठ तक पहुँचने के लिए आपको साइन इन होना चाहिए",
+    "goToSignUp": "साइन अप पर जाएं",
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "farmDetails": "खेत विवरण",
+    "aadharCardPhoto": "आधार कार्ड फोटो *",
+    "fileConstraints": "अधिकतम आकार: 1MB | फॉर्मेट: JPG, PNG",
+    "continueToFarmDetails": "खेत विवरण पर जारी रखें",
+    "uploadFarmDocument": "खेत दस्तावेज़ अपलोड करें *",
+    "creatingProfile": "प्रोफ़ाइल बना रहे हैं...",
+    "completeRegistration": "पंजीकरण पूर्ण करें",
+    "agreeToTerms": "मैं सहमत हूँ",
+    "termsOfService": "सेवा की शर्तें",
+    "and": "और",
+    "privacyPolicy": "गोपनीयता नीति"
+  }
 }

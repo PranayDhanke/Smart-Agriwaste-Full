@@ -249,7 +249,7 @@ export default function CreateAccount() {
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <CreditCard className="h-4 w-4 text-green-600" />
                     <h3 className="font-semibold text-gray-900">
-                      Identity Verification
+                      {t("identityVerification")}
                     </h3>
                   </div>
 
@@ -269,7 +269,7 @@ export default function CreateAccount() {
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <Upload className="h-3.5 w-3.5" />
-                      Aadhaar Card Photo <span className="text-red-500">*</span>
+                      {t("aadhaarPhoto")} <span className="text-red-500">*</span>
                     </Label>
                     <div className="relative">
                       <Input
@@ -302,7 +302,7 @@ export default function CreateAccount() {
                       </p>
                     )}
                     <p className="text-xs text-gray-500">
-                      Max size: 1MB | Formats: JPG, PNG
+                      {t("maxSizeNote")}
                     </p>
                   </div>
                 </div>
@@ -312,7 +312,7 @@ export default function CreateAccount() {
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <Phone className="h-4 w-4 text-green-600" />
                     <h3 className="font-semibold text-gray-900">
-                      Contact Information
+                      {t("contactInformation")}
                     </h3>
                   </div>
 
@@ -333,7 +333,7 @@ export default function CreateAccount() {
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <MapPin className="h-4 w-4 text-green-600" />
                     <h3 className="font-semibold text-gray-900">
-                      Location Details
+                      {t("locationDetails")}
                     </h3>
                   </div>
 
@@ -460,9 +460,9 @@ export default function CreateAccount() {
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <Home className="h-4 w-4 text-green-600" />
                     <h3 className="font-semibold text-gray-900">
-                      Address Details{" "}
+                      {t("addressDetails")}{" "}
                       <span className="text-xs text-gray-500 font-normal">
-                        (Optional)
+                        {t("optional")}
                       </span>
                     </h3>
                   </div>
@@ -503,25 +503,25 @@ export default function CreateAccount() {
                     {isSubmitting || isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Creating Profile...
+                        {t("creatingProfile")}
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="mr-2 h-5 w-5" />
-                        Complete Registration
+                        {t("completeRegistration")}
                       </>
                     )}
                   </Button>
                 </div>
 
                 <p className="text-center text-xs text-gray-500">
-                  By completing registration, you agree to our{" "}
+                  {t("agreeTo")}{" "}
                   <span className="text-green-600 underline cursor-pointer">
-                    Terms of Service
+                    {t("terms")}
                   </span>{" "}
-                  and{" "}
+                  {t("and")}{" "}
                   <span className="text-green-600 underline cursor-pointer">
-                    Privacy Policy
+                    {t("privacy")}
                   </span>
                 </p>
               </div>

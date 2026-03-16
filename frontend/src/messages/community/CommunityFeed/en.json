@@ -1,0 +1,51 @@
+{
+  "board": {
+    "title": "Community Board",
+    "subtitle": "Connect, ask, and trade with local farmers & buyers.",
+    "createPost": "Create a New Post",
+    "categories": {
+      "farmQuery": "Question",
+      "cropCare": "Crop Care",
+      "marketHelp": "Market/Selling",
+      "successStory": "Harvest/Success",
+      "equipment": "Equipment"
+    },
+    "placeholders": {
+      "description": "Describe your crop issue, list your produce for sale, or ask a question...",
+      "reply": "Write your advice or answer here..."
+    },
+    "buttons": {
+      "uploadPhoto": "Upload Photo",
+      "publish": "Publish Post",
+      "postReply": "Post Reply",
+      "cancel": "Cancel"
+    },
+    "status": {
+      "loading": "Loading board...",
+      "emptyTitle": "The board is empty.",
+      "emptyDescription": "Be the first to share an update or ask a question."
+    },
+    "toasts": {
+      "signInToPost": "Sign in to post.",
+      "addTextOrPhoto": "Add text or a photo.",
+      "postPublished": "Post published!",
+      "couldNotPublish": "Could not publish post.",
+      "signInToLike": "Sign in to like posts.",
+      "couldNotUpdateLike": "Could not update like.",
+      "signInToSave": "Sign in to save posts.",
+      "couldNotSave": "Could not save post.",
+      "signInToReply": "Sign in to reply.",
+      "writeReplyFirst": "Write a reply first.",
+      "replyAdded": "Reply added!",
+      "couldNotAddReply": "Could not add reply."
+    },
+    "actions": {
+      "helpful": "Helpful",
+      "replies": "Replies"
+    },
+    "post": {
+      "previewAlt": "Preview",
+      "attachmentAlt": "Post attachment"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -28,16 +29,18 @@ import {
   X
 } from "lucide-react";
 
-const categories = [
-  { id: "farm-query", label: "Question" },
-  { id: "crop-care", label: "Crop Care" },
-  { id: "market-help", label: "Market/Selling" },
-  { id: "success-story", label: "Harvest/Success" },
-  { id: "equipment", label: "Equipment" },
+const categoryDefinitions = [
+  { id: "farm-query", labelKey: "farmQuery" },
+  { id: "crop-care", labelKey: "cropCare" },
+  { id: "market-help", labelKey: "marketHelp" },
+  { id: "success-story", labelKey: "successStory" },
+  { id: "equipment", labelKey: "equipment" },
 ];
 
 export default function CommunityFeed() {
   const { user } = useUser();
+  const locale = useLocale();
+  const t = useTranslations("community.board");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("farm-query");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -70,6 +73,15 @@ export default function CommunityFeed() {
     [user],
   );
 
+  const categories = useMemo(
+    () =>
+      categoryDefinitions.map((cat) => ({
+        ...cat,
+        label: t(`categories.${cat.labelKey}`),
+      })),
+    [t],
+  );
+
   const posts = data?.posts ?? [];
   const isSubmittingPost = isUploadingImage || isCreatingPost;
 
@@ -87,8 +99,8 @@ export default function CommunityFeed() {
 
   const handleCreatePost = async () => {
     if (isSubmittingPost) return;
-    if (!user) return toast.error("Sign in to post.");
-    if (!description.trim() && !selectedFile) return toast.error("Add text or a photo.");
+    if (!user) return toast.error(t("toasts.signInToPost"));
+    if (!description.trim() && !selectedFile) return toast.error(t("toasts.addTextOrPhoto"));
 
     try {
       let imageUrl = "";
@@ -111,36 +123,36 @@ export default function CommunityFeed() {
       setDescription("");
       setSelectedCategory("farm-query");
       clearImage();
-      toast.success("Post published!");
+      toast.success(t("toasts.postPublished"));
     } catch (error) {
-      toast.error("Could not publish post.");
+      toast.error(t("toasts.couldNotPublish"));
     } finally {
       setIsUploadingImage(false);
     }
   };
 
   const handleToggleLike = async (postId: string) => {
-    if (!user) return toast.error("Sign in to like posts.");
+    if (!user) return toast.error(t("toasts.signInToLike"));
     try {
       await toggleLike({ postId, userId: user.id, username: signedInName }).unwrap();
     } catch {
-      toast.error("Could not update like.");
+      toast.error(t("toasts.couldNotUpdateLike"));
     }
   };
 
   const handleToggleSave = async (postId: string) => {
-    if (!user) return toast.error("Sign in to save posts.");
+    if (!user) return toast.error(t("toasts.signInToSave"));
     try {
       await toggleSave({ postId, userId: user.id }).unwrap();
     } catch {
-      toast.error("Could not save post.");
+      toast.error(t("toasts.couldNotSave"));
     }
   };
 
   const handleReply = async (postId: string) => {
-    if (!user) return toast.error("Sign in to reply.");
+    if (!user) return toast.error(t("toasts.signInToReply"));
     const message = replyDrafts[postId]?.trim();
-    if (!message) return toast.error("Write a reply first.");
+    if (!message) return toast.error(t("toasts.writeReplyFirst"));
 
     try {
       await addReply({
@@ -153,15 +165,18 @@ export default function CommunityFeed() {
 
       setReplyDrafts((prev) => ({ ...prev, [postId]: "" }));
       setActiveReplyId(null);
-      toast.success("Reply added!");
+      toast.success(t("toasts.replyAdded"));
     } catch {
-      toast.error("Could not add reply.");
+      toast.error(t("toasts.couldNotAddReply"));
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' 
+    return new Date(dateString).toLocaleDateString(locale, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
     });
   };
 
@@ -173,15 +188,15 @@ export default function CommunityFeed() {
         <div className="flex items-center gap-3 bg-green-800 text-white p-6 rounded-2xl shadow-md">
           <Tractor className="h-10 w-10 text-green-300" />
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Community Board</h1>
-            <p className="text-green-100 font-medium mt-1">Connect, ask, and trade with local farmers & buyers.</p>
+            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+            <p className="text-green-100 font-medium mt-1">{t("subtitle")}</p>
           </div>
         </div>
 
         {/* Post Creation Box */}
         <div className="bg-white rounded-2xl shadow-sm border-2 border-green-100 overflow-hidden">
           <div className="p-5 sm:p-6 space-y-5">
-            <h2 className="text-lg font-bold text-gray-900">Create a New Post</h2>
+            <h2 className="text-lg font-bold text-gray-900">{t("createPost")}</h2>
             
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
@@ -202,7 +217,7 @@ export default function CommunityFeed() {
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your crop issue, list your produce for sale, or ask a question..."
+              placeholder={t("placeholders.description")}
               className="min-h-[120px] text-lg p-4 bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
             />
 
@@ -217,7 +232,7 @@ export default function CommunityFeed() {
                 </Button>
                 <Image
                   src={previewUrl}
-                  alt="Preview"
+                  alt={t("post.previewAlt")}
                   width={800}
                   height={600}
                   className="w-full max-h-[400px] object-cover"
@@ -229,7 +244,7 @@ export default function CommunityFeed() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <label className="flex-1 flex justify-center items-center gap-2 cursor-pointer bg-green-50 text-green-800 border-2 border-green-200 rounded-xl py-3 px-4 font-bold hover:bg-green-100 transition">
                 <Camera className="h-6 w-6" />
-                <span>Upload Photo</span>
+                <span>{t("buttons.uploadPhoto")}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -243,7 +258,7 @@ export default function CommunityFeed() {
                 disabled={isSubmittingPost}
                 className="flex-1 bg-green-700 hover:bg-green-800 text-white rounded-xl py-6 text-lg font-bold shadow-md"
               >
-                {isSubmittingPost ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : "Publish Post"}
+                {isSubmittingPost ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : t("buttons.publish")}
               </Button>
             </div>
           </div>
@@ -254,12 +269,12 @@ export default function CommunityFeed() {
           {isLoading ? (
             <div className="text-center py-12">
               <Loader2 className="h-10 w-10 animate-spin text-green-700 mx-auto" />
-              <p className="mt-4 text-stone-500 font-medium">Loading board...</p>
+              <p className="mt-4 text-stone-500 font-medium">{t("status.loading")}</p>
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center bg-white p-12 rounded-2xl border-2 border-dashed border-stone-300">
-              <p className="text-xl font-bold text-stone-700">The board is empty.</p>
-              <p className="text-stone-500 mt-2">Be the first to share an update or ask a question.</p>
+              <p className="text-xl font-bold text-stone-700">{t("status.emptyTitle")}</p>
+              <p className="text-stone-500 mt-2">{t("status.emptyDescription")}</p>
             </div>
           ) : (
             posts.map((post) => {
@@ -292,7 +307,7 @@ export default function CommunityFeed() {
                     <div className="bg-stone-100 border-y border-stone-100">
                       <Image
                         src={post.imageUrl}
-                        alt="Post attachment"
+                        alt={t("post.attachmentAlt")}
                         width={800}
                         height={600}
                         className="w-full h-auto max-h-[500px] object-cover"
@@ -316,7 +331,7 @@ export default function CommunityFeed() {
                       className={`flex-1 rounded-xl font-bold py-6 ${likedByUser ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100' : 'text-gray-600 hover:bg-gray-50 border-gray-200'}`}
                     >
                       <Heart className={`mr-2 h-5 w-5 ${likedByUser ? "fill-current" : ""}`} />
-                      {post.likes.length} Helpful
+                      {post.likes.length} {t("actions.helpful")}
                     </Button>
                     
                     <Button
@@ -325,7 +340,7 @@ export default function CommunityFeed() {
                       className="flex-1 rounded-xl font-bold py-6 text-gray-600 hover:bg-gray-50 border-gray-200"
                     >
                       <MessageSquare className="mr-2 h-5 w-5" />
-                      {post.replies.length} Replies
+                      {post.replies.length} {t("actions.replies")}
                     </Button>
 
                     <Button
@@ -357,19 +372,19 @@ export default function CommunityFeed() {
                           <Textarea
                             value={replyDrafts[post._id] ?? ""}
                             onChange={(e) => setReplyDrafts(prev => ({ ...prev, [post._id]: e.target.value }))}
-                            placeholder="Write your advice or answer here..."
+                            placeholder={t("placeholders.reply")}
                             className="min-h-[80px] bg-white border-stone-300 rounded-xl focus-visible:ring-green-600 p-3"
                           />
                           <div className="flex justify-end gap-2">
                             <Button variant="ghost" onClick={() => setActiveReplyId(null)} className="font-bold">
-                              Cancel
+                              {t("buttons.cancel")}
                             </Button>
                             <Button 
                               onClick={() => handleReply(post._id)}
                               disabled={isReplying || !replyDrafts[post._id]?.trim()}
                               className="bg-green-700 hover:bg-green-800 text-white font-bold rounded-xl px-6"
                             >
-                              {isReplying ? <Loader2 className="h-4 w-4 animate-spin" /> : "Post Reply"}
+                              {isReplying ? <Loader2 className="h-4 w-4 animate-spin" /> : t("buttons.postReply")}
                             </Button>
                           </div>
                         </div>

@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import type { ReactNode } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +27,7 @@ const formatMoney = (value: number) =>
 export default function AnalyticsDashboard({ role }: { role: Role }) {
   const { user } = useUser();
   const locale = useLocale() as Locale;
+  const t = useTranslations('analytics.dashboard');
 
   const farmerOrderResult = useGetOrdersByFarmerQuery(
     user?.id && role === "farmer"
@@ -103,9 +104,9 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
 
   const loading = orderResult.isLoading || negotiationResult.isLoading;
   const heading =
-    role === "farmer" ? "Farmer Analytics" : "Buyer Analytics";
+    role === "farmer" ? t('farmerHeading') : t('buyerHeading');
   const valueLabel =
-    role === "farmer" ? "Revenue tracked" : "Purchases tracked";
+    role === "farmer" ? t('farmerValueLabel') : t('buyerValueLabel');
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#f4fbf5_0%,#fffdf8_55%,#ffffff_100%)] px-4 py-8 sm:px-6">
@@ -113,33 +114,32 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
         <section className="rounded-[28px] border border-emerald-100 bg-white/90 p-6 shadow-[0_20px_80px_rgba(22,101,52,0.10)]">
           <Badge className="mb-4 bg-emerald-600 text-white">{heading}</Badge>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            Orders and negotiations at a glance
+            {t('subtitle')}
           </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            Track how many negotiations are active, how orders are moving, and
-            how much value is flowing through your marketplace activity.
+            {t('description')}
           </p>
         </section>
 
         {loading ? (
           <Card>
             <CardContent className="pt-6 text-sm text-slate-500">
-              Loading analytics...
+              {t('loading')}
             </CardContent>
           </Card>
         ) : (
           <>
             <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <MetricCard
-                title="Total negotiations"
+                title={t('metrics.totalNegotiations')}
                 value={negotiationStats?.total ?? 0}
-                note={`${negotiationStats?.pending ?? 0} pending now`}
+                note={`${negotiationStats?.pending ?? 0} ${t('metrics.pendingNow')}`}
                 icon={<Handshake className="h-5 w-5 text-emerald-700" />}
               />
               <MetricCard
-                title="Total orders"
+                title={t('metrics.totalOrders')}
                 value={metrics.totalOrders}
-                note={`${metrics.confirmedOrders} confirmed`}
+                note={`${metrics.confirmedOrders} ${t('metrics.confirmed')}`}
                 icon={<Package className="h-5 w-5 text-sky-700" />}
               />
               <MetricCard
@@ -149,9 +149,9 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                 icon={<IndianRupee className="h-5 w-5 text-amber-700" />}
               />
               <MetricCard
-                title="Delivered orders"
+                title={t('metrics.deliveredOrders')}
                 value={metrics.deliveredOrders}
-                note={`${metrics.outForDelivery} out for delivery`}
+                note={`${metrics.outForDelivery} ${t('metrics.outForDelivery')}`}
                 icon={<Truck className="h-5 w-5 text-violet-700" />}
               />
             </section>
@@ -161,24 +161,24 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Handshake className="h-5 w-5 text-emerald-600" />
-                    Negotiation analytics
+                    {t('sections.negotiationAnalytics')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <StatusRow
-                    label="Pending"
+                    label={t('statuses.pending')}
                     value={negotiationStats?.pending ?? 0}
                     total={negotiationStats?.total ?? 0}
                     color="bg-amber-400"
                   />
                   <StatusRow
-                    label="Accepted"
+                    label={t('statuses.accepted')}
                     value={negotiationStats?.accepted ?? 0}
                     total={negotiationStats?.total ?? 0}
                     color="bg-emerald-500"
                   />
                   <StatusRow
-                    label="Rejected"
+                    label={t('statuses.rejected')}
                     value={negotiationStats?.rejected ?? 0}
                     total={negotiationStats?.total ?? 0}
                     color="bg-rose-500"
@@ -190,30 +190,30 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <TrendingUp className="h-5 w-5 text-sky-600" />
-                    Order analytics
+                    {t('sections.orderAnalytics')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <StatusRow
-                    label="Pending"
+                    label={t('statuses.pending')}
                     value={metrics.pendingOrders}
                     total={metrics.totalOrders}
                     color="bg-amber-400"
                   />
                   <StatusRow
-                    label="Confirmed"
+                    label={t('statuses.confirmed')}
                     value={metrics.confirmedOrders}
                     total={metrics.totalOrders}
                     color="bg-emerald-500"
                   />
                   <StatusRow
-                    label="Cancelled"
+                    label={t('statuses.cancelled')}
                     value={metrics.cancelledOrders}
                     total={metrics.totalOrders}
                     color="bg-rose-500"
                   />
                   <StatusRow
-                    label="Delivered"
+                    label={t('statuses.delivered')}
                     value={metrics.deliveredOrders}
                     total={metrics.totalOrders}
                     color="bg-violet-500"
@@ -225,12 +225,12 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
             <section className="grid gap-6 lg:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent negotiations</CardTitle>
+                  <CardTitle>{t('sections.recentNegotiations')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentNegotiations.length === 0 ? (
                     <p className="text-sm text-slate-500">
-                      No negotiations yet.
+                      {t('noData.noNegotiations')}
                     </p>
                   ) : (
                     recentNegotiations.map((negotiation) => (
@@ -247,7 +247,7 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                           </Badge>
                         </div>
                         <p className="mt-1 text-sm text-slate-600">
-                          Offer: {formatMoney(negotiation.negotiatedPrice)}
+                          {t('labels.offer')} {formatMoney(negotiation.negotiatedPrice)}
                         </p>
                       </div>
                     ))
@@ -257,11 +257,11 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent orders</CardTitle>
+                  <CardTitle>{t('sections.recentOrders')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentOrders.length === 0 ? (
-                    <p className="text-sm text-slate-500">No orders yet.</p>
+                    <p className="text-sm text-slate-500">{t('noData.noOrders')}</p>
                   ) : (
                     recentOrders.map((order) => (
                       <div
@@ -277,7 +277,7 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                           </Badge>
                         </div>
                         <p className="mt-1 text-sm text-slate-600">
-                          Total: {formatMoney(order.totalAmount)}
+                          {t('labels.total')} {formatMoney(order.totalAmount)}
                         </p>
                       </div>
                     ))

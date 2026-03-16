@@ -43,13 +43,38 @@
     "processing": "Processing..."
   },
 
+  "buttons": {
+    "continue": "Continue",
+    "back": "Back",
+    "getRecommendations": "Get Recommendations",
+    "tryAnother": "Try Another",
+    "shareResults": "Share Results"
+  },
+
 "result": {
   "title": "Recommendation",
   "benefits": "Benefits",
   "finalOutput": "Final Output",
   "process": "Processing Steps",
   "notes": "Notes",
-  "notFound": "No recommendation found for the selected inputs"
+  "notFound": "No recommendation found for the selected inputs",
+  "processingSteps": "Processing Steps"
+},
+
+"tips": {
+  "title": "Tips",
+  "tip1": "Proper waste management reduces environmental impact",
+  "tip2": "Composting improves soil quality naturally",
+  "tip3": "Biogas generation provides renewable energy",
+  "tip4": "Process waste to create additional income"
+},
+
+"features": {
+  "title": "Features",
+  "feature1": "Step-by-step guidance",
+  "feature2": "Personalized recommendations",
+  "feature3": "Multiple language support",
+  "feature4": "Practical implementation tips"
 }
 
 }

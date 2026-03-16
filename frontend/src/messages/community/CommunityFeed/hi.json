@@ -1,0 +1,51 @@
+{
+  "board": {
+    "title": "कम्युनिटी बोर्ड",
+    "subtitle": "स्थानीय किसानों और खरीदारों से जुड़ें, पूछें, और व्यापार करें।",
+    "createPost": "एक नया पोस्ट बनाएं",
+    "categories": {
+      "farmQuery": "प्रश्न",
+      "cropCare": "फसल देखभाल",
+      "marketHelp": "बाजार/बिक्री",
+      "successStory": "बंपर/सफलता",
+      "equipment": "उपकरण"
+    },
+    "placeholders": {
+      "description": "अपने फसल समस्या का वर्णन करें, बिक्री के लिए अपनी उपज सूचीबद्ध करें, या कोई प्रश्न पूछें...",
+      "reply": "अपनी सलाह या उत्तर यहां लिखें..."
+    },
+    "buttons": {
+      "uploadPhoto": "फोटो अपलोड करें",
+      "publish": "पोस्ट प्रकाशित करें",
+      "postReply": "जवाब पोस्ट करें",
+      "cancel": "रद्द करें"
+    },
+    "status": {
+      "loading": "बोर्ड लोड हो रहा है...",
+      "emptyTitle": "बोर्ड खाली है।",
+      "emptyDescription": "अपडेट साझा करने या प्रश्न पूछने वाला पहला व्यक्ति बनें।"
+    },
+    "toasts": {
+      "signInToPost": "पोस्ट करने के लिए साइन इन करें।",
+      "addTextOrPhoto": "पाठ या फ़ोटो जोड़ें।",
+      "postPublished": "पोस्ट प्रकाशित हो गया!",
+      "couldNotPublish": "पोस्ट प्रकाशित नहीं किया जा सका।",
+      "signInToLike": "पोस्ट को लाइक करने के लिए साइन इन करें।",
+      "couldNotUpdateLike": "लाइक अपडेट नहीं किया जा सका।",
+      "signInToSave": "पोस्ट को सहेजने के लिए साइन इन करें।",
+      "couldNotSave": "पोस्ट सहेजा नहीं जा सका।",
+      "signInToReply": "जवाब देने के लिए साइन इन करें।",
+      "writeReplyFirst": "पहले जवाब लिखें।",
+      "replyAdded": "जवाब जोड़ दिया गया!",
+      "couldNotAddReply": "जवाब जोड़ नहीं सका।"
+    },
+    "actions": {
+      "helpful": "सहायक",
+      "replies": "जवाब"
+    },
+    "post": {
+      "previewAlt": "पूर्वावलोकन",
+      "attachmentAlt": "पोस्ट अटैचमेंट"
+    }
+  }
+}

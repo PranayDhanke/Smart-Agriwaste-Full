@@ -81,6 +81,12 @@
     "deliveredByFarmer": "किसान द्वारा डिलीवर किया गया"
   },
 
+  "status": {
+    "pending": "लंबित",
+    "confirmed": "पुष्टि की गई",
+    "cancelled": "रद्द किया गया"
+  },
+
   "cancelled": {
     "banner": "यह ऑर्डर रद्द कर दिया गया है"
   },
@@ -90,7 +96,7 @@
 
   "toasts": {
     "loadFailed": "ऑर्डर विवरण लोड करने में विफल",
-    "statusChanged": "ऑर्डर {status} успешно",
+    "statusChanged": "ऑर्डर {status} सफलतापूर्वक",
     "changeStatusFailed": "ऑर्डर स्थिति बदलने में विफल",
     "outForPickup": "ऑर्डर पिकअप के लिए चिह्नित किया गया",
     "outForPickupFailed": "पिकअप के लिए ऑर्डर चिह्नित करने में विफल",

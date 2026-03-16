@@ -1,0 +1,41 @@
+{
+  "dashboard": {
+    "farmerHeading": "Farmer Analytics",
+    "buyerHeading": "Buyer Analytics",
+    "farmerValueLabel": "Revenue tracked",
+    "buyerValueLabel": "Purchases tracked",
+    "subtitle": "Orders and negotiations at a glance",
+    "description": "Track how many negotiations are active, how orders are moving, and how much value is flowing through your marketplace activity.",
+    "loading": "Loading analytics...",
+    "metrics": {
+      "totalNegotiations": "Total negotiations",
+      "pendingNow": "pending now",
+      "totalOrders": "Total orders",
+      "confirmed": "confirmed",
+      "deliveredOrders": "Delivered orders",
+      "outForDelivery": "out for delivery"
+    },
+    "sections": {
+      "negotiationAnalytics": "Negotiation analytics",
+      "orderAnalytics": "Order analytics",
+      "recentNegotiations": "Recent negotiations",
+      "recentOrders": "Recent orders"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "delivered": "Delivered"
+    },
+    "noData": {
+      "noNegotiations": "No negotiations yet.",
+      "noOrders": "No orders yet."
+    },
+    "labels": {
+      "offer": "Offer:",
+      "total": "Total:"
+    }
+  }
+}

@@ -239,7 +239,7 @@ export default function Process() {
                               className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                               onClick={() => setStep(2)}
                             >
-                              Continue <ChevronRight className="w-5 h-5 ml-2" />
+                              {t("buttons.continue")} <ChevronRight className="w-5 h-5 ml-2" />
                             </Button>
                           )}
                         </div>
@@ -312,7 +312,7 @@ export default function Process() {
                               className="flex-1 h-12 rounded-lg border-2"
                               onClick={() => setStep(1)}
                             >
-                              Back
+                              {t("buttons.back")}
                             </Button>
                             <Button
                               type="submit"
@@ -326,11 +326,11 @@ export default function Process() {
                               {isLoading ? (
                                 <>
                                   <Loader className="animate-spin w-5 h-5 mr-2" />
-                                  Processing...
+                                  {t("actions.processing")}
                                 </>
                               ) : (
                                 <>
-                                  Get Recommendations{" "}
+                                  {t("buttons.getRecommendations")}{" "}
                                   <Zap className="w-5 h-5 ml-2" />
                                 </>
                               )}
@@ -359,7 +359,7 @@ export default function Process() {
                     {/* Process Steps */}
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="text-lg">📋</span> Processing Steps
+                        <span className="text-lg">📋</span> {t("result.processingSteps")}
                       </h3>
                       <div className="space-y-3">
                         {data?.process.map((step: string, i: number) => (
@@ -412,10 +412,10 @@ export default function Process() {
                         className="flex-1 h-12 rounded-lg border-2"
                         onClick={handleReset}
                       >
-                        Try Another
+                        {t("buttons.tryAnother")}
                       </Button>
                       <Button className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg">
-                        Share Results
+                        {t("buttons.shareResults")}
                       </Button>
                     </div>
                   </div>
@@ -449,26 +449,24 @@ export default function Process() {
             <Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50">
               <CardContent className="p-6">
                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-lg">💡</span> Tips
+                  <span className="text-lg">💡</span> {t("tips.title")}
                 </h3>
                 <ul className="space-y-3 text-sm text-gray-700">
                   <li className="flex gap-2">
                     <span className="text-lg">🌍</span>
-                    <span>
-                      Proper waste management reduces environmental impact
-                    </span>
+                    <span>{t("tips.tip1")}</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-lg">💚</span>
-                    <span>Composting improves soil quality naturally</span>
+                    <span>{t("tips.tip2")}</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-lg">⚡</span>
-                    <span>Biogas generation provides renewable energy</span>
+                    <span>{t("tips.tip3")}</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-lg">💰</span>
-                    <span>Process waste to create additional income</span>
+                    <span>{t("tips.tip4")}</span>
                   </li>
                 </ul>
               </CardContent>
@@ -477,30 +475,30 @@ export default function Process() {
             {/* Features Card */}
             <Card className="border-0 shadow-lg rounded-2xl">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Features</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">{t("features.title")}</h3>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">
-                      Step-by-step guidance
+                      {t("features.feature1")}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">
-                      Personalized recommendations
+                      {t("features.feature2")}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">
-                      Multiple language support
+                      {t("features.feature3")}
                     </span>
                   </div>
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">
-                      Practical implementation tips
+                      {t("features.feature4")}
                     </span>
                   </div>
                 </div>

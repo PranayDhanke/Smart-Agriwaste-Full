@@ -321,9 +321,7 @@ export default function SingleMarketplace() {
                 {data.title[locale]}
               </h1>
               <p className="text-lg text-gray-600 font-medium">
-                {c(
-                  `productSet.${data.wasteType}.${data.wasteCategory}.${data.wasteProduct}`,
-                )}
+                {c(`productSet.${data.wasteProduct}`)}
               </p>
             </div>
 

@@ -9,7 +9,7 @@
   "aadhaarNumber": "Aadhaar Number",
   "aadhaarPlaceholder": "XXXX XXXX XXXX",
   "aadhaarPhoto": "Aadhaar Card Photo",
-  "maxSizeNote": "Max size: 5MB | Formats: JPG, PNG",
+  "maxSizeNote": "Max size: 1MB | Formats: JPG, PNG",
   "contactInformation": "Contact Information",
   "phoneNumber": "Phone Number",
   "locationDetails": "Location Details",
