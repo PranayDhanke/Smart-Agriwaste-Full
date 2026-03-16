@@ -2,11 +2,13 @@ import { Server, Socket } from "socket.io";
 import { createMessage, getMessages } from "../controllers/messages.controller";
 
 let io: Server | null = null;
+export const getUserSocketRoom = (userId: string) => `user:${userId}`;
+export const getIO = () => io;
 
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:3000/", "https://smart-agriwaste.vercel.app/"],
+      origin: ["http://localhost:3000", "https://smart-agriwaste.vercel.app"],
       credentials: true,
     },
   });
@@ -18,6 +20,11 @@ export const initSocket = (server: any) => {
 };
 
 const setUser = (socket: Socket) => {
+  socket.on("register-user", (userId: string) => {
+    if (!userId) return;
+    socket.join(getUserSocketRoom(String(userId)));
+  });
+
   socket.on("join-room", async () => {
     const ROOM = "main-room";
     socket.join(ROOM);

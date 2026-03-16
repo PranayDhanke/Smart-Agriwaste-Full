@@ -10,7 +10,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 
 const router = Router();
 
-router.post("/add-negotiation", requireAuth(), asyncHandler(listNegotiations));
+router.post("/add-negotiation", asyncHandler(listNegotiations));
 router.get(
   "/get-negotiation/farmer/:id",
   asyncHandler(getNegotiationsByFarmer),

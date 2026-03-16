@@ -11,12 +11,16 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, XCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
+  notificationApi,
   useDeleteNotificationMutation,
   useGetNotificationsQuery,
   useMarkAsReadMutation,
 } from "@/redux/api/notificationAPi";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Notification } from "@/components/types/notification";
+import { connectSocketForUser } from "@/lib/socket";
+import { useDispatch } from "react-redux";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface NotificationPanelProps {
   open: boolean;
@@ -30,59 +34,92 @@ export default function NotificationPanel({
   userId,
 }: NotificationPanelProps) {
   const t = useTranslations("extra");
+  const dispatch = useDispatch();
+  const [socketNotifications, setSocketNotifications] = useState<Notification[]>([]);
 
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const { data, isFetching, refetch } = useGetNotificationsQuery({
-    userId,
-    cursor,
-  });
+  const { data, isFetching } = useGetNotificationsQuery(
+    userId
+      ? {
+          userId,
+          limit: 20,
+        }
+      : skipToken,
+  );
   const [deleteNotification] = useDeleteNotificationMutation();
   const [markAsRead] = useMarkAsReadMutation();
 
-  useEffect(() => {
-    if (!data?.notifications) return;
+  const notifications = useMemo(() => {
+    const notificationMap = new Map<string, Notification>();
 
-    setNotifications((prev) => {
-      // First page → replace
-      if (!cursor) {
-        return data.notifications;
-      }
-
-      // Next pages → append + dedupe
-      const map = new Map<string, Notification>();
-
-      [...prev, ...data.notifications]  .forEach((n) => {
-        map.set(n._id, n);
-      });
-
-      return Array.from(map.values());
+    socketNotifications.forEach((notification) => {
+      notificationMap.set(notification._id, notification);
     });
-  }, [data, cursor]);
 
-  const loadMore = () => {
-    if (data?.pagination.hasNext) {
-      setCursor(data.pagination.nextCursor);
-    }
-  };
+    data?.notifications?.forEach((notification) => {
+      if (!notificationMap.has(notification._id)) {
+        notificationMap.set(notification._id, notification);
+      }
+    });
+
+    return Array.from(notificationMap.values());
+  }, [data?.notifications, socketNotifications]);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const socket = connectSocketForUser(userId);
+
+    const onNotification = (incoming: Notification) => {
+      setSocketNotifications((prev) => [
+        incoming,
+        ...prev.filter((item) => item._id !== incoming._id),
+      ]);
+
+      dispatch(
+        notificationApi.util.updateQueryData(
+          "getNotifications",
+          { userId, limit: 20 },
+          (draft) => {
+            const existing = draft.notifications.find(
+              (item) => item._id === incoming._id,
+            );
+
+            if (existing) {
+              Object.assign(existing, incoming);
+              return;
+            }
+
+            draft.notifications.unshift(incoming);
+          },
+        ),
+      );
+    };
+
+    socket.on("notification:new", onNotification);
+
+    return () => {
+      socket.off("notification:new", onNotification);
+    };
+  }, [dispatch, userId]);
 
   const markAsReadNotification = async (id: string) => {
     await markAsRead(id).unwrap();
 
-    setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, read: true } : n)),
+    setSocketNotifications((prev) =>
+      prev.map((notification) =>
+        notification._id === id ? { ...notification, read: true } : notification,
+      ),
     );
   };
 
-  const deleteNotificaitonAction = async (id: string) => {
+  const deleteNotificationAction = async (id: string) => {
     try {
       await deleteNotification(id).unwrap();
-
-      setNotifications((prev) => prev.filter((n) => n._id !== id));
-    } catch (err: any) {
-      alert(
-        err?.data?.message || err?.error || "Failed to delete notification",
-      );
+      setSocketNotifications((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete notification";
+      alert(message);
     }
   };
 
@@ -104,35 +141,32 @@ export default function NotificationPanel({
                 {t("NotificationPanel.none")}
               </p>
             ) : (
-              notifications.map((n) => (
+              notifications.map((notification) => (
                 <div
-                  onClick={() => markAsReadNotification(n._id)}
-                  key={n._id}
+                  onClick={() => markAsReadNotification(notification._id)}
+                  key={notification._id}
                   className={`border p-3 rounded-lg cursor-pointer transition ${
-                    n.read ? "bg-muted" : "bg-green-50 border-green-300"
+                    notification.read ? "bg-muted" : "bg-green-50 border-green-300"
                   }`}
                 >
                   <XCircle
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteNotificaitonAction(n._id);
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      deleteNotificationAction(notification._id);
                     }}
                     className="h-5 w-5 float-end text-red-600 cursor-pointer"
                   />
 
-                  <p className="text-sm font-medium">{n.title}</p>
-                  <p className="text-xs text-muted-foreground">{n.message}</p>
+                  <p className="text-sm font-medium">{notification.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {notification.message}
+                  </p>
                 </div>
               ))
             )}
           </div>
-          <aside className="float-right p-2 cursor-pointer">
-            {" "}
-            {data?.pagination?.hasNext && (
-              <button onClick={loadMore} disabled={isFetching}>
-                {isFetching ? "Loading..." : "Load more"}
-              </button>
-            )}
+          <aside className="float-right p-2 text-xs text-slate-400">
+            {isFetching ? "Refreshing..." : ""}
           </aside>
         </ScrollArea>
       </SheetContent>

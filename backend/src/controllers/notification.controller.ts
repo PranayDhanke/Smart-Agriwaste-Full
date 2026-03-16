@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AppError } from "../utils/AppError";
 import notification from "../models/notification.model";
+import { createNotificationRecord } from "../lib/notifications";
 
 export const sendNotification = async (req: Request, res: Response) => {
   const { userId, title, message, type } = await req.body.data;
@@ -9,42 +10,16 @@ export const sendNotification = async (req: Request, res: Response) => {
     throw new AppError("Insufficient data provided", 400);
   }
 
-  const sendednotification = await notification.create({
+  const sendednotification = await createNotificationRecord({
     userId,
     title,
     message,
     type: type ?? "system",
-    read: false,
   });
 
   if (!sendednotification) {
     throw new AppError("Failed to log notification", 500);
   }
-
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `${process.env.ONESIGNAL_REST_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      app_id: process.env.ONESIGNAL_APP_ID,
-
-      headings: { en: title },
-      contents: { en: message },
-
-      include_aliases: { external_id: [userId] },
-      target_channel: "push",
-    }),
-  };
-
-  await fetch("https://api.onesignal.com/notifications?c=push", options)
-    .then((res) => {
-      res.json();
-    })
-    .catch((err) => {
-      throw new AppError("Failed to send notification", 500);
-    });
 
   res.status(200).json({ message: "Notificaiton Sended Successfully" });
 };
@@ -57,7 +32,7 @@ export const getNotification = async (req: Request, res: Response) => {
   }
 
   const { cursor } = req.query;
-  const limit = Math.min(parseInt(req.query.limit as string) | 10, 50);
+  const limit = Math.min(Number(req.query.limit) || 10, 50);
 
   const query = cursor ? { userId: id, _id: { $lt: cursor } } : { userId: id };
 

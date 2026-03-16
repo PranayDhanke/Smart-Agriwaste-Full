@@ -33,12 +33,15 @@ const NegotiationPanel = ({
 }) => {
   const locale = useLocale() as "en" | "hi" | "mr";
   const [price, setPrice] = useState<number | "">("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("marketplace.NegotiationPanel");
   const { user } = useUser();
-  const [createNegotiation, { isLoading }] = useCreateNegotiationMutation();
+  const [createNegotiation] = useCreateNegotiationMutation();
   const [sendNotification] = useSendNotificationMutation();
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
     if (!user?.id) {
       toast.error(t("errors.failed"));
       return;
@@ -55,6 +58,8 @@ const NegotiationPanel = ({
     }
 
     try {
+      setIsSubmitting(true);
+
       await createNegotiation({
         data: {
           buyerId: user.id,
@@ -84,17 +89,24 @@ const NegotiationPanel = ({
         },
       }).unwrap();
 
-      await sendNotification({
-        data: {
-          userId: item.seller.farmerId,
-          title: t("notification.title"),
-          message: t("notification.message", {
-            buyer: user.fullName || t("buyerPlaceholder"),
-            title: item.title[locale],
-          }),
-          type: "negotiation",
-        },
-      }).unwrap();
+      try {
+        await sendNotification({
+          data: {
+            userId: item.seller.farmerId,
+            title: t("notification.title"),
+            message: t("notification.message", {
+              buyer: user.fullName || t("buyerPlaceholder"),
+              title: item.title[locale],
+            }),
+            type: "negotiation",
+          },
+        }).unwrap();
+      } catch (notificationError) {
+        console.error(
+          "Negotiation created but notification failed",
+          notificationError,
+        );
+      }
 
       toast.success(t("success.sent"));
       onClose();
@@ -105,6 +117,8 @@ const NegotiationPanel = ({
         mutationError.error ||
         t("errors.failed");
       toast.error(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -163,9 +177,9 @@ const NegotiationPanel = ({
         <Button
           className="w-full bg-amber-500 hover:bg-amber-600"
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={isSubmitting}
         >
-          {isLoading ? t("buttons.sending") : t("buttons.submit")}
+          {isSubmitting ? t("buttons.sending") : t("buttons.submit")}
         </Button>
       </CardContent>
     </Card>

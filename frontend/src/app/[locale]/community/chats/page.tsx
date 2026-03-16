@@ -1,11 +1,11 @@
-import Discussion from "@/components/page/home/Discussion"
+import CommunityFeed from "@/components/page/community/CommunityFeed";
 
 const page = () => {
   return (
     <div>
-        <Discussion />
+      <CommunityFeed />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

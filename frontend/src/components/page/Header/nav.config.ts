@@ -50,6 +50,11 @@ export const NAVIGATION: Record<Role, NavItem[]> = {
       href: "/profile/buyer/my-purchases",
       icon: Package,
     },
+    {
+      key: "nav.analytics",
+      href: "/profile/buyer/analytics",
+      icon: TrendingUp,
+    },
     { key: "nav.Nego", href: "/profile/buyer/negotiations", icon: List },
     { key: "nav.community", href: "/community", icon: User },
   ],

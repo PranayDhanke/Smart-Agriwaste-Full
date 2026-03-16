@@ -3,13 +3,55 @@ import negotiation from "../models/negotiation.model";
 import { AppError } from "../utils/AppError";
 
 export const listNegotiations = async (req: Request, res: Response) => {
-  const data = await req.body.data;
+  const data = req.body.data;
   if (!data) {
     throw new AppError("No data provided", 400);
   }
 
+  const {
+    buyerId,
+    buyerName,
+    farmerId,
+    negotiatedPrice,
+    status,
+    item,
+  } = data;
+
+  if (
+    !buyerId ||
+    !buyerName ||
+    !farmerId ||
+    !negotiatedPrice ||
+    !item?.prodId
+  ) {
+    throw new AppError("Incomplete negotiation data provided", 400);
+  }
+
+  const existingPendingNegotiation = await negotiation.findOne({
+    buyerId,
+    farmerId,
+    "item.prodId": item.prodId,
+    status: "pending",
+  });
+
+  if (existingPendingNegotiation) {
+    existingPendingNegotiation.buyerName = buyerName;
+    existingPendingNegotiation.farmerId = farmerId;
+    existingPendingNegotiation.negotiatedPrice = negotiatedPrice;
+    existingPendingNegotiation.item = item;
+    existingPendingNegotiation.status = "pending";
+
+    await existingPendingNegotiation.save();
+
+    return res.status(200).json({
+      message: "Negotiation request updated successfully",
+      negotiation: existingPendingNegotiation,
+    });
+  }
+
   const createdNegotiation = await negotiation.create({
     ...data,
+    status: status ?? "pending",
     createdAt: new Date(),
   });
 
@@ -17,7 +59,10 @@ export const listNegotiations = async (req: Request, res: Response) => {
     throw new AppError("Failed to log negotiation request", 500);
   }
 
-  res.status(200).json({ message: "Negotiation request logged successfully" });
+  res.status(200).json({
+    message: "Negotiation request logged successfully",
+    negotiation: createdNegotiation,
+  });
 };
 
 export const getNegotiationsByFarmer = async (req: Request, res: Response) => {

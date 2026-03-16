@@ -13,6 +13,7 @@ import notificationRoute from "./routes/notification.routes";
 import negotiationRoute from "./routes/negotiation.routes";
 import wasteRoute from "./routes/waste.routes";
 import orderRoute from "./routes/order.routes";
+import communityRoute from "./routes/community.routes";
 import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use("/api/notification", notificationRoute);
 app.use("/api/negotiation", negotiationRoute);
 app.use("/api/waste", wasteRoute);
 app.use("/api/order", orderRoute);
+app.use("/api/community", communityRoute);
 
 app.use(errorHandler);
 

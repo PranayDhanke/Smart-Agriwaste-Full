@@ -71,7 +71,7 @@ export const negotiationApi = baseApi.injectEndpoints({
 
     // Create negotiation
     createNegotiation: builder.mutation<
-      { message: string },
+      { message: string; negotiation: Negotiation },
       { data: Partial<Negotiation> }
     >({
       query: (body) => ({
@@ -110,6 +110,8 @@ export const negotiationApi = baseApi.injectEndpoints({
 ======================= */
 
 export const {
+  useGetNegotiationsByFarmerQuery,
+  useGetNegotiationsByBuyerQuery,
   useLazyGetNegotiationsByFarmerQuery,
   useLazyGetNegotiationsByBuyerQuery,
   useCreateNegotiationMutation,
