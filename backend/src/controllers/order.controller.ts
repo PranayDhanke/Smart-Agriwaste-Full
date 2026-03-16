@@ -32,7 +32,10 @@ export const addOrder = async (req: Request, res: Response) => {
         throw new AppError("Waste item not found", 404);
       }
 
-      totalAmount += waste.price * item.quantity;
+      const unitPrice =
+        typeof item.price === "number" && item.price > 0 ? item.price : waste.price;
+
+      totalAmount += unitPrice * item.quantity;
 
       validatedItems.push({
         prodId: waste._id,
@@ -41,7 +44,7 @@ export const addOrder = async (req: Request, res: Response) => {
         wasteProduct: waste.wasteProduct,
         moisture: waste.moisture,
         quantity: item.quantity,
-        price: waste.price,
+        price: unitPrice,
         unit: waste.unit,
         description: waste.description,
         image: waste.imageUrl,

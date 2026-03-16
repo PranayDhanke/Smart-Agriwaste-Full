@@ -33,7 +33,7 @@ const MarketPlaceButton = ({ p }: { p: Waste }) => {
       moisture: item.moisture,
       price: item.price,
       prodId: item._id,
-      quantity: 1,
+      quantity: item.quantity,
       sellerInfo: {
         address: item.address,
         seller: {

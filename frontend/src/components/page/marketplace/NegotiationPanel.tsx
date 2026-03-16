@@ -33,6 +33,7 @@ const NegotiationPanel = ({
 }) => {
   const locale = useLocale() as "en" | "hi" | "mr";
   const [price, setPrice] = useState<number | "">("");
+  const [quantity, setQuantity] = useState<number | "">(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("marketplace.NegotiationPanel");
   const { user } = useUser();
@@ -49,6 +50,11 @@ const NegotiationPanel = ({
 
     if (!price || price <= 0) {
       toast.error(t("errors.invalidPrice"));
+      return;
+    }
+
+    if (!quantity || quantity <= 0 || quantity > item.quantity) {
+      toast.error("Please enter a valid quantity within available stock.");
       return;
     }
 
@@ -73,7 +79,7 @@ const NegotiationPanel = ({
             wasteType: item.wasteType,
             wasteProduct: item.wasteProduct,
             moisture: item.moisture,
-            quantity: 1,
+            quantity: Number(quantity),
             price: item.price,
             unit: item.unit,
             description: item.description,
@@ -154,23 +160,40 @@ const NegotiationPanel = ({
           <p className="text-xs text-gray-500">
             {t("listedPrice", { price: item.price, unit: item.unit })}
           </p>
+          <p className="text-xs text-gray-500">
+            Available quantity: {item.quantity} {item.unit}
+          </p>
         </div>
 
-        {/* Input */}
-        <div className="space-y-1.5">
-          <Label>{t("labels.yourOffer")}</Label>
-          <div className="relative">
-            <IndianRupee className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label>Quantity</Label>
             <Input
               type="number"
               min={1}
-              max={item.price - 1}
-              value={price}
+              max={item.quantity}
+              value={quantity}
               onChange={(e) =>
-                setPrice(e.target.value === "" ? "" : Number(e.target.value))
+                setQuantity(e.target.value === "" ? "" : Number(e.target.value))
               }
-              className="pl-8"
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>{t("labels.yourOffer")}</Label>
+            <div className="relative">
+              <IndianRupee className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+              <Input
+                type="number"
+                min={1}
+                max={item.price - 1}
+                value={price}
+                onChange={(e) =>
+                  setPrice(e.target.value === "" ? "" : Number(e.target.value))
+                }
+                className="pl-8"
+              />
+            </div>
           </div>
         </div>
 
