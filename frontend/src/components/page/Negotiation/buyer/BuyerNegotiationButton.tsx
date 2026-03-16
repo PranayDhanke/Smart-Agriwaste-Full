@@ -9,10 +9,14 @@ import { toast } from "sonner";
 import { addToCart } from "@/redux/features/cartSlice";
 import NegotiationPanel from "@/components/page/marketplace/NegotiationPanel";
 import { Waste } from "@/components/types/waste";
+import { useRouter } from "@/i18n/navigation";
 
 const BuyerNegotiationButton = ({ neg }: { neg: Negotiation }) => {
   const t = useTranslations("profile.buyer.Negotiation");
   const dispatch = useDispatch();
+
+  const router = useRouter();
+  
   const { user } = useSelector((state: RootState) => state.auth);
   const [isNegotiationOpen, setIsNegotiationOpen] = useState(false);
 
@@ -56,7 +60,9 @@ const BuyerNegotiationButton = ({ neg }: { neg: Negotiation }) => {
       }),
     );
 
-    toast.success("Negotiated item added to cart. Complete the order from the cart.");
+    toast.success(
+      "Negotiated item added to cart. Complete the order from the cart.",
+    );
     router.push("/marketplace");
   };
 
