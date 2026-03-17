@@ -286,7 +286,7 @@ export default function CommunityFeed() {
     try {
       await updateReply({
         postId,
-        replyId,
+        replyId, 
         userId: user.id,
         message: replyEditMessage.trim(),
       }).unwrap();

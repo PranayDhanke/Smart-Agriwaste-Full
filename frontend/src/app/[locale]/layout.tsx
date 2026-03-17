@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
@@ -7,26 +7,41 @@ import { routing } from "@/i18n/routing";
 import { enUS, hiIN } from "@clerk/localizations";
 import { LocalizationResource } from "@clerk/types";
 import { notFound } from "next/navigation";
-import Providers from "./providers"; 
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 const clerkLocales: Record<string, LocalizationResource> = {
   en: enUS,
   hi: hiIN,
   mr: hiIN,
 };
+
+export const viewport: Viewport = {
+  themeColor: "#16a34a",
+};
+
 export const metadata: Metadata = {
   title: "Smart Agriwaste",
   description:
     "This is an website useful for farmer for sustainable and agriculutre waste management",
+
+  manifest: "/manifest.json",
+
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
+  },
 };
+
 export default async function RootLayout({
   children,
   params,
