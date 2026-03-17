@@ -94,6 +94,48 @@ export const deleteCommunityPost = async (req: Request, res: Response) => {
   });
 };
 
+export const updateCommunityPost = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const postId = String(id);
+  const { userId, description, category } = req.body ?? {};
+
+  if (!id || !mongoose.Types.ObjectId.isValid(postId)) {
+    throw new AppError("Valid post id is required", 400);
+  }
+
+  if (!userId) {
+    throw new AppError("User id is required", 400);
+  }
+
+  if (!description || !String(description).trim()) {
+    throw new AppError("Description is required", 400);
+  }
+
+  const post = await CommunityPost.findById(postId);
+
+  if (!post) {
+    throw new AppError("Post not found", 404);
+  }
+
+  if (post.authorId !== String(userId)) {
+    throw new AppError("You can edit only your own post", 403);
+  }
+
+  post.description = String(description).trim().slice(0, 4000);
+  if (category) {
+    post.category = String(category).slice(0, 60);
+  }
+
+  await post.save();
+
+  getIO()?.emit("community:post-updated", post.toObject());
+
+  res.status(200).json({
+    success: true,
+    post,
+  });
+};
+
 export const toggleCommunityLike = async (req: Request, res: Response) => {
   const { id } = req.params;
   const postId = String(id);
@@ -217,6 +259,102 @@ export const addCommunityReply = async (req: Request, res: Response) => {
   getIO()?.emit("community:post-updated", post.toObject());
 
   res.status(201).json({
+    success: true,
+    post,
+  });
+};
+
+export const updateCommunityReply = async (req: Request, res: Response) => {
+  const { id, replyId } = req.params;
+  const postId = String(id);
+  const replyObjectId = String(replyId);
+  const { userId, message } = req.body ?? {};
+
+  if (!id || !mongoose.Types.ObjectId.isValid(postId)) {
+    throw new AppError("Valid post id is required", 400);
+  }
+
+  if (!replyId || !mongoose.Types.ObjectId.isValid(replyObjectId)) {
+    throw new AppError("Valid reply id is required", 400);
+  }
+
+  if (!userId) {
+    throw new AppError("User id is required", 400);
+  }
+
+  if (!message || !String(message).trim()) {
+    throw new AppError("Reply message is required", 400);
+  }
+
+  const post = await CommunityPost.findById(postId);
+
+  if (!post) {
+    throw new AppError("Post not found", 404);
+  }
+
+  const reply = post.replies.id(replyObjectId);
+
+  if (!reply) {
+    throw new AppError("Reply not found", 404);
+  }
+
+  if (reply.userId !== String(userId)) {
+    throw new AppError("You can edit only your own reply", 403);
+  }
+
+  reply.message = String(message).trim().slice(0, 1000);
+
+  await post.save();
+
+  getIO()?.emit("community:post-updated", post.toObject());
+
+  res.status(200).json({
+    success: true,
+    post,
+  });
+};
+
+export const deleteCommunityReply = async (req: Request, res: Response) => {
+  const { id, replyId } = req.params;
+  const postId = String(id);
+  const replyObjectId = String(replyId);
+  const { userId } = req.body ?? {};
+
+  if (!id || !mongoose.Types.ObjectId.isValid(postId)) {
+    throw new AppError("Valid post id is required", 400);
+  }
+
+  if (!replyId || !mongoose.Types.ObjectId.isValid(replyObjectId)) {
+    throw new AppError("Valid reply id is required", 400);
+  }
+
+  if (!userId) {
+    throw new AppError("User id is required", 400);
+  }
+
+  const post = await CommunityPost.findById(postId);
+
+  if (!post) {
+    throw new AppError("Post not found", 404);
+  }
+
+  const reply = post.replies.id(replyObjectId);
+
+  if (!reply) {
+    throw new AppError("Reply not found", 404);
+  }
+
+  if (reply.userId !== String(userId)) {
+    throw new AppError("You can delete only your own reply", 403);
+  }
+
+  reply.deleteOne();
+
+  await post.save();
+
+  getIO()?.emit("community:post-updated", post.toObject());
+
+  res.status(200).json({
     success: true,
     post,
   });

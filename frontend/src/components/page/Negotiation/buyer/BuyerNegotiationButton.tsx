@@ -53,6 +53,7 @@ const BuyerNegotiationButton = ({ neg }: { neg: Negotiation }) => {
 
     dispatch(
       addToCart({
+        cartItemId: `negotiation-${neg._id}`,
         ...neg.item,
         price: neg.negotiatedPrice,
         quantity: neg.item.quantity || 1,
@@ -63,7 +64,7 @@ const BuyerNegotiationButton = ({ neg }: { neg: Negotiation }) => {
     toast.success(
       "Negotiated item added to cart. Complete the order from the cart.",
     );
-    router.push("/marketplace");
+
   };
 
   const handleSendNewNegotiation = () => {

@@ -1,25 +1,35 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import axios from "axios";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import {
   useLazyGetProfileQuery,
   useUpdateProfileMutation,
 } from "@/redux/api/authApi";
+import { FileUploadInput } from "@/components/common/form/FileUploadInput";
 import { FormInput } from "@/components/common/form/FormInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
 import { uploadImage } from "@/utils/imagekit";
+import addressJson from "@/../public/Address.json";
+
+// Vibrant icons
+import {
+  MapPin,
+  Tractor,
+  FileText,
+  Loader2,
+  Sparkles,
+  Fingerprint,
+  User,
+  Phone,
+} from "lucide-react";
 
 const formSchema = z.object({
   phone: z.string().optional(),
@@ -39,24 +49,17 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// Field labels mapping
-const fieldLabels: Record<string, string> = {
-  phone: "Phone Number",
-  aadharnumber: "Aadhar Number",
-  state: "State",
-  district: "District",
-  taluka: "Taluka",
-  village: "Village",
-  houseBuildingName: "House/Building Name",
-  roadarealandmarkName: "Road, Area, Landmark Name",
-  farmNumber: "Farm Number",
-  farmArea: "Farm Area",
-  farmUnit: "Farm Unit",
-};
+interface AddressType {
+  states: string[];
+  districts: { [key: string]: string[] };
+  talukas: { [key: string]: string[] };
+  villages: { [key: string]: string[] };
+}
 
 export default function Profile() {
   const { user, isLoaded } = useUser();
   const t = useTranslations("profile.farmer.Profile");
+  const Address: AddressType = addressJson;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -64,9 +67,11 @@ export default function Profile() {
   });
 
   const { control, handleSubmit } = form;
-
-  const [aadharPreview, setAadharPreview] = useState<string | null>(null);
-  const [farmDocPreview, setFarmDocPreview] = useState<string | null>(null);
+  const selectedState = useWatch({ control, name: "state" });
+  const selectedDistrict = useWatch({ control, name: "district" });
+  const selectedTaluka = useWatch({ control, name: "taluka" });
+  const aadharPreview = useWatch({ control, name: "aadharUrl" });
+  const farmDocPreview = useWatch({ control, name: "farmDocUrl" });
 
   const [files, setFiles] = useState<{
     aadharFile: File | null;
@@ -77,298 +82,298 @@ export default function Profile() {
   });
 
   const farmerId = user ? user.id : "";
-
   const role = user ? user.unsafeMetadata.role : "";
   const [getProfile, { data: profiledata, isFetching, isLoading, isSuccess }] =
     useLazyGetProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
-  // Fetch data from API when component mounts
-
   useEffect(() => {
     if (isLoaded && user?.id) {
-      getProfile({
-        id: farmerId || user.id,
-        role: role as string,
-      });
+      getProfile({ id: farmerId || user.id, role: role as string });
     }
-  }, [user?.id, isLoaded]);
+  }, [farmerId, getProfile, isLoaded, role, user?.id]);
+
   useEffect(() => {
     if (!farmerId) return;
-
     const data = profiledata?.accountdata;
-
     if (data) {
-      form.reset({
-        phone: data.phone || "",
-        aadharnumber: data.aadharnumber || "",
-        state: data.state || "",
-        district: data.district || "",
-        taluka: data.taluka || "",
-        village: data.village || "",
-        houseBuildingName: data.houseBuildingName || "",
-        roadarealandmarkName: data.roadarealandmarkName || "",
-        farmNumber: data.farmNumber || "",
-        farmArea: data.farmArea || "",
-        farmUnit: data.farmUnit || "",
-        aadharUrl: data.aadharUrl || "",
-        farmDocUrl: data.farmDocUrl || "",
-      });
-
-
-      if (data.aadharUrl) setAadharPreview(data.aadharUrl);
-      if (data.farmDocUrl) setFarmDocPreview(data.farmDocUrl);
+      setTimeout(() => {
+        form.reset({
+          ...data,
+        });
+      }, 100);
     }
   }, [farmerId, form, profiledata]);
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setPreview: React.Dispatch<React.SetStateAction<string | null>>,
-    field: { onChange: (value: string | ArrayBuffer | null) => void },
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setFiles({ ...files, [e.target.name]: file });
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
-      field.onChange(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const uploadToImageKit = async (file: File, folder: string) => {
-    return uploadImage(file, folder);
-  };
-
   const onSubmit = async () => {
     try {
-      // Upload Aadhar if present and update the form
       if (files.aadharFile) {
-        const aadharUrl = await uploadToImageKit(files.aadharFile, "aadhar");
+        const aadharUrl = await uploadImage(files.aadharFile, "aadhar");
         form.setValue("aadharUrl", aadharUrl);
       }
-
-      // Upload farm doc if present and update the form
       if (files.farmdocFile) {
-        const farmDocUrl = await uploadToImageKit(files.farmdocFile, "farmdoc");
+        const farmDocUrl = await uploadImage(files.farmdocFile, "farmdoc");
         form.setValue("farmDocUrl", farmDocUrl);
       }
-
-      // IMPORTANT: read the latest form values (includes urls we set above)
-      const payload = form.getValues();
-
-      // Optional: validate farmerId
-      if (!farmerId) throw new Error("Missing farmerId");
 
       const res = await updateProfile({
         userId: farmerId,
         role: role as string,
-        data: payload,
+        data: form.getValues(),
       });
 
-      if ("data" in res) {
-        toast.success(t("profileUpdated"));
-      } else {
-        toast.error(t("profileUpdateFailed"));
-      }
+      if ("data" in res)
+        toast.success(
+          t("profileUpdated") || "Profile Updated Successfully! 🌾",
+        );
+      else toast.error(t("profileUpdateFailed") || "Update failed.");
     } catch {
-      toast.error(t("somethingWentWrong"));
+      toast.error(t("somethingWentWrong") || "An error occurred.");
     }
   };
 
-  if (!user) return <p className="text-center py-10">{t("loadingUser")}</p>;
-  if (isFetching && isLoading)
-    return <p className="text-center py-10">{t("loadingData")}</p>;
+  if (!user || (isFetching && isLoading)) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+        <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-4" />
+        <p className="text-emerald-900 font-medium">
+          Loading your colorful profile...
+        </p>
+      </div>
+    );
+  }
+
+  // Common input styling class
+  const inputStyle =
+    "h-12 rounded-xl bg-white border-gray-200 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm";
 
   return (
-    <div className="container py-10">
-      <Card className="max-w-4xl mx-auto border-gray-200 shadow-lg">
-        <CardHeader className="bg-green-50">
-          <CardTitle className="text-2xl font-bold text-green-700">
-            {t("title")}
-          </CardTitle>
-          <p className="text-sm text-gray-600 mt-1">{t("subtitle")}</p>
-        </CardHeader>
-        {isSuccess && (
-          <CardContent className="pt-6">
-            <FormProvider {...form}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                {/* Farmer ID */}
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <p className="text-sm">
-                    <span className="font-semibold text-green-700">
-                      {t("farmerIdLabel")}
-                    </span>
-                    {"   "}
-                    <span className="text-gray-700">
-                      {farmerId}
-                    </span>
-                  </p>
-                </div>
+    <div className="min-h-screen bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-green-100 via-white to-emerald-100 py-10 px-4 sm:px-6">
+      <Card className="max-w-4xl mx-auto border-0 shadow-[0_20px_50px_rgba(16,_185,_129,_0.07)] bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden">
+        {/* Vibrant Header */}
+        <div className="bg-gradient-to-r rounded-2xl from-emerald-600 via-green-600 to-teal-600 p-8 sm:p-10 relative overflow-hidden">
+          {/* Decorative background shapes */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-lime-300 opacity-20 rounded-full blur-2xl"></div>
 
-                {/* Account Information */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {t("account.heading")}
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white flex items-center tracking-tight">
+                {t("title") || "Farmer Profile"}{" "}
+                <Sparkles className="w-6 h-6 ml-3 text-yellow-300" />
+              </h1>
+              <p className="text-emerald-50 mt-2 text-base max-w-lg">
+                Manage your personal details, farm location, and agricultural
+                verification documents.
+              </p>
+            </div>
+            <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-inner inline-flex items-center self-start sm:self-auto">
+              <Fingerprint className="w-4 h-4 text-emerald-200 mr-2" />
+              <span className="text-xs font-mono text-emerald-50">
+                ID: {farmerId.slice(0, 10)}...
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {isSuccess && (
+          <CardContent className="p-6 sm:p-10">
+            <FormProvider {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+                {/* 1. Account Info (Colorful Grid) */}
+                <div className="relative">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center mb-5">
+                    <div className="bg-gradient-to-br from-emerald-500 to-teal-500 p-2 rounded-xl mr-3 shadow-sm text-white">
+                      <User className="w-4 h-4" />
+                    </div>
+                    {t("account.heading") || "Account Information"}
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <FormLabel className="text-gray-700">
-                        {t("account.firstName")}
-                      </FormLabel>
-                      <Input
-                        value={user?.firstName || ""}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
-                    <div>
-                      <FormLabel className="text-gray-700">
-                        {t("account.lastName")}
-                      </FormLabel>
-                      <Input
-                        value={user?.lastName || ""}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
-                    <div>
-                      <FormLabel className="text-gray-700">
-                        {t("account.username")}
-                      </FormLabel>
-                      <Input
-                        value={user?.username || ""}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
-                    <div>
-                      <FormLabel className="text-gray-700">
-                        {t("account.emailAddress")}
-                      </FormLabel>
-                      <Input
-                        value={user?.primaryEmailAddress?.emailAddress || ""}
-                        disabled
-                        className="bg-gray-50"
-                      />
-                    </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[
+                      {
+                        label: t("account.firstName") || "First Name",
+                        value: user?.firstName,
+                        color:
+                          "bg-emerald-50/70 border-emerald-100 text-emerald-900",
+                      },
+                      {
+                        label: t("account.lastName") || "Last Name",
+                        value: user?.lastName,
+                        color: "bg-teal-50/70 border-teal-100 text-teal-900",
+                      },
+                      {
+                        label: t("account.username") || "Username",
+                        value: user?.username,
+                        color: "bg-cyan-50/70 border-cyan-100 text-cyan-900",
+                      },
+                      {
+                        label: t("account.emailAddress") || "Email",
+                        value: user?.primaryEmailAddress?.emailAddress,
+                        color: "bg-blue-50/70 border-blue-100 text-blue-900",
+                      },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className={`p-4 rounded-2xl border ${item.color} transition-all hover:shadow-md`}
+                      >
+                        <p className="text-xs font-semibold opacity-70 mb-1 uppercase tracking-wider">
+                          {item.label}
+                        </p>
+                        <p
+                          className="font-bold truncate"
+                          title={item.value || ""}
+                        >
+                          {item.value || "-"}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <hr className="border-gray-200" />
-
-                {/* Contact Information */}
+                {/* 2. Contact Details */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {t("contact.heading")}
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center mb-5">
+                    <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-2 rounded-xl mr-3 shadow-sm text-white">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    {t("contact.heading") || "Contact Details"}
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-6 p-6 bg-amber-50/30 rounded-3xl border border-amber-100/50">
                     <FormInput
                       control={control}
+                      classname={inputStyle}
                       name="phone"
                       label={t("fields.phone")}
                       type="tel"
-                      placeholder={t("placeholders.phone")}
-                      classname="h-10"
+                      placeholder="10-digit number"
                     />
                     <FormInput
                       control={control}
+                      classname={inputStyle}
                       name="aadharnumber"
                       label={t("fields.aadharnumber")}
                       type="text"
-                      placeholder={t("placeholders.aadharnumber")}
-                      classname="h-10"
+                      placeholder="12-digit number"
                     />
                   </div>
                 </div>
 
-                <hr className="border-gray-200" />
-
-                {/* Address Details */}
+                {/* 3. Address */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {t("address.heading")}
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center mb-5">
+                    <div className="bg-gradient-to-br from-cyan-400 to-blue-500 p-2 rounded-xl mr-3 shadow-sm text-white">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    {t("address.heading") || "Location Details"}
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <FormInput
-                      control={control}
-                      name="state"
-                      label={t("fields.state")}
-                      type="text"
-                      placeholder={t("placeholders.state")}
-                      classname="h-10"
-                    />
-                    <FormInput
-                      control={control}
-                      name="district"
-                      label={t("fields.district")}
-                      type="text"
-                      placeholder={t("placeholders.district")}
-                      classname="h-10"
-                    />
-                    <FormInput
-                      control={control}
-                      name="taluka"
-                      label={t("fields.taluka")}
-                      type="text"
-                      placeholder={t("placeholders.taluka")}
-                      classname="h-10"
-                    />
-                    <FormInput
-                      control={control}
-                      name="village"
-                      label={t("fields.village")}
-                      type="text"
-                      placeholder={t("placeholders.village")}
-                      classname="h-10"
-                    />
-                    <FormInput
-                      control={control}
-                      name="houseBuildingName"
-                      label={t("fields.houseBuildingName")}
-                      type="text"
-                      placeholder={t("placeholders.houseBuildingName")}
-                      classname="h-10"
-                    />
-                    <FormInput
-                      control={control}
-                      name="roadarealandmarkName"
-                      label={t("fields.roadarealandmarkName")}
-                      type="text"
-                      placeholder={t("placeholders.roadarealandmarkName")}
-                      classname="h-10"
-                    />
+                  <div className="p-6 bg-cyan-50/30 rounded-3xl border border-cyan-100/50 space-y-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <SelectInput
+                        classname={inputStyle}
+                        control={control}
+                        placeholder="Select State"
+                        name="state"
+                        label={t("fields.state")}
+                        option={Address.states.map((s) => ({
+                          label: s,
+                          value: s,
+                        }))}
+                      />
+                      <SelectInput
+                        classname={inputStyle}
+                        control={control}
+                        name="district"
+                        placeholder="Select District"
+                        label={t("fields.district")}
+                        option={
+                          selectedState
+                            ? (Address.districts[selectedState] || []).map(
+                                (d) => ({ label: d, value: d }),
+                              )
+                            : []
+                        }
+                        disabled={!selectedState}
+                      />
+                      <SelectInput
+                        classname={inputStyle}
+                        control={control}
+                        name="taluka"
+                        placeholder="Select Taluka"
+                        label={t("fields.taluka")}
+                        option={
+                          selectedDistrict
+                            ? (Address.talukas[selectedDistrict] || []).map(
+                                (t) => ({ label: t, value: t }),
+                              )
+                            : []
+                        }
+                        disabled={!selectedDistrict}
+                      />
+                      <SelectInput
+                        classname={inputStyle}
+                        control={control}
+                        name="village"
+                        placeholder="Select Village"
+                        label={t("fields.village")}
+                        option={
+                          selectedTaluka
+                            ? (Address.villages[selectedTaluka] || []).map(
+                                (v) => ({ label: v, value: v }),
+                              )
+                            : []
+                        }
+                        disabled={!selectedTaluka}
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <FormInput
+                        type="text"
+                        classname={inputStyle}
+                        control={control}
+                        name="houseBuildingName"
+                        label={t("fields.houseBuildingName")}
+                        placeholder="House No / Building"
+                      />
+                      <FormInput
+                        type="text"
+                        classname={inputStyle}
+                        control={control}
+                        name="roadarealandmarkName"
+                        label={t("fields.roadarealandmarkName")}
+                        placeholder="Landmark / Area"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <hr className="border-gray-200" />
-
-                {/* Farm Details */}
+                {/* 4. Farm Details */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {t("farm.heading")}
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center mb-5">
+                    <div className="bg-gradient-to-br from-lime-400 to-green-500 p-2 rounded-xl mr-3 shadow-sm text-white">
+                      <Tractor className="w-4 h-4" />
+                    </div>
+                    {t("farm.heading") || "Farm Information"}
                   </h3>
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 bg-lime-50/30 rounded-3xl border border-lime-100/50">
                     <FormInput
+                      type="text"
+                      classname={inputStyle}
                       control={control}
                       name="farmNumber"
                       label={t("fields.farmNumber")}
-                      type="text"
-                      placeholder={`Enter ${fieldLabels["farmNumber"].toLowerCase()}`}
-                      classname="h-10"
+                      placeholder="e.g. Survey No. 12A"
                     />
                     <FormInput
+                      classname={inputStyle}
                       control={control}
                       name="farmArea"
                       label={t("fields.farmArea")}
                       type="number"
-                      placeholder={`Enter ${fieldLabels["farmArea"].toLowerCase()}`}
-                      classname="h-10"
+                      placeholder="Total Area size"
                     />
                     <SelectInput
+                      classname={inputStyle}
+                      placeholder="Select Unit"
                       control={control}
                       name="farmUnit"
                       label={t("fields.farmUnit")}
@@ -376,92 +381,60 @@ export default function Profile() {
                         { label: "Hectare", value: "hectare" },
                         { label: "Acre", value: "acre" },
                       ]}
-                      placeholder="Select unit"
-                      classname="h-10"
                     />
                   </div>
                 </div>
 
-                <hr className="border-gray-200" />
-
-                {/* Documents */}
+                {/* 5. Documents */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {t("documents.heading")}
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center mb-5">
+                    <div className="bg-gradient-to-br from-indigo-400 to-violet-500 p-2 rounded-xl mr-3 shadow-sm text-white">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    {t("documents.heading") || "Verification Documents"}
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-8">
-                    <FormField
+                  <div className="grid md:grid-cols-2 gap-6 p-6 bg-indigo-50/30 rounded-3xl border border-indigo-100/50">
+                    <FileUploadInput
                       control={control}
                       name="aadharUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-700">
-                            {t("documents.aadhar")}
-                          </FormLabel>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            name="aadharFile"
-                            onChange={(e) =>
-                              handleFileChange(e, setAadharPreview, field)
-                            }
-                          />
-                          {aadharPreview && (
-                            <div className="mt-3">
-                              <Image
-                                src={aadharPreview}
-                                alt="Aadhar preview"
-                                className="rounded-lg border-2 border-gray-200 shadow-sm"
-                                width={200}
-                                height={120}
-                              />
-                            </div>
-                          )}
-                        </FormItem>
-                      )}
+                      label={t("documents.aadhar") || "Aadhar Image"}
+                      preview={aadharPreview || null}
+                      onFileChange={(file) =>
+                        setFiles((prev) => ({ ...prev, aadharFile: file }))
+                      }
+                      classname="max-w-md"
                     />
 
-                    <FormField
+                    <FileUploadInput
                       control={control}
                       name="farmDocUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-gray-700">
-                            {t("documents.farm")}
-                          </FormLabel>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            name="farmdocFile"
-                            onChange={(e) =>
-                              handleFileChange(e, setFarmDocPreview, field)
-                            }
-                          />
-                          {farmDocPreview && (
-                            <div className="mt-3">
-                              <Image
-                                src={farmDocPreview}
-                                alt="Farm document preview"
-                                className="rounded-lg border-2 border-gray-200 shadow-sm"
-                                width={200}
-                                height={120}
-                              />
-                            </div>
-                          )}
-                        </FormItem>
-                      )}
+                      label={
+                        t("documents.farm") || "Farm Document (7/12 Extract)"
+                      }
+                      preview={farmDocPreview || null}
+                      onFileChange={(file) =>
+                        setFiles((prev) => ({ ...prev, farmdocFile: file }))
+                      }
+                      classname="max-w-md"
                     />
                   </div>
                 </div>
 
-                {/* Submit Button */}
-                <div className="flex justify-end pt-4">
+                {/* Vibrant Submit Button */}
+                <div className="pt-6 border-t border-gray-100 flex justify-end">
                   <Button
                     type="submit"
                     disabled={isUpdating}
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 text-base font-semibold"
+                    className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold px-10 py-6 h-auto rounded-2xl shadow-lg shadow-emerald-200 transform hover:-translate-y-0.5 transition-all text-lg"
                   >
-                    {t("saveChanges")}
+                    {isUpdating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-3 animate-spin" /> Saving
+                        Changes...
+                      </>
+                    ) : (
+                      t("saveChanges") || "Save Profile Updates"
+                    )}
                   </Button>
                 </div>
               </form>

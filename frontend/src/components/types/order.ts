@@ -16,6 +16,7 @@ interface buyerInfo {
 }
 
 export interface CartItem {
+  cartItemId?: string;
   prodId: string;
   title: TranslatedString;
   wasteType: string;

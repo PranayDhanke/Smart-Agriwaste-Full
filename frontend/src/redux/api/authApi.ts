@@ -26,7 +26,7 @@ export const authApi = baseApi.injectEndpoints({
       query: ({ userId, role, data }) => ({
         url: `${role}/update-account/${userId}`,
         method: "PUT",
-        body: data,
+        body: { data },
       }),
       invalidatesTags: (_result, _error, { userId }) => [
         { type: "Profile", id: userId },

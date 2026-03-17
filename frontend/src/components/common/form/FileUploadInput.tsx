@@ -86,12 +86,6 @@ export function FileUploadInput<T extends FieldValues>({
                     classname || "border-2 border-dashed border-gray-300"
                   }`}
                 />
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <Upload className="w-5 h-5 text-gray-400 mr-2" />
-                  <span className="text-sm text-gray-500">
-                    Choose or drag file
-                  </span>
-                </div>
               </div>
 
               {preview && (

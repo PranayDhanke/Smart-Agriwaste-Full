@@ -10,39 +10,47 @@ const initialState: cartSlice = {
   cart: [],
 };
 
+const getCartItemId = (item: CartItem) => item.cartItemId ?? item.prodId;
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState: initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const item = action.payload;
-      const exists = state.cart.find((i) => i.prodId === item.prodId);
+      const itemId = getCartItemId(item);
+      const exists = state.cart.find((i) => getCartItemId(i) === itemId);
       if (exists) {
         exists.quantity += item.quantity;
       } else {
-        state.cart.push(item);
+        state.cart.push({
+          ...item,
+          cartItemId: itemId,
+        });
       }
     },
-    removeFromCart: (state, action: PayloadAction<string>) => {
-      state.cart = state.cart.filter((i) => i.prodId !== action.payload);
+    removeFromCart: (state, action: PayloadAction<{ cartItemId: string }>) => {
+      state.cart = state.cart.filter(
+        (i) => getCartItemId(i) !== action.payload.cartItemId,
+      );
     },
     updateQuantity: (
       state,
       action: PayloadAction<{
-        prodId: string;
+        cartItemId: string;
         quantity: number;
         maxQuantity: number;
       }>,
     ) => {
-      const { prodId, quantity, maxQuantity } = action.payload;
+      const { cartItemId, quantity, maxQuantity } = action.payload;
 
-      const item = state.cart.find((i) => i.prodId === prodId);
+      const item = state.cart.find((i) => getCartItemId(i) === cartItemId);
       if (!item) {
         return;
       }
 
       if (quantity <= 0) {
-        state.cart = state.cart.filter((i) => i.prodId !== prodId);
+        state.cart = state.cart.filter((i) => getCartItemId(i) !== cartItemId);
         return;
       }
       if (quantity > maxQuantity) {

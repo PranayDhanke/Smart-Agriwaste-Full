@@ -6,13 +6,24 @@ import { useLocale } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useGetOrdersByBuyerQuery, useGetOrdersByFarmerQuery } from "@/redux/api/orderApi";
 import {
   useGetNegotiationsByBuyerQuery,
   useGetNegotiationsByFarmerQuery,
 } from "@/redux/api/negotiationApi";
 import { Handshake, IndianRupee, Package, TrendingUp, Truck } from "lucide-react";
+
+// Shadcn Chart Imports
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, PieChart, Pie, Cell, Label } from "recharts";
 
 type Role = "farmer" | "buyer";
 type Locale = "en" | "hi" | "mr";
@@ -24,62 +35,47 @@ const formatMoney = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
+// Define chart colors for consistency
+const COLORS = {
+  pending: "hsl(var(--warning, 45 93% 47%))", // Amber
+  accepted: "hsl(var(--success, 142 71% 45%))", // Emerald
+  rejected: "hsl(var(--destructive, 346 87% 43%))", // Rose
+  delivered: "hsl(var(--primary, 262 83% 58%))", // Violet
+};
+
 export default function AnalyticsDashboard({ role }: { role: Role }) {
   const { user } = useUser();
   const locale = useLocale() as Locale;
 
   const farmerOrderResult = useGetOrdersByFarmerQuery(
-    user?.id && role === "farmer"
-      ? { farmerId: user.id, limit: 50 }
-      : skipToken,
+    user?.id && role === "farmer" ? { farmerId: user.id, limit: 50 } : skipToken,
   );
   const buyerOrderResult = useGetOrdersByBuyerQuery(
-    user?.id && role === "buyer"
-      ? { buyerId: user.id, limit: 50 }
-      : skipToken,
+    user?.id && role === "buyer" ? { buyerId: user.id, limit: 50 } : skipToken,
   );
   const farmerNegotiationResult = useGetNegotiationsByFarmerQuery(
-    user?.id && role === "farmer"
-      ? { farmerId: user.id, limit: 50 }
-      : skipToken,
+    user?.id && role === "farmer" ? { farmerId: user.id, limit: 50 } : skipToken,
   );
   const buyerNegotiationResult = useGetNegotiationsByBuyerQuery(
-    user?.id && role === "buyer"
-      ? { buyerId: user.id, limit: 50 }
-      : skipToken,
+    user?.id && role === "buyer" ? { buyerId: user.id, limit: 50 } : skipToken,
   );
 
   const orderResult = role === "farmer" ? farmerOrderResult : buyerOrderResult;
-  const negotiationResult =
-    role === "farmer" ? farmerNegotiationResult : buyerNegotiationResult;
+  const negotiationResult = role === "farmer" ? farmerNegotiationResult : buyerNegotiationResult;
 
   const orders = useMemo(() => orderResult.data?.orderdata ?? [], [orderResult.data]);
   const negotiationStats = negotiationResult.data?.stats;
-  const negotiations = useMemo(
-    () => negotiationResult.data?.data ?? [],
-    [negotiationResult.data],
-  );
+  const negotiations = useMemo(() => negotiationResult.data?.data ?? [], [negotiationResult.data]);
 
   const metrics = useMemo(() => {
     const totalOrders = orders.length;
     const pendingOrders = orders.filter((order) => order.status === "pending").length;
-    const confirmedOrders = orders.filter(
-      (order) => order.status === "confirmed",
-    ).length;
-    const cancelledOrders = orders.filter(
-      (order) => order.status === "cancelled",
-    ).length;
+    const confirmedOrders = orders.filter((order) => order.status === "confirmed").length;
+    const cancelledOrders = orders.filter((order) => order.status === "cancelled").length;
     const deliveredOrders = orders.filter((order) => order.isDelivered).length;
-    const outForDelivery = orders.filter(
-      (order) => order.isOutForDelivery && !order.isDelivered,
-    ).length;
-    const totalOrderValue = orders.reduce(
-      (sum, order) => sum + (order.totalAmount || 0),
-      0,
-    );
-    const averageOrderValue = totalOrders
-      ? Math.round(totalOrderValue / totalOrders)
-      : 0;
+    const outForDelivery = orders.filter((order) => order.isOutForDelivery && !order.isDelivered).length;
+    const totalOrderValue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const averageOrderValue = totalOrders ? Math.round(totalOrderValue / totalOrders) : 0;
 
     return {
       totalOrders,
@@ -102,183 +98,221 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
     .slice(0, 5);
 
   const loading = orderResult.isLoading || negotiationResult.isLoading;
-  const heading =
-    role === "farmer" ? "Farmer Analytics" : "Buyer Analytics";
-  const valueLabel =
-    role === "farmer" ? "Revenue tracked" : "Purchases tracked";
+  const heading = role === "farmer" ? "Farmer Analytics" : "Buyer Analytics";
+  const valueLabel = role === "farmer" ? "Revenue tracked" : "Purchases tracked";
+
+  // --- CHART DATA PREPARATION ---
+  
+  const negotiationChartData = useMemo(() => [
+    { status: "Pending", count: negotiationStats?.pending ?? 0, fill: COLORS.pending },
+    { status: "Accepted", count: negotiationStats?.accepted ?? 0, fill: COLORS.accepted },
+    { status: "Rejected", count: negotiationStats?.rejected ?? 0, fill: COLORS.rejected },
+  ], [negotiationStats]);
+
+  const orderChartData = useMemo(() => [
+    { status: "Pending", count: metrics.pendingOrders, fill: COLORS.pending },
+    { status: "Confirmed", count: metrics.confirmedOrders, fill: COLORS.accepted },
+    { status: "Cancelled", count: metrics.cancelledOrders, fill: COLORS.rejected },
+    { status: "Delivered", count: metrics.deliveredOrders, fill: COLORS.delivered },
+  ], [metrics]);
+
+  const negotiationChartConfig = {
+    count: { label: "Count" },
+    Pending: { label: "Pending", color: COLORS.pending },
+    Accepted: { label: "Accepted", color: COLORS.accepted },
+    Rejected: { label: "Rejected", color: COLORS.rejected },
+  } satisfies ChartConfig;
+
+  const orderChartConfig = {
+    count: { label: "Orders" },
+  } satisfies ChartConfig;
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#f4fbf5_0%,#fffdf8_55%,#ffffff_100%)] px-4 py-8 sm:px-6">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <section className="rounded-[28px] border border-emerald-100 bg-white/90 p-6 shadow-[0_20px_80px_rgba(22,101,52,0.10)]">
-          <Badge className="mb-4 bg-emerald-600 text-white">{heading}</Badge>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-            Orders and negotiations at a glance
+      <div className="mx-auto max-w-7xl space-y-8">
+        {/* Header Section */}
+        <section className="rounded-3xl border border-emerald-100 bg-white/80 backdrop-blur-md p-8 shadow-sm">
+          <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 text-sm">{heading}</Badge>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            Overview & Performance
           </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-            Track how many negotiations are active, how orders are moving, and
-            how much value is flowing through your marketplace activity.
+          <p className="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
+            Track active negotiations, monitor your order pipeline, and analyze the total value flowing through your account.
           </p>
         </section>
 
         {loading ? (
-          <Card>
-            <CardContent className="pt-6 text-sm text-slate-500">
-              Loading analytics...
+          <Card className="flex items-center justify-center min-h-[400px]">
+            <CardContent className="text-slate-500 animate-pulse font-medium text-lg">
+              Loading your analytics...
             </CardContent>
           </Card>
         ) : (
           <>
+            {/* Metrics Grid */}
             <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <MetricCard
                 title="Total negotiations"
                 value={negotiationStats?.total ?? 0}
                 note={`${negotiationStats?.pending ?? 0} pending now`}
-                icon={<Handshake className="h-5 w-5 text-emerald-700" />}
+                icon={<Handshake className="h-6 w-6 text-emerald-600" />}
               />
               <MetricCard
                 title="Total orders"
                 value={metrics.totalOrders}
                 note={`${metrics.confirmedOrders} confirmed`}
-                icon={<Package className="h-5 w-5 text-sky-700" />}
+                icon={<Package className="h-6 w-6 text-sky-600" />}
               />
               <MetricCard
                 title={valueLabel}
                 value={formatMoney(metrics.totalOrderValue)}
-                note={`Average ${formatMoney(metrics.averageOrderValue)}`}
-                icon={<IndianRupee className="h-5 w-5 text-amber-700" />}
+                note={`Avg. ${formatMoney(metrics.averageOrderValue)}`}
+                icon={<IndianRupee className="h-6 w-6 text-amber-600" />}
               />
               <MetricCard
                 title="Delivered orders"
                 value={metrics.deliveredOrders}
                 note={`${metrics.outForDelivery} out for delivery`}
-                icon={<Truck className="h-5 w-5 text-violet-700" />}
+                icon={<Truck className="h-6 w-6 text-violet-600" />}
               />
             </section>
 
+            {/* Charts Grid */}
             <section className="grid gap-6 lg:grid-cols-2">
-              <Card className="border-emerald-100">
+              
+              {/* Negotiation Donut Chart */}
+              <Card className="border-slate-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Handshake className="h-5 w-5 text-emerald-600" />
-                    Negotiation analytics
+                  <CardTitle className="flex items-center gap-2">
+                    <Handshake className="h-5 w-5 text-slate-700" />
+                    Negotiation Breakdown
                   </CardTitle>
+                  <CardDescription>Current status of all tracked negotiations</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <StatusRow
-                    label="Pending"
-                    value={negotiationStats?.pending ?? 0}
-                    total={negotiationStats?.total ?? 0}
-                    color="bg-amber-400"
-                  />
-                  <StatusRow
-                    label="Accepted"
-                    value={negotiationStats?.accepted ?? 0}
-                    total={negotiationStats?.total ?? 0}
-                    color="bg-emerald-500"
-                  />
-                  <StatusRow
-                    label="Rejected"
-                    value={negotiationStats?.rejected ?? 0}
-                    total={negotiationStats?.total ?? 0}
-                    color="bg-rose-500"
-                  />
+                <CardContent className="flex-1 pb-0">
+                  <ChartContainer config={negotiationChartConfig} className="mx-auto aspect-square max-h-[300px]">
+                    <PieChart>
+                      <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                      <Pie
+                        data={negotiationChartData}
+                        dataKey="count"
+                        nameKey="status"
+                        innerRadius={60}
+                        strokeWidth={5}
+                      >
+                        <Label
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-slate-900 text-3xl font-bold">
+                                    {negotiationStats?.total ?? 0}
+                                  </tspan>
+                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-slate-500 text-sm">
+                                    Total
+                                  </tspan>
+                                </text>
+                              )
+                            }
+                          }}
+                        />
+                      </Pie>
+                      <ChartLegend content={<ChartLegendContent />} className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center" />
+                    </PieChart>
+                  </ChartContainer>
                 </CardContent>
               </Card>
 
-              <Card className="border-sky-100">
+              {/* Orders Bar Chart */}
+              <Card className="border-slate-200 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <TrendingUp className="h-5 w-5 text-sky-600" />
-                    Order analytics
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-slate-700" />
+                    Order Pipeline
                   </CardTitle>
+                  <CardDescription>Quantity of orders across different stages</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <StatusRow
-                    label="Pending"
-                    value={metrics.pendingOrders}
-                    total={metrics.totalOrders}
-                    color="bg-amber-400"
-                  />
-                  <StatusRow
-                    label="Confirmed"
-                    value={metrics.confirmedOrders}
-                    total={metrics.totalOrders}
-                    color="bg-emerald-500"
-                  />
-                  <StatusRow
-                    label="Cancelled"
-                    value={metrics.cancelledOrders}
-                    total={metrics.totalOrders}
-                    color="bg-rose-500"
-                  />
-                  <StatusRow
-                    label="Delivered"
-                    value={metrics.deliveredOrders}
-                    total={metrics.totalOrders}
-                    color="bg-violet-500"
-                  />
+                <CardContent>
+                  <ChartContainer config={orderChartConfig} className="aspect-auto h-[300px] w-full">
+                    <BarChart
+                      accessibilityLayer
+                      data={orderChartData}
+                      margin={{ top: 20, left: -20, right: 12, bottom: 0 }}
+                    >
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="status"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        className="text-xs font-medium text-slate-600"
+                      />
+                      <YAxis tickLine={false} axisLine={false} tickMargin={10} className="text-xs text-slate-500" />
+                      <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={<ChartTooltipContent hideIndicator />} />
+                      <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+                        {orderChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ChartContainer>
                 </CardContent>
               </Card>
+
             </section>
 
+            {/* Recent Activity Lists */}
             <section className="grid gap-6 lg:grid-cols-2">
-              <Card>
+              <Card className="shadow-sm">
                 <CardHeader>
-                  <CardTitle>Recent negotiations</CardTitle>
+                  <CardTitle>Recent Negotiations</CardTitle>
+                  <CardDescription>Your latest offers and counter-offers.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentNegotiations.length === 0 ? (
-                    <p className="text-sm text-slate-500">
-                      No negotiations yet.
-                    </p>
+                    <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+                      No active negotiations to show.
+                    </div>
                   ) : (
                     recentNegotiations.map((negotiation) => (
-                      <div
-                        key={negotiation._id}
-                        className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="font-medium text-slate-900">
-                            {negotiation.item.title[locale]}
+                      <div key={negotiation._id} className="group flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 p-4 transition-colors">
+                        <div>
+                          <p className="font-semibold text-slate-900">{negotiation.item.title[locale]}</p>
+                          <p className="mt-1 text-sm font-medium text-emerald-600">
+                            Offer: {formatMoney(negotiation.negotiatedPrice)}
                           </p>
-                          <Badge variant="outline" className="capitalize">
-                            {negotiation.status}
-                          </Badge>
                         </div>
-                        <p className="mt-1 text-sm text-slate-600">
-                          Offer: {formatMoney(negotiation.negotiatedPrice)}
-                        </p>
+                        <Badge variant="outline" className={`capitalize ${negotiation.status === 'accepted' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : negotiation.status === 'rejected' ? 'border-rose-200 bg-rose-50 text-rose-700' : 'bg-white'}`}>
+                          {negotiation.status}
+                        </Badge>
                       </div>
                     ))
                   )}
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-sm">
                 <CardHeader>
-                  <CardTitle>Recent orders</CardTitle>
+                  <CardTitle>Recent Orders</CardTitle>
+                  <CardDescription>The latest transactions processed.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentOrders.length === 0 ? (
-                    <p className="text-sm text-slate-500">No orders yet.</p>
+                    <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+                      No recent orders to show.
+                    </div>
                   ) : (
                     recentOrders.map((order) => (
-                      <div
-                        key={order._id}
-                        className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="font-medium text-slate-900">
-                            {order.items[0]?.title?.[locale] || "Order"}
+                      <div key={order._id} className="group flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 p-4 transition-colors">
+                        <div>
+                          <p className="font-semibold text-slate-900">{order.items[0]?.title?.[locale] || "Marketplace Order"}</p>
+                          <p className="mt-1 text-sm font-medium text-slate-600">
+                            Total: {formatMoney(order.totalAmount)}
                           </p>
-                          <Badge variant="outline" className="capitalize">
-                            {order.status}
-                          </Badge>
                         </div>
-                        <p className="mt-1 text-sm text-slate-600">
-                          Total: {formatMoney(order.totalAmount)}
-                        </p>
+                        <Badge variant="secondary" className="capitalize">
+                          {order.status}
+                        </Badge>
                       </div>
                     ))
                   )}
@@ -304,41 +338,17 @@ function MetricCard({
   icon: ReactNode;
 }) {
   return (
-    <Card className="border-slate-200 bg-white/95">
-      <CardContent className="flex items-start justify-between gap-4 pt-6">
-        <div>
-          <p className="text-sm text-slate-500">{title}</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{value}</p>
-          <p className="mt-2 text-xs text-slate-500">{note}</p>
+    <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <CardContent className="flex flex-col justify-between p-6">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm font-medium text-slate-500">{title}</p>
+          <div className="rounded-xl bg-slate-50 p-2 border border-slate-100">{icon}</div>
         </div>
-        <div className="rounded-2xl bg-slate-100 p-3">{icon}</div>
+        <div>
+          <p className="text-3xl font-bold tracking-tight text-slate-900">{value}</p>
+          <p className="mt-1 text-xs font-medium text-slate-400">{note}</p>
+        </div>
       </CardContent>
     </Card>
-  );
-}
-
-function StatusRow({
-  label,
-  value,
-  total,
-  color,
-}: {
-  label: string;
-  value: number;
-  total: number;
-  color: string;
-}) {
-  const width = total > 0 ? `${Math.max((value / total) * 100, 6)}%` : "0%";
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-600">{label}</span>
-        <span className="font-medium text-slate-900">{value}</span>
-      </div>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-        <div className={`h-full rounded-full ${color}`} style={{ width }} />
-      </div>
-    </div>
   );
 }

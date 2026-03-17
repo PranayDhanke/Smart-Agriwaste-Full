@@ -7,15 +7,35 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadImage } from "@/utils/imagekit";
 import { connectSocketForUser } from "@/lib/socket";
 import {
   useAddCommunityReplyMutation,
   useCreateCommunityPostMutation,
+  useDeleteCommunityPostMutation,
+  useDeleteCommunityReplyMutation,
   useGetCommunityPostsQuery,
   useToggleCommunityLikeMutation,
   useToggleCommunitySaveMutation,
+  useUpdateCommunityPostMutation,
+  useUpdateCommunityReplyMutation,
 } from "@/redux/api/communityApi";
 import {
   Bookmark,
@@ -23,8 +43,10 @@ import {
   Heart,
   Loader2,
   MessageSquare,
-  Send,
+  MoreHorizontal,
+  Pencil,
   Tractor,
+  Trash2,
   X
 } from "lucide-react";
 
@@ -38,6 +60,7 @@ const categories = [
 
 export default function CommunityFeed() {
   const { user } = useUser();
+  const [feedFilter, setFeedFilter] = useState<"all" | "mine" | "others">("all");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("farm-query");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -45,12 +68,26 @@ export default function CommunityFeed() {
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [postEditDescription, setPostEditDescription] = useState("");
+  const [postEditCategory, setPostEditCategory] = useState("farm-query");
+  const [editingReplyKey, setEditingReplyKey] = useState<string | null>(null);
+  const [replyEditMessage, setReplyEditMessage] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<
+    | { type: "post"; postId: string }
+    | { type: "reply"; postId: string; replyId: string }
+    | null
+  >(null);
 
   const { data, isLoading, refetch } = useGetCommunityPostsQuery({ limit: 20 });
   const [createPost, { isLoading: isCreatingPost }] = useCreateCommunityPostMutation();
+  const [updatePost, { isLoading: isUpdatingPost }] = useUpdateCommunityPostMutation();
+  const [deletePost, { isLoading: isDeletingPost }] = useDeleteCommunityPostMutation();
   const [toggleLike] = useToggleCommunityLikeMutation();
   const [toggleSave] = useToggleCommunitySaveMutation();
   const [addReply, { isLoading: isReplying }] = useAddCommunityReplyMutation();
+  const [updateReply, { isLoading: isUpdatingReply }] = useUpdateCommunityReplyMutation();
+  const [deleteReply, { isLoading: isDeletingReply }] = useDeleteCommunityReplyMutation();
 
   useEffect(() => {
     const socket = connectSocketForUser(user?.id);
@@ -58,10 +95,12 @@ export default function CommunityFeed() {
 
     socket.on("community:post-created", refreshFeed);
     socket.on("community:post-updated", refreshFeed);
+    socket.on("community:post-deleted", refreshFeed);
 
     return () => {
       socket.off("community:post-created", refreshFeed);
       socket.off("community:post-updated", refreshFeed);
+      socket.off("community:post-deleted", refreshFeed);
     };
   }, [refetch, user?.id]);
 
@@ -70,8 +109,54 @@ export default function CommunityFeed() {
     [user],
   );
 
-  const posts = data?.posts ?? [];
+  const posts = useMemo(() => data?.posts ?? [], [data?.posts]);
+  const filteredPosts = useMemo(() => {
+    if (feedFilter === "all") {
+      return posts;
+    }
+
+    if (!user) {
+      return feedFilter === "others" ? posts : [];
+    }
+
+    return posts.filter((post) =>
+      feedFilter === "mine" ? post.authorId === user.id : post.authorId !== user.id,
+    );
+  }, [feedFilter, posts, user]);
   const isSubmittingPost = isUploadingImage || isCreatingPost;
+
+  const emptyState = useMemo(() => {
+    if (posts.length === 0) {
+      return {
+        title: "The board is empty.",
+        description: "Be the first to share an update or ask a question.",
+      };
+    }
+
+    if (feedFilter === "mine") {
+      return user
+        ? {
+            title: "You have not posted yet.",
+            description: "Create your first post to see it here.",
+          }
+        : {
+            title: "Sign in to view your posts.",
+            description: "Your own community posts will appear here after you sign in.",
+          };
+    }
+
+    if (feedFilter === "others") {
+      return {
+        title: "No posts from other members yet.",
+        description: "Check back later for updates from the community.",
+      };
+    }
+
+    return {
+      title: "No posts found.",
+      description: "Try a different filter or create a new post.",
+    };
+  }, [feedFilter, posts.length, user]);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -112,7 +197,7 @@ export default function CommunityFeed() {
       setSelectedCategory("farm-query");
       clearImage();
       toast.success("Post published!");
-    } catch (error) {
+    } catch {
       toast.error("Could not publish post.");
     } finally {
       setIsUploadingImage(false);
@@ -156,6 +241,90 @@ export default function CommunityFeed() {
       toast.success("Reply added!");
     } catch {
       toast.error("Could not add reply.");
+    }
+  };
+
+  const handleStartPostEdit = (
+    postId: string,
+    currentDescription: string,
+    currentCategory: string,
+  ) => {
+    setEditingPostId(postId);
+    setPostEditDescription(currentDescription);
+    setPostEditCategory(currentCategory);
+  };
+
+  const handleUpdatePost = async (postId: string) => {
+    if (!user) return toast.error("Sign in to edit posts.");
+    if (!postEditDescription.trim()) return toast.error("Post text cannot be empty.");
+
+    try {
+      await updatePost({
+        postId,
+        userId: user.id,
+        description: postEditDescription.trim(),
+        category: postEditCategory,
+      }).unwrap();
+
+      setEditingPostId(null);
+      toast.success("Post updated!");
+    } catch {
+      toast.error("Could not update post.");
+    }
+  };
+
+  const handleStartReplyEdit = (postId: string, replyId: string, message: string) => {
+    setActiveReplyId(postId);
+    setEditingReplyKey(`${postId}:${replyId}`);
+    setReplyEditMessage(message);
+  };
+
+  const handleUpdateReply = async (postId: string, replyId: string) => {
+    if (!user) return toast.error("Sign in to edit replies.");
+    if (!replyEditMessage.trim()) return toast.error("Reply cannot be empty.");
+
+    try {
+      await updateReply({
+        postId,
+        replyId,
+        userId: user.id,
+        message: replyEditMessage.trim(),
+      }).unwrap();
+
+      setEditingReplyKey(null);
+      setReplyEditMessage("");
+      toast.success("Reply updated!");
+    } catch {
+      toast.error("Could not update reply.");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!user || !deleteTarget) return;
+
+    try {
+      if (deleteTarget.type === "post") {
+        await deletePost({ postId: deleteTarget.postId, userId: user.id }).unwrap();
+        if (editingPostId === deleteTarget.postId) {
+          setEditingPostId(null);
+        }
+        toast.success("Post deleted.");
+      } else {
+        await deleteReply({
+          postId: deleteTarget.postId,
+          replyId: deleteTarget.replyId,
+          userId: user.id,
+        }).unwrap();
+        if (editingReplyKey === `${deleteTarget.postId}:${deleteTarget.replyId}`) {
+          setEditingReplyKey(null);
+          setReplyEditMessage("");
+        }
+        toast.success("Reply deleted.");
+      }
+
+      setDeleteTarget(null);
+    } catch {
+      toast.error("Could not delete item.");
     }
   };
 
@@ -251,20 +420,44 @@ export default function CommunityFeed() {
 
         {/* Feed */}
         <div className="space-y-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-3 sm:p-4">
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: "all" as const, label: "All Posts" },
+                { id: "mine" as const, label: "My Posts" },
+                { id: "others" as const, label: "Other Posts" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setFeedFilter(option.id)}
+                  className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${
+                    feedFilter === option.id
+                      ? "bg-green-700 text-white shadow-md ring-2 ring-green-700 ring-offset-1"
+                      : "bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {isLoading ? (
             <div className="text-center py-12">
               <Loader2 className="h-10 w-10 animate-spin text-green-700 mx-auto" />
               <p className="mt-4 text-stone-500 font-medium">Loading board...</p>
             </div>
-          ) : posts.length === 0 ? (
+          ) : filteredPosts.length === 0 ? (
             <div className="text-center bg-white p-12 rounded-2xl border-2 border-dashed border-stone-300">
-              <p className="text-xl font-bold text-stone-700">The board is empty.</p>
-              <p className="text-stone-500 mt-2">Be the first to share an update or ask a question.</p>
+              <p className="text-xl font-bold text-stone-700">{emptyState.title}</p>
+              <p className="text-stone-500 mt-2">{emptyState.description}</p>
             </div>
           ) : (
-            posts.map((post) => {
+            filteredPosts.map((post) => {
               const likedByUser = user ? post.likes.includes(user.id) : false;
               const savedByUser = user ? post.saves.includes(user.id) : false;
+              const canManagePost = user?.id === post.authorId;
+              const isEditingPost = editingPostId === post._id;
               const catLabel = categories.find(c => c.id === post.category)?.label || post.category;
 
               return (
@@ -282,9 +475,37 @@ export default function CommunityFeed() {
                       <h3 className="text-lg font-bold text-gray-900">{post.authorName}</h3>
                       <p className="text-sm text-gray-500 font-medium">{formatDate(post.createdAt)}</p>
                     </div>
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200 text-sm px-3 py-1 font-bold border-0">
-                      {catLabel}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-200 text-sm px-3 py-1 font-bold border-0">
+                        {catLabel}
+                      </Badge>
+                      {canManagePost && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-10 w-10 rounded-full text-stone-500 hover:bg-stone-200"
+                            >
+                              <MoreHorizontal className="h-5 w-5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuItem onClick={() => handleStartPostEdit(post._id, post.description, post.category)}>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit post
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setDeleteTarget({ type: "post", postId: post._id })}
+                              className="text-red-600 focus:text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete post
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
+                    </div>
                   </div>
 
                   {/* Image (Edge to Edge) */}
@@ -303,9 +524,50 @@ export default function CommunityFeed() {
 
                   {/* Body Text */}
                   <div className="p-6">
-                    <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap">
-                      {post.description}
-                    </p>
+                    {isEditingPost ? (
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap gap-2">
+                          {categories.map((cat) => (
+                            <button
+                              key={cat.id}
+                              onClick={() => setPostEditCategory(cat.id)}
+                              className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
+                                postEditCategory === cat.id
+                                  ? "bg-green-700 text-white"
+                                  : "bg-stone-100 text-stone-600 border border-stone-200"
+                              }`}
+                            >
+                              {cat.label}
+                            </button>
+                          ))}
+                        </div>
+                        <Textarea
+                          value={postEditDescription}
+                          onChange={(e) => setPostEditDescription(e.target.value)}
+                          className="min-h-[120px] bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
+                        />
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            onClick={() => setEditingPostId(null)}
+                            disabled={isUpdatingPost}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => handleUpdatePost(post._id)}
+                            disabled={isUpdatingPost || !postEditDescription.trim()}
+                            className="bg-green-700 hover:bg-green-800 text-white"
+                          >
+                            {isUpdatingPost ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save changes"}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap">
+                        {post.description}
+                      </p>
+                    )}
                   </div>
 
                   {/* Action Bar */}
@@ -344,10 +606,69 @@ export default function CommunityFeed() {
                       {post.replies.map((reply) => (
                         <div key={reply._id} className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
                           <div className="flex justify-between items-start mb-2">
-                            <span className="font-bold text-gray-900">{reply.username}</span>
-                            <span className="text-xs text-gray-500 font-medium">{formatDate(reply.createdAt)}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-gray-900">{reply.username}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-gray-500 font-medium">{formatDate(reply.createdAt)}</span>
+                              {user?.id === reply.userId && (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 rounded-full text-stone-500 hover:bg-stone-100"
+                                    >
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-40">
+                                    <DropdownMenuItem onClick={() => handleStartReplyEdit(post._id, reply._id, reply.message)}>
+                                      <Pencil className="mr-2 h-4 w-4" />
+                                      Edit reply
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() => setDeleteTarget({ type: "reply", postId: post._id, replyId: reply._id })}
+                                      className="text-red-600 focus:text-red-600"
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete reply
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
+                            </div>
                           </div>
-                          <p className="text-gray-700">{reply.message}</p>
+                          {editingReplyKey === `${post._id}:${reply._id}` ? (
+                            <div className="space-y-3">
+                              <Textarea
+                                value={replyEditMessage}
+                                onChange={(e) => setReplyEditMessage(e.target.value)}
+                                className="min-h-[90px] bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
+                              />
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setEditingReplyKey(null);
+                                    setReplyEditMessage("");
+                                  }}
+                                  disabled={isUpdatingReply}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={() => handleUpdateReply(post._id, reply._id)}
+                                  disabled={isUpdatingReply || !replyEditMessage.trim()}
+                                  className="bg-green-700 hover:bg-green-800 text-white"
+                                >
+                                  {isUpdatingReply ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save reply"}
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-gray-700 whitespace-pre-wrap">{reply.message}</p>
+                          )}
                         </div>
                       ))}
 
@@ -382,6 +703,36 @@ export default function CommunityFeed() {
           )}
         </div>
       </div>
+      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {deleteTarget?.type === "post" ? "Delete post?" : "Delete reply?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteTarget?.type === "post"
+                ? "This will permanently remove your post from the community board."
+                : "This will permanently remove your reply from the discussion."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel variant="outline" disabled={isDeletingPost || isDeletingReply}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeletingPost || isDeletingReply}
+            >
+              {isDeletingPost || isDeletingReply ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </main>
   );
 }

@@ -24,7 +24,7 @@ export default function Providers({
         localization={clerkLocale}
         publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       >
-        <Toaster position="top-center" />
+        <Toaster position="bottom-right" />
         <OneSignalProvider />
         <Header />
         <AuthProvider />

@@ -60,6 +60,20 @@ export const communityApi = baseApi.injectEndpoints({
         { type: "Community", id: "LIST" },
       ],
     }),
+    updateCommunityPost: builder.mutation<
+      { success: boolean; post: CommunityPost },
+      { postId: string; userId: string; description: string; category?: string }
+    >({
+      query: ({ postId, ...body }) => ({
+        url: `/community/posts/${postId}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (_, __, arg) => [
+        { type: "Community", id: arg.postId },
+        { type: "Community", id: "LIST" },
+      ],
+    }),
     toggleCommunityLike: builder.mutation<
       { success: boolean; liked: boolean; post: CommunityPost },
       { postId: string; userId: string; username: string }
@@ -108,6 +122,34 @@ export const communityApi = baseApi.injectEndpoints({
         { type: "Community", id: "LIST" },
       ],
     }),
+    updateCommunityReply: builder.mutation<
+      { success: boolean; post: CommunityPost },
+      { postId: string; replyId: string; userId: string; message: string }
+    >({
+      query: ({ postId, replyId, ...body }) => ({
+        url: `/community/posts/${postId}/replies/${replyId}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (_, __, arg) => [
+        { type: "Community", id: arg.postId },
+        { type: "Community", id: "LIST" },
+      ],
+    }),
+    deleteCommunityReply: builder.mutation<
+      { success: boolean; post: CommunityPost },
+      { postId: string; replyId: string; userId: string }
+    >({
+      query: ({ postId, replyId, ...body }) => ({
+        url: `/community/posts/${postId}/replies/${replyId}`,
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: (_, __, arg) => [
+        { type: "Community", id: arg.postId },
+        { type: "Community", id: "LIST" },
+      ],
+    }),
   }),
   overrideExisting: false,
 });
@@ -116,7 +158,10 @@ export const {
   useAddCommunityReplyMutation,
   useCreateCommunityPostMutation,
   useDeleteCommunityPostMutation,
+  useDeleteCommunityReplyMutation,
   useGetCommunityPostsQuery,
   useToggleCommunityLikeMutation,
   useToggleCommunitySaveMutation,
+  useUpdateCommunityPostMutation,
+  useUpdateCommunityReplyMutation,
 } = communityApi;

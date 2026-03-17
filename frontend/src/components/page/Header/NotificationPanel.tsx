@@ -16,12 +16,13 @@ import {
   useGetNotificationsQuery,
   useMarkAsReadMutation,
 } from "@/redux/api/notificationAPi";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Notification } from "@/components/types/notification";
 import { connectSocketForUser } from "@/lib/socket";
 import { useDispatch } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import type { AppDispatch } from "@/redux/store";
+import { toast } from "sonner";
 
 interface NotificationPanelProps {
   open: boolean;
@@ -37,6 +38,7 @@ export default function NotificationPanel({
   const t = useTranslations("extra");
   const dispatch = useDispatch<AppDispatch>();
   const [socketNotifications, setSocketNotifications] = useState<Notification[]>([]);
+  const toastedNotificationIdsRef = useRef<string[]>([]);
 
   const { data, isFetching } = useGetNotificationsQuery(
     userId
@@ -75,6 +77,16 @@ export default function NotificationPanel({
         incoming,
         ...prev.filter((item) => item._id !== incoming._id),
       ]);
+
+      if (!toastedNotificationIdsRef.current.includes(incoming._id)) {
+        toast(incoming.title, {
+          description: incoming.message,
+        });
+        toastedNotificationIdsRef.current = [
+          incoming._id,
+          ...toastedNotificationIdsRef.current,
+        ].slice(0, 50);
+      }
 
       dispatch(
         notificationApi.util.updateQueryData(

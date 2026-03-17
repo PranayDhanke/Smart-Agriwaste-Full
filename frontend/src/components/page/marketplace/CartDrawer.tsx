@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,7 +11,6 @@ import {
   Truck,
   Store,
   ChevronDown,
-  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -21,14 +20,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
-import axios from "axios";
 import { useLocale, useTranslations } from "next-intl";
 import { CartItem } from "@/components/types/order";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
-  addToCart,
   clearCart,
   removeFromCart,
   updateQuantity,
@@ -73,14 +69,12 @@ export default function CartDrawer() {
 
   const { address, user } = useSelector((state: RootState) => state.auth);
 
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [createOrder] = useCreateOrderMutation();
   const { cart } = useSelector((state: RootState) => state.cart);
   const t = useTranslations("marketplace.CartDrawer");
 
   const [deliveryMethod, setDeliveryMethod] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(true);
-
-  const [loading, setloading] = useState(false);
 
   const [sendNotification] = useSendNotificationMutation();
 
@@ -202,7 +196,7 @@ export default function CartDrawer() {
                       onClick={() =>
                         dispatch(
                           updateQuantity({
-                            prodId: item.prodId,
+                            cartItemId: item.cartItemId ?? item.prodId,
                             quantity: item.quantity - 1,
                             maxQuantity: item.maxQuantity,
                           }),
@@ -229,7 +223,7 @@ export default function CartDrawer() {
                       onClick={() =>
                         dispatch(
                           updateQuantity({
-                            prodId: item.prodId,
+                            cartItemId: item.cartItemId ?? item.prodId,
                             quantity: item.quantity + 1,
                             maxQuantity: item.maxQuantity,
                           }),
@@ -246,7 +240,13 @@ export default function CartDrawer() {
                   size="icon"
                   variant="ghost"
                   className="text-muted-foreground hover:text-red-500"
-                  onClick={() => dispatch(removeFromCart(item.prodId))}
+                  onClick={() =>
+                    dispatch(
+                      removeFromCart({
+                        cartItemId: item.cartItemId ?? item.prodId,
+                      }),
+                    )
+                  }
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -356,15 +356,7 @@ export default function CartDrawer() {
                 disabled={!deliveryMethod}
                 onClick={() => proceedOrder()}
               >
-                {loading ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  <>
-                    {!deliveryMethod
-                      ? t("checkout.select")
-                      : t("checkout.proceed")}
-                  </>
-                )}
+                {!deliveryMethod ? t("checkout.select") : t("checkout.proceed")}
               </Button>
             </div>
           </div>
