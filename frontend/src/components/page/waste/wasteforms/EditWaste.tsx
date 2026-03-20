@@ -186,8 +186,8 @@ export default function EditWaste() {
           ? waste.description
           : (waste.description?.en ?? ""),
       moisture:
-        waste.moisture === "semi_wet"
-          ? "semiwet"
+        waste.moisture === "semiwet"
+          ? "semi_wet"
           : (waste.moisture as wasteFormDataType["moisture"]),
       price: waste.price,
       quantity: waste.quantity,
