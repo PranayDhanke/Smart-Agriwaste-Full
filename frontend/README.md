@@ -2,7 +2,9 @@
 
 Next.js 16 frontend for Smart Agriwaste.
 
-## What It Includes
+## Responsibilities
+
+The frontend provides:
 
 - Farmer and buyer dashboards
 - Waste listing and editing flows
@@ -10,7 +12,7 @@ Next.js 16 frontend for Smart Agriwaste.
 - Negotiation and order management
 - Recommendation flow powered by the dataset API
 - Authentication with Clerk
-- Notifications and realtime chat
+- Realtime notifications and chat
 - Multilingual UI with `next-intl`
 
 ## Tech Stack
@@ -18,14 +20,20 @@ Next.js 16 frontend for Smart Agriwaste.
 - Next.js 16
 - React 19
 - TypeScript
-- Redux Toolkit + RTK Query
+- Redux Toolkit and RTK Query
 - Tailwind CSS
 - Clerk
 - Socket.IO client
-- Leaflet / React Leaflet
+- Leaflet and React Leaflet
 - OneSignal
 
-## Run Locally
+## Prerequisites
+
+- Node.js 20+ and npm
+- Running backend API
+- Running dataset API
+
+## Setup
 
 1. Install dependencies:
 
@@ -33,72 +41,107 @@ Next.js 16 frontend for Smart Agriwaste.
 npm install
 ```
 
-2. Create a `.env` file in `frontend/`.
+2. Create `frontend/.env` from [`frontend/.env.example`](/a:/FinalY/frontend/.env.example).
 
-3. Start the dev server:
+3. Update the API URLs and public keys you need for local development.
+
+## Required Environment Variables
+
+```env
+NEXT_PUBLIC_APP_ENV=development
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
+NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+NEXT_PUBLIC_AGRI_API_URL=http://localhost:8080
+NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=public_H1AjdWUA1HD2x8wIcSRh1/TDlZ4=
+NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/glegrwdpvm
+NEXT_PUBLIC_IMAGEKIT_AUTH_ENDPOINT=http://localhost:5000/api/imagekit/auth
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+NEXT_PUBLIC_ONESIGNAL_APP_ID=
+CLERK_SECRET_KEY=
+```
+
+## Run Locally
+
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Open:
+Build for production:
+
+```bash
+npm run build
+```
+
+Run the production build:
+
+```bash
+npm run start
+```
+
+Run lint:
+
+```bash
+npm run lint
+```
+
+Default local URL:
 
 ```txt
 http://localhost:3000
 ```
 
-## Scripts
+## Runtime Service Dependencies
 
-- `npm run dev` - start development server
-- `npm run build` - production build
-- `npm run start` - run production build
-- `npm run lint` - run ESLint
+The frontend expects these services:
 
-## Required Environment Variables
+- Backend API at `http://localhost:5000/api`
+- Backend Socket.IO server at `http://localhost:5000`
+- Dataset API at `http://localhost:8080`
 
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api
-NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
-NEXT_PUBLIC_AGRI_API_URL=http://localhost:8080
-
-NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=
-NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=
-NEXT_PUBLIC_IMAGEKIT_AUTH_ENDPOINT=http://localhost:5000/api/imagekit/auth
-
-NEXT_PUBLIC_ONESIGNAL_APP_ID=
-```
-
-## Service Dependencies
-
-The frontend talks to:
-
-- Backend API for auth, profile, waste, order, negotiation, and notification flows
-- Dataset API for recommendation data
-- Backend Socket.IO server for realtime features
-
-## Key App Areas
-
-- `src/app/` - App Router pages and providers
-- `src/components/` - shared UI and page-level components
-- `src/redux/` - store, slices, selectors, RTK Query APIs
-- `src/i18n/` - localized routing and message loading
-- `public/` - static assets
-
-## Runtime API Configuration
-
-The app supports runtime endpoint configuration through:
+Those values are controlled through:
 
 - `NEXT_PUBLIC_API_BASE_URL`
 - `NEXT_PUBLIC_SOCKET_URL`
 - `NEXT_PUBLIC_AGRI_API_URL`
+- `NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY`
+- `NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT`
+- `NEXT_PUBLIC_IMAGEKIT_AUTH_ENDPOINT`
 
-Setting these explicitly is recommended for local development.
+## Local Startup Checklist
+
+Before opening the app, make sure:
+
+- The backend is running
+- The dataset API is running
+- The Clerk keys are present if you need auth flows
+- The ImageKit keys are present if you need uploads
+- The OneSignal app id is present if you need push notifications
+
+## Key App Areas
+
+```txt
+frontend/
+  public/
+  src/
+    app/
+    components/
+    config/
+    i18n/
+    lib/
+    messages/
+    redux/
+```
 
 ## Notes
 
-- The app uses localized routes through `next-intl`.
-- Clerk is required for sign-in, sign-up, and profile-aware navigation.
-- Image uploads and push notifications depend on matching backend/service credentials.
+- Runtime API and socket URLs are centralized in [`src/config/env.ts`](/a:/FinalY/frontend/src/config/env.ts)
+- The app uses App Router and localized routes through `next-intl`
+- Several features depend on backend credentials being configured correctly
+
+## Related Docs
+
+- [Root README](/a:/FinalY/README.md)
+- [Backend README](/a:/FinalY/backend/README.md)
+- [Dataset API README](/a:/FinalY/dataset-api/README.md)

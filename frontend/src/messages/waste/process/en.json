@@ -3,7 +3,6 @@
     "title": "Smart Waste Management",
     "subtitle": "Auto-categorized waste processing plan"
   },
-
   "form": {
     "wasteType": "Type of Waste",
     "wasteCategory": "Product Category",
@@ -14,7 +13,6 @@
     "contamination": "Contamination",
     "notes": "Notes"
   },
-
   "placeholders": {
     "selectWasteType": "Select waste type",
     "selectCategory": "Select category",
@@ -23,33 +21,57 @@
     "selectUse": "Select use",
     "notes": "Optional notes"
   },
-
   "intendedUse": {
     "compost": "Compost",
     "feed": "Feed",
     "sell": "Sell",
-    "biogas" : "Biogas"
-    
+    "biogas": "Biogas"
   },
-
   "common": {
     "yes": "Yes",
     "no": "No"
   },
-
   "actions": {
     "showPlan": "Show Plan",
     "reset": "Reset",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "continue": "Continue",
+    "back": "Back",
+    "getRecommendations": "Get Recommendations",
+    "tryAnother": "Try Another",
+    "shareResults": "Share Results"
   },
-
-"result": {
-  "title": "Recommendation",
-  "benefits": "Benefits",
-  "finalOutput": "Final Output",
-  "process": "Processing Steps",
-  "notes": "Notes",
-  "notFound": "No recommendation found for the selected inputs"
-}
-
+  "content": {
+    "typeSelection": "Type Selection",
+    "moistureSelection": "Moisture Selection",
+    "selectWasteType": "Select your agricultural waste type",
+    "selectMoistureAndUse": "Tell us about the moisture level and intended use",
+    "analyzing": "Analyzing your waste...",
+    "tips": "Tips",
+    "features": "Features",
+    "tipEnvironmental": "Proper waste management reduces environmental impact",
+    "tipCompost": "Composting improves soil quality naturally",
+    "tipBiogas": "Biogas generation provides renewable energy",
+    "tipIncome": "Process waste to create additional income",
+    "featureGuidance": "Step-by-step guidance",
+    "featureRecommendations": "Personalized recommendations",
+    "featureLanguages": "Multiple language support",
+    "featurePractical": "Practical implementation tips",
+    "notFoundTitle": "Not Found",
+    "errorTitle": "Error",
+    "errorMessage": "Something went wrong. Please try again."
+  },
+  "result": {
+    "title": "Recommendation",
+    "benefits": "Benefits",
+    "finalOutput": "Final Output",
+    "process": "Processing Steps",
+    "notes": "Notes",
+    "notFound": "No recommendation found for the selected inputs",
+    "requiredMaterials": "Required Materials",
+    "requiredEquipment": "Required Equipment",
+    "processDuration": "Process Duration",
+    "recommendedFor": "Recommended For",
+    "environmentalImpact": "Environmental Impact"
+  }
 }

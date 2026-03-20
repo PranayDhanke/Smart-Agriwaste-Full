@@ -2,6 +2,7 @@
 
 import { Address } from "@/components/types/waste";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { connectSocketForUser, disconnectSocket } from "@/lib/socket";
 import { useLazyGetProfileQuery } from "@/redux/api/authApi";
 import { setToken, setUser, User } from "@/redux/features/authSlice";
 import { useAuth, useUser } from "@clerk/nextjs";
@@ -40,6 +41,17 @@ export function AuthProvider() {
     loadUser();
     loadToken();
   }, [getToken, dispatch, user, isLoaded, isSignedIn, role, getProfile]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (isSignedIn && user?.id) {
+      connectSocketForUser(user.id);
+      return;
+    }
+
+    disconnectSocket();
+  }, [isLoaded, isSignedIn, user?.id]);
 
   useEffect(() => {
     if (!isLoaded) return;

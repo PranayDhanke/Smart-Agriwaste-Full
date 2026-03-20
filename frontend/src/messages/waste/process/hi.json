@@ -3,7 +3,6 @@
     "title": "स्मार्ट अपशिष्ट प्रबंधन",
     "subtitle": "स्वचालित श्रेणीकरण आधारित अपशिष्ट प्रक्रिया योजना"
   },
-
   "form": {
     "wasteType": "अपशिष्ट का प्रकार",
     "wasteCategory": "उत्पाद श्रेणी",
@@ -14,7 +13,6 @@
     "contamination": "प्रदूषण",
     "notes": "टिप्पणियाँ"
   },
-
   "placeholders": {
     "selectWasteType": "अपशिष्ट प्रकार चुनें",
     "selectCategory": "श्रेणी चुनें",
@@ -23,31 +21,57 @@
     "selectUse": "उपयोग चुनें",
     "notes": "वैकल्पिक टिप्पणियाँ"
   },
-
   "intendedUse": {
     "compost": "खाद",
     "feed": "पशु आहार",
     "sell": "बेचना",
-    "biogas" : "बायोगॅस"
+    "biogas": "बायोगैस"
   },
-
   "common": {
     "yes": "हाँ",
     "no": "नहीं"
   },
-
   "actions": {
     "showPlan": "योजना दिखाएँ",
     "reset": "रीसेट",
-    "processing": "प्रक्रिया जारी है..."
+    "processing": "प्रक्रिया जारी है...",
+    "continue": "आगे बढ़ें",
+    "back": "वापस",
+    "getRecommendations": "सिफारिश प्राप्त करें",
+    "tryAnother": "फिर से प्रयास करें",
+    "shareResults": "परिणाम साझा करें"
   },
-
+  "content": {
+    "typeSelection": "प्रकार चयन",
+    "moistureSelection": "नमी चयन",
+    "selectWasteType": "अपने कृषि अपशिष्ट का प्रकार चुनें",
+    "selectMoistureAndUse": "नमी स्तर और उपयोग का उद्देश्य चुनें",
+    "analyzing": "आपके अपशिष्ट का विश्लेषण किया जा रहा है...",
+    "tips": "सुझाव",
+    "features": "विशेषताएँ",
+    "tipEnvironmental": "सही अपशिष्ट प्रबंधन पर्यावरणीय प्रभाव को कम करता है",
+    "tipCompost": "कम्पोस्टिंग मिट्टी की गुणवत्ता को स्वाभाविक रूप से सुधारती है",
+    "tipBiogas": "बायोगैस नवीकरणीय ऊर्जा प्रदान करती है",
+    "tipIncome": "अपशिष्ट को संसाधित करके अतिरिक्त आय प्राप्त करें",
+    "featureGuidance": "चरण-दर-चरण मार्गदर्शन",
+    "featureRecommendations": "व्यक्तिगत सिफारिशें",
+    "featureLanguages": "बहुभाषी समर्थन",
+    "featurePractical": "व्यावहारिक कार्यान्वयन सुझाव",
+    "notFoundTitle": "नहीं मिला",
+    "errorTitle": "त्रुटि",
+    "errorMessage": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।"
+  },
   "result": {
     "title": "सिफारिश",
     "benefits": "लाभ",
     "finalOutput": "अंतिम परिणाम",
     "process": "प्रक्रिया के चरण",
     "notes": "महत्वपूर्ण निर्देश",
-    "notFound": "चयनित विकल्पों के लिए कोई सिफारिश नहीं मिली"
+    "notFound": "चयनित विकल्पों के लिए कोई सिफारिश नहीं मिली",
+    "requiredMaterials": "आवश्यक सामग्री",
+    "requiredEquipment": "आवश्यक उपकरण",
+    "processDuration": "प्रक्रिया अवधि",
+    "recommendedFor": "किसके लिए उपयुक्त",
+    "environmentalImpact": "पर्यावरणीय प्रभाव"
   }
 }

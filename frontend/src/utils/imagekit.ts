@@ -1,4 +1,5 @@
 import axios from "axios";
+import { publicEnv } from "@/config/env";
 
 interface ImageKitAuthResponse {
   token: string;
@@ -24,7 +25,7 @@ async function compressImageIfNeeded(file: File): Promise<File> {
   try {
     const image = await new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new window.Image();
-      img.onload = () => resolve(img);
+      img.onload = () => resolve(img); 
       img.onerror = () => reject(new Error("Failed to load selected image"));
       img.src = imageUrl;
     });
@@ -73,7 +74,7 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
   const optimizedFile = await compressImageIfNeeded(file);
 
   const authRes = await axios.get<ImageKitAuthResponse>(
-    process.env.NEXT_PUBLIC_IMAGEKIT_AUTH_ENDPOINT!,
+    publicEnv.imagekitAuthEndpoint,
     {
       withCredentials: true,
       timeout: MAX_UPLOAD_TIME_MS,
@@ -86,7 +87,7 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
   formData.append("file", optimizedFile);
   formData.append("fileName", optimizedFile.name);
   formData.append("folder", folder);
-  formData.append("publicKey", process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!);
+  formData.append("publicKey", publicEnv.imagekitPublicKey);
   formData.append("token", token);
   formData.append("expire", expire.toString());
   formData.append("signature", signature);

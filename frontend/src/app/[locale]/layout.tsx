@@ -56,6 +56,9 @@ export default async function RootLayout({
   }
   return (
     <html suppressHydrationWarning lang={locale}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

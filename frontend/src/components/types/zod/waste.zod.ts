@@ -17,7 +17,7 @@ export const wasteFormSchema = z.object({
     .min(1, "Quantity must be greater than 0"),
 
   moisture: z
-    .enum(["dry", "semiwet", "wet"])
+    .enum(["dry", "semi_wet", "wet"])
     .refine(Boolean, { message: "Moisture is required" }),
 
   price: z.number()

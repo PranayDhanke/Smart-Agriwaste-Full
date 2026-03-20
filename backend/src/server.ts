@@ -1,24 +1,42 @@
 import app from "./app";
-import { mongoConnect } from "./lib/db";
+import { env } from "./config/env";
+import { mongoConnect, mongoDisconnect } from "./lib/db";
 import { initSocket } from "./lib/socket";
+import { logger } from "./lib/logger";
 import http from "http";
 
-const PORT = 5000;
-
 const startServer = async () => {
-  const server = http.createServer(app);
+  try {
+    const server = http.createServer(app);
 
-  await mongoConnect();
+    await mongoConnect();
+    initSocket(server);
 
-  initSocket(server);
+    server.listen(env.port, () => {
+      logger.info("server_started", { port: env.port });
+    });
 
-  app.get("/", (_req, res) => {
-    res.json({ message: "Server is running" });
-  });
+    const shutdown = async (signal: NodeJS.Signals) => {
+      logger.info("shutdown_signal_received", { signal });
 
-  server.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`);
-  });
+      server.close(async () => {
+        await mongoDisconnect();
+        logger.info("server_shutdown_complete");
+        process.exit(0);
+      });
+
+      setTimeout(() => {
+        logger.error("forced_shutdown_timeout", { timeoutMs: 10000 });
+        process.exit(1);
+      }, 10000).unref();
+    };
+
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
+  } catch (error) {
+    logger.error("server_start_failed", { error });
+    process.exit(1);
+  }
 };
 
 startServer();

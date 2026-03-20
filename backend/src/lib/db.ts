@@ -1,22 +1,22 @@
 import mongoose from "mongoose";
-
-const mongo_uri = process.env.MONGO_URI as string;
-
-if (!mongo_uri) {
-  console.log("MongoDB URI is not defined");
-  process.exit(1);
-}
+import { env } from "../config/env";
+import { logger } from "../config/logger";
 
 export const mongoConnect = async () => {
-  try {
-    if (mongoose.connection.readyState === 1) {
-      return mongoose.connection;
-    }
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
 
-    await mongoose.connect(mongo_uri);
-    console.log("MongoDB connected");
-  } catch {
-    console.log("Error connecting to MongoDB");
-    process.exit(1);
+  await mongoose.connect(env.mongoUri);
+  logger.info("mongo_connected");
+  return mongoose.connection;
+};
+
+export const mongoDisconnect = async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+    logger.info("mongo_disconnected");
   }
 };
+
+export const isMongoReady = () => mongoose.connection.readyState === 1;

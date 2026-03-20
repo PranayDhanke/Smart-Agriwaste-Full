@@ -2,27 +2,42 @@
 
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL ??
-  "https://smartagriwasteapi.azurewebsites.net/api";
+import { publicEnv } from "@/config/env";
+
+const SOCKET_URL = publicEnv.socketUrl;
 
 let socket: Socket | null = null;
 let registeredUserId: string | null = null;
+
+const attachDefaultListeners = (currentSocket: Socket) => {
+  currentSocket.on("connect", () => {
+    if (registeredUserId) {
+      currentSocket.emit("register-user", registeredUserId);
+    }
+  });
+
+  currentSocket.on("connect_error", (error) => {
+    console.error("Socket connect error:", error.message);
+  });
+
+  currentSocket.on("disconnect", (reason) => {
+    console.warn("Socket disconnected:", reason);
+  });
+};
 
 export const getSocket = () => {
   if (!socket) {
     socket = io(SOCKET_URL, {
       autoConnect: false,
-      transports: ["websocket"],
-      reconnectionAttempts: 5,
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
+      reconnectionDelayMax: 10000,
+      timeout: 20000,
     });
 
-    socket.on("connect", () => {
-      if (registeredUserId) {
-        socket?.emit("register-user", registeredUserId);
-      }
-    });
+    attachDefaultListeners(socket);
   }
 
   return socket;
@@ -31,21 +46,23 @@ export const getSocket = () => {
 export const connectSocketForUser = (userId?: string | null) => {
   const currentSocket = getSocket();
 
-  if (!currentSocket.connected) {
+  if (userId) {
+    registeredUserId = userId;
+  }
+
+  if (!currentSocket.active) {
     currentSocket.connect();
   }
 
-  if (userId) {
-    registeredUserId = userId;
-
-    if (currentSocket.connected) {
-      currentSocket.emit("register-user", userId);
-    } else {
-      currentSocket.once("connect", () => {
-        currentSocket.emit("register-user", userId);
-      });
-    }
+  if (registeredUserId && currentSocket.connected) {
+    currentSocket.emit("register-user", registeredUserId);
   }
 
   return currentSocket;
+};
+
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+  }
 };

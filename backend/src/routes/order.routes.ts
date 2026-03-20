@@ -1,4 +1,3 @@
-import { requireAuth } from "@clerk/express";
 import { Router } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import {

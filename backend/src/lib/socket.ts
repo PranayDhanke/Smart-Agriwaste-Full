@@ -1,5 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { createMessage, getMessages } from "../controllers/messages.controller";
+import { env } from "../config/env";
+import { logger } from "./logger";
 
 let io: Server | null = null;
 export const getUserSocketRoom = (userId: string) => `user:${userId}`;
@@ -8,13 +10,13 @@ export const getIO = () => io;
 export const initSocket = (server: any) => {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:3000", "https://smart-agriwaste.vercel.app"],
+      origin: env.corsOrigins,
       credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+    logger.info("socket_connected", { socketId: socket.id });
     setUser(socket);
   });
 };
@@ -56,7 +58,10 @@ const setUser = (socket: Socket) => {
         createdAt: saved.createdAt,
       });
     } catch (err) {
-      console.error("send-message error:", err);
+      logger.error("socket_send_message_failed", {
+        socketId: socket.id,
+        error: err,
+      });
       socket.emit("send-error", { message: "Could not save/send message" });
     }
   });
@@ -66,6 +71,6 @@ const setUser = (socket: Socket) => {
   });
 
   socket.on("disconnect", (reason) => {
-    console.log("disconnect", socket.id, reason);
+    logger.info("socket_disconnected", { socketId: socket.id, reason });
   });
 };

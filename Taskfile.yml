@@ -1,0 +1,93 @@
+version: "3"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  help:
+    desc: Show available commands
+    aliases: [h]
+    cmds:
+      - task --list
+
+  up:
+    desc: Build and start the full project with Docker Compose
+    cmds:
+      - docker compose up --build -d
+
+  down:
+    desc: Stop the full project
+    cmds:
+      - docker compose down
+
+  build:
+    desc: Rebuild all containers
+    cmds:
+      - docker compose build
+
+  logs:
+    desc: Follow logs from all services
+    cmds:
+      - docker compose logs -f
+
+  restart:
+    desc: Restart all services
+    cmds:
+      - docker compose down
+      - docker compose up --build -d
+
+  backend:
+    desc: Start only backend and mongo with Docker
+    cmds:
+      - docker compose up --build backend mongo
+
+  dataset:
+    desc: Start only dataset-api and mongo with Docker
+    cmds:
+      - docker compose up --build dataset-api mongo
+
+  frontend:
+    desc: Start only frontend with Docker
+    cmds:
+      - docker compose up --build frontend
+
+  typecheck:
+    desc: Run frontend and backend type checks
+    cmds:
+      - cd backend && npm run typecheck
+      - cd frontend && npx tsc --noEmit
+
+  dev-backend:
+    desc: Run backend locally on port 5000
+    cmds:
+      - cd backend && npm run dev
+
+  dev-dataset:
+    desc: Run dataset-api locally on port 8080
+    cmds:
+      - cd dataset-api && go run .
+
+  dev-frontend:
+    desc: Run frontend locally on port 3000
+    cmds:
+      - cd frontend && npm run dev
+
+  dev-all:
+    desc: Open all local dev servers at once (Windows/Linux/macOS)
+    cmds:
+      - cmd: powershell -NoProfile -Command "Start-Process powershell -ArgumentList '-NoExit','-Command','Set-Location ''{{.TASKFILE_DIR}}\\backend''; npm run dev'"
+        platforms: [windows]
+      - cmd: powershell -NoProfile -Command "Start-Process powershell -ArgumentList '-NoExit','-Command','Set-Location ''{{.TASKFILE_DIR}}\\dataset-api''; go run .'"
+        platforms: [windows]
+      - cmd: powershell -NoProfile -Command "Start-Process powershell -ArgumentList '-NoExit','-Command','Set-Location ''{{.TASKFILE_DIR}}\\frontend''; npm run dev'"
+        platforms: [windows]
+      - cmd: sh -c "cd '{{.TASKFILE_DIR}}/backend' && nohup npm run dev >/tmp/finaly-backend.log 2>&1 &"
+        platforms: [linux, darwin]
+      - cmd: sh -c "cd '{{.TASKFILE_DIR}}/dataset-api' && nohup go run . >/tmp/finaly-dataset.log 2>&1 &"
+        platforms: [linux, darwin]
+      - cmd: sh -c "cd '{{.TASKFILE_DIR}}/frontend' && nohup npm run dev >/tmp/finaly-frontend.log 2>&1 &"
+        platforms: [linux, darwin]
+      - cmd: 'echo "Started all dev servers. Linux/macOS logs: /tmp/finaly-*.log"'
+        platforms: [linux, darwin]

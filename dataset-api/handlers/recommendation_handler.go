@@ -11,6 +11,29 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+func getLocalizedString(values map[string]string, lang string) string {
+	if len(values) == 0 {
+		return ""
+	}
+	if value, ok := values[lang]; ok {
+		return value
+	}
+	return values["en"]
+}
+
+func getLocalizedStringSlice(values map[string][]string, lang string) []string {
+	if len(values) == 0 {
+		return []string{}
+	}
+	if value, ok := values[lang]; ok {
+		return value
+	}
+	if value, ok := values["en"]; ok {
+		return value
+	}
+	return []string{}
+}
+
 func GetRecommendation(c *gin.Context) {
 	product := c.Query("product")
 	moisture := c.Query("moisture")
@@ -37,9 +60,14 @@ func GetRecommendation(c *gin.Context) {
 		lang = "en"
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"process":     rec.Process[lang],
-		"finalOutput": rec.FinalOutput[lang],
-		"benefits":    rec.Benefits[lang],
-		"notes":       rec.Notes[lang],
+		"process":             getLocalizedStringSlice(rec.Process, lang),
+		"finalOutput":         getLocalizedString(rec.FinalOutput, lang),
+		"benefits":            getLocalizedString(rec.Benefits, lang),
+		"notes":               getLocalizedString(rec.Notes, lang),
+		"requiredMaterials":   getLocalizedStringSlice(rec.RequiredMaterials, lang),
+		"processDuration":     getLocalizedString(rec.ProcessDuration, lang),
+		"requiredEquipment":   getLocalizedStringSlice(rec.RequiredEquipment, lang),
+		"recommendedFor":      getLocalizedStringSlice(rec.RecommendedFor, lang),
+		"environmentalImpact": getLocalizedString(rec.EnvironmentalImpact, lang),
 	})
 }
