@@ -35,9 +35,9 @@ export default function NegotiationsGrid({
   if (!negotiations.length) {
     return (
       <Card className="border-dashed border-2 border-gray-300">
-        <CardContent className="p-12 text-center">
+        <CardContent className="p-6 text-center sm:p-12">
           <Box className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-          <p className="text-lg font-semibold text-gray-900 mb-2">
+          <p className="mb-2 text-base font-semibold text-gray-900 sm:text-lg">
             {hasFilters
               ? t("noResultsTitle") || "No negotiations found"
               : t("empty.title") || "No negotiations yet"}

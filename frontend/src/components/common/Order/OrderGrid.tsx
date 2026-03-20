@@ -37,9 +37,9 @@ export default function OrderGrid({
   if (!orders.length) {
     return (
       <Card className="border-2 border-dashed border-gray-300">
-        <CardContent className="p-12 text-center">
+        <CardContent className="p-6 text-center sm:p-12">
           <PackageOpen className="mx-auto mb-4 h-12 w-12 text-gray-300" />
-          <p className="mb-2 text-lg font-semibold text-gray-900">
+          <p className="mb-2 text-base font-semibold text-gray-900 sm:text-lg">
             {hasFilters
               ? isFarmer
                 ? t("empty.noMatch")

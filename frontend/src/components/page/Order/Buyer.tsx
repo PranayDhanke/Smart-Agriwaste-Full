@@ -85,14 +85,14 @@ export default function BuyerOrdersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
-      <div className="mx-auto max-w-7xl space-y-6 p-6">
+      <div className="mx-auto max-w-7xl space-y-5 px-4 py-4 sm:space-y-6 sm:px-6 sm:py-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{t("title")}</h1>
-            <p className="text-gray-600">{t("description")}</p>
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{t("title")}</h1>
+            <p className="text-sm text-gray-600 sm:text-base">{t("description")}</p>
           </div>
           {stats.pending ? (
-            <div className="rounded-lg bg-amber-100 px-4 py-2 font-medium text-amber-800">
+            <div className="w-fit rounded-lg bg-amber-100 px-3 py-2 text-sm font-medium text-amber-800 sm:px-4">
               {stats.pending} {t("filter.pending")}
             </div>
           ) : null} 
@@ -116,7 +116,7 @@ export default function BuyerOrdersPage() {
         />
       </div>
 
-      <section className="p-10">
+      <section className="px-4 pb-6 pt-2 sm:p-10">
         <Paginations page={page} onPageChange={setPage} hasNext={hasNext} />
       </section>
     </div>

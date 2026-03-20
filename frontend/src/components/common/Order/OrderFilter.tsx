@@ -42,14 +42,14 @@ export default function OrderFilter({
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((tab) => (
           <Button
             key={tab.id}
             type="button"
             variant={statusFilter === tab.id ? "default" : "outline"}
             onClick={() => setStatusFilter(tab.id)}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap px-3 text-xs sm:text-sm"
           >
             <span>{tab.label}</span>
             <span className="ml-2 font-semibold text-current/80">{tab.count}</span>
@@ -67,7 +67,7 @@ export default function OrderFilter({
               ? t("search.placeholder")
               : t("searchPlaceholder")
           }
-          className="pl-10 pr-10"
+          className="h-10 pl-10 pr-10 sm:h-11"
         />
         {searchTerm ? (
           <button

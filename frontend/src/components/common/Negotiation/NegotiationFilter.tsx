@@ -38,13 +38,13 @@ export default function NegotiationFilters({
   return (
     <div className="space-y-4">
       {/* Status Filter Tabs */}
-      <div className="flex overflow-x-auto gap-2 pb-2">
+      <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {filterTabs.map((tab) => (
           <Button
             key={tab.id}
             onClick={() => setStatusFilter(tab.id)}
             variant={statusFilter === tab.id ? "default" : "outline"}
-            className="whitespace-nowrap"
+            className="whitespace-nowrap px-3 text-xs sm:text-sm"
           >
             <span>{tab.label}</span>
             <span className={`ml-2 font-semibold ${tab.color || "text-gray-600"}`}>
@@ -61,7 +61,7 @@ export default function NegotiationFilters({
           placeholder={`Search by product or ${isFarmer ? "Farmer" : "Buyer"} name...`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 pr-10"
+          className="h-10 pl-10 pr-10 sm:h-11"
         />
         {searchTerm && (
           <button

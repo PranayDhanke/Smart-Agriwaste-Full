@@ -15,20 +15,20 @@ interface Props {
 
 export default function Paginations({ page, hasNext, onPageChange }: Props) {
   return (
-    <Pagination className="mt-8">
-      <PaginationContent>
-        <Button variant={"ghost"} disabled={page === 1}>
+    <Pagination className="mt-6 sm:mt-8">
+      <PaginationContent className="flex-wrap justify-center gap-2 sm:gap-3">
+        <Button variant={"ghost"} size="sm" className="px-2 sm:px-3" disabled={page === 1}>
           <PaginationPrevious
             onClick={() => page > 1 && onPageChange(page - 1)}
-            className={page === 1 ? "pointer-events-none nopacity-50" : ""}
-          />{" "}
+            className={page === 1 ? "pointer-events-none opacity-50" : ""}
+          />
         </Button>
 
         <PaginationItem>
-          <span className="px-4 text-sm font-medium">Page {page}</span>
+          <span className="px-2 text-xs font-medium sm:px-4 sm:text-sm">Page {page}</span>
         </PaginationItem>
 
-        <Button variant={"ghost"} disabled={!hasNext}>
+        <Button variant={"ghost"} size="sm" className="px-2 sm:px-3" disabled={!hasNext}>
           <PaginationNext
             onClick={() => hasNext && onPageChange(page + 1)}
             className={!hasNext ? "pointer-events-none opacity-50" : ""}

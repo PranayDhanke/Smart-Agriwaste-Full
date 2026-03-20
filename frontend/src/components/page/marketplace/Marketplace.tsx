@@ -169,15 +169,15 @@ export default function Marketplace() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/20 to-emerald-50">
-      <section className="mx-auto max-w-7xl px-4 md:px-6 py-8 md:py-12">
+      <section className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
         {/* Hero Header */}
         <div className="mb-8">
-          <div className="flex items-start justify-between mb-4">
+          <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+              <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl md:mb-3 md:text-5xl">
                 {t("title")}
               </h1>
-              <p className="text-lg text-gray-600 max-w-2xl">{t("subtitle")}</p>
+              <p className="max-w-2xl text-sm text-gray-600 sm:text-base md:text-lg">{t("subtitle")}</p>
             </div>
             <div className="hidden lg:flex items-center gap-2 text-green-600 text-sm font-medium">
               <TrendingUp className="h-4 w-4" />
@@ -195,7 +195,7 @@ export default function Marketplace() {
               placeholder={t("placeholders.search") as string}
               value={filters.search}
               onChange={(e) => handleFilterChange("search", e.target.value)}
-              className="pl-12 h-14 bg-white border-2 border-gray-200 focus:border-green-500 rounded-lg text-base shadow-sm focus:shadow-md transition-all"
+              className="h-12 rounded-lg border-2 border-gray-200 bg-white pl-12 text-sm shadow-sm transition-all focus:border-green-500 focus:shadow-md sm:h-14 sm:text-base"
             />
             {filters.search && (
               <button
@@ -209,13 +209,13 @@ export default function Marketplace() {
         </div>
 
         {/* Category Pills */}
-        <div className="mb-6 flex flex-wrap gap-2">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap">
           <Button
             variant={filters.category === "all" ? "default" : "outline"}
             size="sm"
             onClick={() => handleFilterChange("category", "all")}
-            className={`rounded-full ${
-              filters.category === "all"
+              className={`whitespace-nowrap rounded-full ${
+                filters.category === "all"
                 ? "bg-green-600 hover:bg-green-700 text-white"
                 : "border-gray-200 hover:border-green-300"
             }`}
@@ -228,7 +228,7 @@ export default function Marketplace() {
               variant={filters.category === key ? "default" : "outline"}
               size="sm"
               onClick={() => handleFilterChange("category", key)}
-              className={`rounded-full flex items-center gap-2 ${
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full ${
                 filters.category === key
                   ? key === "crop"
                     ? "bg-emerald-600 hover:bg-emerald-700"
@@ -245,7 +245,7 @@ export default function Marketplace() {
         </div>
 
         {/* Filter Controls */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Button
               variant={showFilters ? "default" : "outline"}
@@ -394,7 +394,7 @@ export default function Marketplace() {
           isMarketPlace={true}
         />
       </section>
-      <section className="p-10">
+      <section className="px-4 pb-6 pt-2 sm:p-10">
         <Paginations
           page={page}
           onPageChange={setPage}

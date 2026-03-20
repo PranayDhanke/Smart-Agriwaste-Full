@@ -25,10 +25,10 @@ export default function SignedOutActions() {
         <DropdownMenuTrigger asChild>
           <Button
             size="sm"
-            className="bg-green-600 hover:bg-green-700 text-white"
+            className="bg-green-600 px-2 text-white hover:bg-green-700 sm:px-3"
           >
-            <User className="mr-1" />
-            {t("auth.signup")}
+            <User className="h-4 w-4 sm:mr-1" />
+            <span className="hidden sm:inline">{t("auth.signup")}</span>
           </Button>
         </DropdownMenuTrigger>
 

@@ -35,7 +35,7 @@ export default function ProfileMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full bg-green-50 px-3 py-1 hover:bg-green-100">
+        <button className="flex items-center gap-1 rounded-full bg-green-50 px-1.5 py-1 hover:bg-green-100 sm:gap-2 sm:px-3">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user.imageUrl ?? ""} />
             <AvatarFallback>{user.firstName?.charAt(0) ?? "U"}</AvatarFallback>

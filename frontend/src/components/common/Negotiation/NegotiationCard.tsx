@@ -43,9 +43,9 @@ export default function NegotiationCard({ negotiation: neg, isFarmer }: Props) {
   return (
     <Card className="overflow-hidden border hover:shadow-md transition-all">
       <CardContent className="p-0">
-        <div className="grid md:grid-cols-[260px_1fr] gap-0 md:gap-4">
+        <div className="grid gap-0 md:grid-cols-[220px_1fr] md:gap-4 lg:grid-cols-[260px_1fr]">
           {/* Image */}
-          <div className="relative h-56 md:h-full bg-gray-50">
+          <div className="relative h-48 sm:h-56 md:h-full bg-gray-50">
             {neg.item.image ? (
               <Image
                 src={neg.item.image}
@@ -68,7 +68,7 @@ export default function NegotiationCard({ negotiation: neg, isFarmer }: Props) {
 
           {/* Content */}
           <div className="flex flex-col h-full">
-            <div className="p-4 md:p-6 flex-1 space-y-4">
+            <div className="flex-1 space-y-4 p-4 sm:p-5 md:p-6">
               {/* Header */}
               <div className="space-y-1">
                 <h2 className="text-base md:text-lg font-semibold text-gray-900 line-clamp-2">
@@ -87,7 +87,7 @@ export default function NegotiationCard({ negotiation: neg, isFarmer }: Props) {
               <Separator />
 
               {/* Price + moisture row */}
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <InfoBox
                   icon={<IndianRupee className="h-4 w-4 text-gray-700" />}
                   label={isFarmer ? t("yourPrice") : tc("stats.listedPrice")}
@@ -122,7 +122,7 @@ export default function NegotiationCard({ negotiation: neg, isFarmer }: Props) {
 
               {/* Discount Info */}
 
-              <div className="bg-amber-50 border border-amber-200 px-3 py-2 rounded-md">
+              <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2">
                 <p className="text-xs md:text-sm text-amber-900">
                   <span className="font-semibold">
                     {isFarmer
@@ -135,13 +135,13 @@ export default function NegotiationCard({ negotiation: neg, isFarmer }: Props) {
 
             {/* Actions */}
             {isFarmer ? (
-              <div className="border-t bg-gray-50 px-4 md:px-6 py-3">
+              <div className="border-t bg-gray-50 px-4 py-3 md:px-6">
                 <div className="flex gap-3 flex-col sm:flex-row sm:justify-end">
                   <FarmerNegotiationButton neg={neg} />
                 </div>
               </div>
             ) : (
-              <div className="border-t bg-gray-50 px-4 md:px-6 py-3">
+              <div className="border-t bg-gray-50 px-4 py-3 md:px-6">
                 <div className="flex gap-3 flex-col sm:flex-row sm:justify-end">
                   <BuyerNegotiationButton neg={neg} />
                 </div>

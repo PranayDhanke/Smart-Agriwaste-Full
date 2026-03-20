@@ -33,18 +33,18 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
-      <div className="container mx-auto flex h-16 items-center gap-3 px-4">
+      <div className="container mx-auto flex min-h-16 items-center gap-2 px-3 sm:gap-3 sm:px-4">
         <Link
           href="/"
-          className="flex shrink-0 items-center justify-center gap-2 text-lg font-bold text-green-700"
+          className="flex min-w-0 shrink items-center justify-center gap-2 text-base font-bold text-green-700 sm:shrink-0 sm:text-lg"
         >
-          <Image src={logo} alt="logo" width={30} height={30} />
-          AgriWaste
+          <Image src={logo} alt="logo" width={26} height={26} />
+          <span className="truncate">AgriWaste</span>
         </Link>
 
         <DesktopNav items={navItems} />
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <LanguageSwitcher />
           <AuthActions />
 

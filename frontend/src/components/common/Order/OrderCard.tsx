@@ -101,7 +101,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
 
   return (
     <Card className="border-gray-200 shadow-sm transition hover:shadow-md">
-      <CardContent className="space-y-5 p-6">
+      <CardContent className="space-y-4 p-4 sm:space-y-5 sm:p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
@@ -122,7 +122,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-base font-semibold text-gray-900 sm:text-lg">
                 {isFarmer ? "Order" : t("orderNumber", { id: order._id.slice(-6) })}
                 {isFarmer ? ` #${order._id.slice(-6)}` : ""}
               </h3>
@@ -141,7 +141,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
             <p className="text-sm text-gray-500">
               {isFarmer ? t("labels.totalEarning") : t("total")}
             </p>
-            <p className="text-2xl font-bold text-green-700">Rs. {order.totalAmount}</p>
+            <p className="text-xl font-bold text-green-700 sm:text-2xl">Rs. {order.totalAmount}</p>
           </div>
         </div>
 
@@ -156,14 +156,14 @@ export default function OrderCard({ order, isFarmer }: Props) {
           </div>
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-gray-400" />
-            <span>
+            <span className="break-words">
               {isFarmer ? t("labels.buyer") : "Farmer:"} {partnerName}
             </span>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Button asChild variant="outline">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+          <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link href={detailHref}>
               {isFarmer ? t("actions.view") : t("actions.viewDetails")}
             </Link>
@@ -171,12 +171,13 @@ export default function OrderCard({ order, isFarmer }: Props) {
 
           {isFarmer && order.status === "pending" && !requiresPricingStep ? (
             <>
-              <Button disabled={disableActions} onClick={handleConfirmOrder}>
+              <Button className="w-full sm:w-auto" disabled={disableActions} onClick={handleConfirmOrder}>
                 <CheckCircle2 className="mr-2 h-4 w-4" />
                 {t("actions.accept")}
               </Button>
               <Button
                 variant="destructive"
+                className="w-full sm:w-auto"
                 disabled={disableActions}
                 onClick={handleCancelOrder}
               >
@@ -195,6 +196,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
           {!isFarmer && order.status === "pending" ? (
             <Button
               variant="destructive"
+              className="w-full sm:w-auto"
               disabled={disableActions}
               onClick={handleCancelOrder}
             >
@@ -208,7 +210,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
           order.deliveryMode === "DELIVERYBYFARMER" &&
           !order.isOutForDelivery &&
           !order.isDelivered ? (
-            <Button disabled={disableActions} onClick={handleSetOutForDelivery}>
+            <Button className="w-full sm:w-auto" disabled={disableActions} onClick={handleSetOutForDelivery}>
               <Truck className="mr-2 h-4 w-4" />
               {t("actions.outForDelivery")}
             </Button>
@@ -222,7 +224,7 @@ export default function OrderCard({ order, isFarmer }: Props) {
               order.status === "confirmed" &&
               !order.isDelivered &&
               (order.deliveryMode === "PICKUPBYBUYER" || order.isOutForDelivery))) ? (
-            <Button disabled={disableActions} onClick={handleConfirmDelivery}>
+            <Button className="w-full sm:w-auto" disabled={disableActions} onClick={handleConfirmDelivery}>
               <CheckCircle2 className="mr-2 h-4 w-4" />
               {isFarmer
                 ? t("actions.delivered")

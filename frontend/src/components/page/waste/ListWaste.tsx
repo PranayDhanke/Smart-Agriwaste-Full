@@ -91,15 +91,15 @@ export default function MyListing() {
   }
 
   return (
-    <main className=" bg-gradient-to-br from-gray-50 to-green-50/30 p-4 md:p-6">
+    <main className="bg-gradient-to-br from-gray-50 to-green-50/30 px-4 py-4 sm:px-6 sm:py-6">
       <div className="max-w-7xl mx-auto">
         {/* Minimal Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">
             {" "}
             {t("title")}
           </h1>
-          <p className="text-gray-600">{t("subtitle")}</p>
+          <p className="text-sm text-gray-600 sm:text-base">{t("subtitle")}</p>
         </div>
         {/* Search Bar */}
         <div className="mb-4">
@@ -122,13 +122,14 @@ export default function MyListing() {
           </div>
         </div>
         {/* Type Filters */}
-        <div className="flex gap-2 mb-6">
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {(["all", "crop", "vegetable", "fruit"] as const).map((type) => (
             <Button
               key={type}
               size="sm"
               variant={selectedType === type ? "default" : "outline"}
               onClick={() => setSelectedType(type)}
+              className="whitespace-nowrap"
             >
               {t(`filters.${type}`)}
             </Button>
@@ -153,7 +154,7 @@ export default function MyListing() {
           wastes={filteredListings}
         />
 
-        <section className="p-10">
+        <section className="px-0 pb-2 pt-4 sm:p-10">
           <WastePagination
             page={page}
             onPageChange={setPage}
