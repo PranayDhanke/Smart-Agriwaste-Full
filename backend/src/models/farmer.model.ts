@@ -27,6 +27,21 @@ const FarmerAccountSchema = new Schema(
     farmArea: { type: String, required: true },
     farmUnit: { type: String, enum: ["hectare", "acre"], required: true },
     wallet: { type: Number, default: 0 },
+    isBanned: { type: Boolean, default: false, index: true },
+    bannedAt: { type: Date, default: null },
+    bannedReason: { type: String, default: "" },
+    verification: {
+      status: {
+        type: String,
+        enum: ["not_requested", "pending", "verified", "rejected"],
+        default: "not_requested",
+        index: true,
+      },
+      requestedAt: { type: Date, default: null },
+      reviewedAt: { type: Date, default: null },
+      reviewedBy: { type: String, default: "" },
+      reason: { type: String, default: "" },
+    },
 
     coordinates: {
       lat: { type: String },

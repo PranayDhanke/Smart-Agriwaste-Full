@@ -1,4 +1,5 @@
 import {
+  Shield,
   Home,
   IndianRupee,
   List,
@@ -9,7 +10,7 @@ import {
 } from "lucide-react";
 import { JSX } from "react";
 
-export type Role = "farmer" | "buyer" | "guest";
+export type Role = "admin" | "farmer" | "buyer" | "guest";
 
 export interface NavItem {
   key: string;
@@ -22,6 +23,13 @@ export const NAVIGATION: Record<Role, NavItem[]> = {
     { key: "nav.home", href: "/", icon: Home },
     { key: "nav.marketplace", href: "/marketplace", icon: ShoppingCart },
     { key: "nav.community", href: "/community", icon: User },
+  ],
+
+  admin: [
+    { key: "nav.home", href: "/", icon: Home },
+    { key: "nav.marketplace", href: "/marketplace", icon: ShoppingCart },
+    { key: "nav.community", href: "/community", icon: User },
+    { key: "nav.admin", href: "/profile/admin", icon: Shield },
   ],
 
   farmer: [

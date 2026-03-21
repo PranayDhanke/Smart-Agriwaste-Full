@@ -55,7 +55,7 @@ export default function ProfileMenu({
           {t("profile.profile")}
         </DropdownMenuItem>
 
-        <Link href={`/profile/${role}`}>
+        <Link href={role === "admin" ? "/profile/admin" : `/profile/${role}`}>
           <DropdownMenuItem>
             <Settings className="mr-2" />
             {t("profile.settings")}

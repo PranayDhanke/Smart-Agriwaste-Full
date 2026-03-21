@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import { JSX, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -23,10 +23,9 @@ import {
   Leaf,
   Recycle,
   Factory,
-  TrendingUp,
   Scale,
+  Flag,
 } from "lucide-react";
-import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Waste, WasteType } from "@/components/types/waste";
@@ -245,6 +244,15 @@ export default function SingleMarketplace() {
                 <Share2 className="h-4 w-4 mr-2" />
                 {t("actions.share")}
               </Button>
+              <Link
+                href={`/report?type=waste&targetId=${data._id}`}
+                className="flex-1"
+              >
+                <Button variant="outline" className="w-full bg-white hover:bg-gray-50">
+                  <Flag className="h-4 w-4 mr-2" />
+                  Report
+                </Button>
+              </Link>
             </div>
 
             {/* Key Information Grid */}
@@ -457,6 +465,17 @@ export default function SingleMarketplace() {
                     >
                       {t("seller.contact")}
                     </Button>
+                    <Link
+                      href={`/report?type=farmer&targetId=${data.seller.farmerId}`}
+                    >
+                      <Button
+                        variant="outline"
+                        className="w-full mt-2 border-amber-300 hover:bg-amber-50"
+                      >
+                        <Flag className="h-4 w-4 mr-2" />
+                        Report seller
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

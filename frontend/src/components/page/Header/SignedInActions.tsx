@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import ProfileMenu from "./ProfileMenu";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Bell, Plus } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectUnreadNotificationCount } from "@/redux/selectors/notificationSelector";
@@ -17,16 +17,11 @@ export default function SignedInActions({ id }: { id: string }) {
 
   const { signOut, openUserProfile } = useClerk();
 
-  const [role, setrole] = useState<"farmer" | "buyer" | "">("");
-
-  useEffect(() => {
-    if (user) {
-      const role = user.unsafeMetadata.role as "farmer" | "buyer";
-      setrole(role);
-    }
-  }, [user]);
-
-  ///const role = user && (user?.publicMetadata?.role as "farmer" | "buyer");
+  const role = (user?.unsafeMetadata.role as
+    | "admin"
+    | "farmer"
+    | "buyer"
+    | undefined) ?? "";
 
   const t = useTranslations("header");
 

@@ -1,10 +1,38 @@
 import { baseApi } from "./baseApi";
 
+export interface AuthProfileAccount {
+  buyerId?: string;
+  farmerId?: string;
+  adminId?: string;
+  email?: string;
+  phone?: string;
+  district?: string;
+  houseBuildingName?: string;
+  roadarealandmarkName?: string;
+  state?: string;
+  taluka?: string;
+  village?: string;
+  aadharnumber?: string;
+  aadharUrl?: string;
+  farmDocUrl?: string;
+  farmNumber?: string;
+  farmArea?: string;
+  farmUnit?: string;
+  isBanned?: boolean;
+  verification?: {
+    status?: "not_requested" | "pending" | "verified" | "rejected";
+    requestedAt?: string | null;
+    reviewedAt?: string | null;
+    reviewedBy?: string;
+    reason?: string;
+  };
+}
+
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<
       {
-        accountdata: any;
+        accountdata: AuthProfileAccount;
       },
       { id: string; role: string }
     >({
@@ -32,6 +60,18 @@ export const authApi = baseApi.injectEndpoints({
         { type: "Profile", id: userId },
       ],
     }),
+    requestVerification: builder.mutation<
+      { message: string },
+      { role: "buyer" | "farmer"; userId: string }
+    >({
+      query: ({ role, userId }) => ({
+        url: `${role}/request-verification/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: (_result, _error, { userId }) => [
+        { type: "Profile", id: userId },
+      ],
+    }),
   }),
 });
 
@@ -39,4 +79,5 @@ export const {
   useCreateProfileMutation,
   useUpdateProfileMutation,
   useLazyGetProfileQuery,
+  useRequestVerificationMutation,
 } = authApi;

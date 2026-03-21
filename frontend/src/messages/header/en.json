@@ -7,7 +7,8 @@
     "orders": "Orders",
     "analytics": "Analytics",
     "myPurchases": "My Purchases",
-    "Nego": "Negotiations"
+    "Nego": "Negotiations",
+    "admin": "Admin Panel"
   },
 
   "auth": {
@@ -20,7 +21,8 @@
 
   "role": {
     "farmer": "Farmer",
-    "buyer": "Buyer"
+    "buyer": "Buyer",
+    "admin": "Admin"
   },
 
   "profile": {

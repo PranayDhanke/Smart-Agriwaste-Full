@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   useLazyGetProfileQuery,
+  useRequestVerificationMutation,
   useUpdateProfileMutation,
 } from "@/redux/api/authApi";
 import { uploadImage } from "@/utils/imagekit";
@@ -103,6 +104,8 @@ export default function Profile() {
   const [getProfile, { data: profileData, isFetching, isLoading, isSuccess }] =
     useLazyGetProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const [requestVerification, { isLoading: isRequestingVerification }] =
+    useRequestVerificationMutation();
 
   useEffect(() => {
     if (isLoaded && user?.id) {
@@ -209,6 +212,21 @@ export default function Profile() {
     }
   };
 
+  const verification = profileData?.accountdata?.verification;
+
+  const handleVerificationRequest = async () => {
+    try {
+      await requestVerification({
+        role: "buyer",
+        userId: buyerId,
+      }).unwrap();
+      await getProfile({ id: buyerId, role: role as string }).unwrap();
+      toast.success("Verification request submitted.");
+    } catch {
+      toast.error("Unable to submit verification request.");
+    }
+  };
+
   if (!user || (isFetching && isLoading)) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
@@ -251,6 +269,39 @@ export default function Profile() {
 
         {isSuccess && (
           <CardContent className="p-6 sm:p-10">
+            <div className="mb-8 rounded-2xl border border-violet-100 bg-violet-50/70 p-5">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-violet-800">
+                    Verification status
+                  </p>
+                  <p className="mt-1 text-sm text-violet-700">
+                    Current status: {verification?.status ?? "not_requested"}
+                  </p>
+                  {verification?.reason && (
+                    <p className="mt-1 text-xs text-violet-700">
+                      Admin note: {verification.reason}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleVerificationRequest}
+                  disabled={
+                    isRequestingVerification || verification?.status === "pending"
+                  }
+                >
+                  {isRequestingVerification
+                    ? "Requesting..."
+                    : verification?.status === "verified"
+                      ? "Verified"
+                      : verification?.status === "pending"
+                        ? "Pending review"
+                        : "Request verification"}
+                </Button>
+              </div>
+            </div>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}

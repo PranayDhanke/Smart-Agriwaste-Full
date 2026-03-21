@@ -60,3 +60,34 @@ export const updateBuyerAccount = async (req: Request, res: Response) => {
 
   res.status(200).json("Updated Buyer Profile");
 };
+
+export const requestBuyerVerification = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  if (!id) {
+    throw new AppError("No buyer ID provided", 400);
+  }
+
+  const updatedBuyer = await buyeraccount.findOneAndUpdate(
+    { buyerId: id },
+    {
+      verification: {
+        status: "pending",
+        requestedAt: new Date(),
+        reviewedAt: null,
+        reviewedBy: "",
+        reason: "",
+      },
+    },
+    { new: true },
+  );
+
+  if (!updatedBuyer) {
+    throw new AppError("Failed to request buyer verification", 500);
+  }
+
+  res.status(200).json({
+    message: "Verification request submitted",
+    accountdata: updatedBuyer,
+  });
+};

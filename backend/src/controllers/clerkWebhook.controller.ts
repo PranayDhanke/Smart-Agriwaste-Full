@@ -1,6 +1,7 @@
 import { UserJSON, WebhookEvent } from "@clerk/clerk-sdk-node";
 import { Request, Response } from "express";
 import { Webhook } from "svix";
+import adminAccount from "../models/admin.model";
 import buyeraccount from "../models/buyer.model";
 import farmeraccount from "../models/farmer.model";
 
@@ -64,6 +65,21 @@ const handleUserUpdated = async (data: UserJSON) => {
         email: data.email_addresses?.[0]?.email_address,
       },
       { new: true },
+    );
+  }
+  if (role === "admin") {
+    await adminAccount.findOneAndUpdate(
+      { adminId: data.id },
+      {
+        firstName: data.first_name || "Admin",
+        lastName: data.last_name || "User",
+        username:
+          data.username ||
+          data.email_addresses?.[0]?.email_address?.split("@")[0] ||
+          data.id,
+        email: data.email_addresses?.[0]?.email_address,
+      },
+      { new: true, upsert: true },
     );
   }
 };

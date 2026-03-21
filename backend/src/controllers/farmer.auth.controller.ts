@@ -59,3 +59,34 @@ export const updateFarmerAccount = async (req: Request, res: Response) => {
 
   res.status(200).json({ message: "Updated Farmer Profile", data: updated });
 };
+
+export const requestFarmerVerification = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  if (!id) {
+    throw new AppError("No farmer ID provided", 400);
+  }
+
+  const updatedFarmer = await farmeraccount.findOneAndUpdate(
+    { farmerId: id },
+    {
+      verification: {
+        status: "pending",
+        requestedAt: new Date(),
+        reviewedAt: null,
+        reviewedBy: "",
+        reason: "",
+      },
+    },
+    { new: true },
+  );
+
+  if (!updatedFarmer) {
+    throw new AppError("Failed to request farmer verification", 500);
+  }
+
+  res.status(200).json({
+    message: "Verification request submitted",
+    accountdata: updatedFarmer,
+  });
+};

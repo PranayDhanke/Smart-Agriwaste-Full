@@ -5,12 +5,13 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { connectSocketForUser, disconnectSocket } from "@/lib/socket";
 import { useLazyGetProfileQuery } from "@/redux/api/authApi";
 import { setToken, setUser, User } from "@/redux/features/authSlice";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export function AuthProvider() {
   const { getToken } = useAuth();
+  const { signOut } = useClerk();
   const { user, isLoaded, isSignedIn } = useUser();
   const dispatch = useDispatch();
 
@@ -19,28 +20,33 @@ export function AuthProvider() {
 
   const role = user?.unsafeMetadata.role;
 
-  const [getProfile, { data, isFetching, isUninitialized }] =
+  const [getProfile, { data, error, isError, isFetching, isUninitialized }] =
     useLazyGetProfileQuery();
 
   const isCreateAccountPage = pathname?.startsWith("/create-account");
 
   useEffect(() => {
-    const loadToken = async () => {
-      const token = await getToken();
-      dispatch(setToken(token));
-    };
+    let isCancelled = false;
 
-    const loadUser = async () => {
-      if (user && isLoaded && isSignedIn && role) {
-        const role = user.unsafeMetadata.role;
-        const id = user.id;
-        getProfile({ id, role: role as string });
+    const loadAuthState = async () => {
+      if (!isLoaded) return;
+
+      const token = await getToken();
+      if (isCancelled) return;
+
+      dispatch(setToken(token));
+
+      if (user && isSignedIn && role && token) {
+        await getProfile({ id: user.id, role: role as string });
       }
     };
 
-    loadUser();
-    loadToken();
-  }, [getToken, dispatch, user, isLoaded, isSignedIn, role, getProfile]);
+    loadAuthState();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [dispatch, getProfile, getToken, isLoaded, isSignedIn, role, user]);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -59,39 +65,67 @@ export function AuthProvider() {
     if (isUninitialized || isFetching) return;
 
     if (data?.accountdata) {
-      const address: Address = {
-        district: data.accountdata.district,
-        houseBuildingName: data.accountdata.houseBuildingName,
-        roadarealandmarkName: data.accountdata.roadarealandmarkName,
-        state: data.accountdata.state,
-        taluka: data.accountdata.taluka,
-        village: data.accountdata.village,
-      };
-      
+      if (data.accountdata.isBanned) {
+        signOut({ redirectUrl: "/" });
+        return;
+      }
+
+      const address: Address | null =
+        role === "admin"
+          ? null
+          : {
+              district: data.accountdata.district || "",
+              houseBuildingName: data.accountdata.houseBuildingName || "",
+              roadarealandmarkName: data.accountdata.roadarealandmarkName || "",
+              state: data.accountdata.state || "",
+              taluka: data.accountdata.taluka || "",
+              village: data.accountdata.village || "",
+            };
+
       const authUser: User = {
-        email: data.accountdata.email,
+        email: data.accountdata.email || "",
         id: user.id,
         name: user.fullName || "",
-        phone: data.accountdata.phone,
+        phone: data.accountdata.phone || "",
+        role: role as "admin" | "buyer" | "farmer",
+        isBanned: Boolean(data.accountdata.isBanned),
       };
 
       dispatch(setUser({ address, user: authUser }));
+
+      if (isCreateAccountPage) {
+        if (role === "admin") {
+          router.replace("/profile/admin");
+          return;
+        }
+
+        router.replace(`/profile/${role}`);
+      }
+
       return;
     }
 
-    if (!isCreateAccountPage) {
+    if (isError && "status" in error && error.status === 404 && !isCreateAccountPage) {
+      if (role === "admin") {
+        router.replace("/profile/admin");
+        return;
+      }
+
       router.replace(`/create-account/${role}`);
     }
   }, [
     data,
     dispatch,
+    error,
     isCreateAccountPage,
+    isError,
     isFetching,
     isLoaded,
     isSignedIn,
     isUninitialized,
     role,
     router,
+    signOut,
     user,
   ]);
 

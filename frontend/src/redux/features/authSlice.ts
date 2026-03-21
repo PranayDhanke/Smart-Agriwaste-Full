@@ -1,5 +1,5 @@
 // src/redux/slices/authSlice.ts
-import { seller, Address } from "@/components/types/waste";
+import { Address } from "@/components/types/waste";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
@@ -7,6 +7,8 @@ export interface User {
   name: string;
   phone: string;
   email: string;
+  role?: "admin" | "buyer" | "farmer";
+  isBanned?: boolean;
 }
 
 interface AuthState {
@@ -28,7 +30,7 @@ const authSlice = createSlice({
     setToken(state, action: PayloadAction<string | null>) {
       state.token = action.payload;
     },
-    setUser(state, action: PayloadAction<{ address: Address; user: User }>) {
+    setUser(state, action: PayloadAction<{ address: Address | null; user: User }>) {
       state.address = action.payload.address;
       state.user = action.payload.user;
     },

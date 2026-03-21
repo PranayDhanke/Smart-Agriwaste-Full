@@ -22,6 +22,9 @@ export const env = {
   nodeEnv: process.env.NODE_ENV?.trim() || "development",
   port: Number(process.env.PORT) || 5000,
   mongoUri: requireEnv("MONGO_URI"),
+  adminBootstrapEmails: optionalCsv(process.env.ADMIN_BOOTSTRAP_EMAILS).map(
+    (email) => email.toLowerCase(),
+  ),
   logLevel: process.env.LOG_LEVEL?.trim().toLowerCase() || "info",
   corsOrigins: optionalCsv(process.env.CORS_ORIGINS).length
     ? optionalCsv(process.env.CORS_ORIGINS)

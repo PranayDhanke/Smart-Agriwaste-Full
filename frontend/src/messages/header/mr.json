@@ -3,40 +3,35 @@
     "home": "मुख्यपृष्ठ",
     "marketplace": "बाजारपेठ",
     "community": "समुदाय",
-    "myListings": "माझ्या जाहिराती",
+    "myListings": "माझ्या नोंदी",
     "orders": "ऑर्डर्स",
     "analytics": "विश्लेषण",
     "myPurchases": "माझी खरेदी",
-    "Nego": "वाटाघाटी"
+    "Nego": "चर्चा",
+    "admin": "प्रशासन पॅनेल"
   },
 
   "auth": {
     "login": "लॉगिन",
-    "signup": "नोंदणी",
-    "signupAs": "म्हणून सामील व्हा",
+    "signup": "नोंदणी करा",
+    "signupAs": "म्हणून नोंदणी करा",
     "signOut": "लॉगआउट",
-    "listWaste": "कचरा नोंदवा"
+    "listWaste": "कचरा सूचीबद्ध करा"
   },
 
   "role": {
     "farmer": "शेतकरी",
-    "buyer": "खरेदीदार"
+    "buyer": "खरेदीदार",
+    "admin": "प्रशासक"
   },
 
   "profile": {
     "myAccount": "माझे खाते",
     "profile": "प्रोफाइल",
-    "settings": "सेटिंग्ज"
+    "settings": "सेटिंग्स"
   },
 
   "notification": {
     "title": "सूचना"
-  },
-
-  "language": {
-    "label": "भाषा",
-    "english": "इंग्रजी",
-    "hindi": "हिंदी",
-    "marathi": "मराठी"
   }
 }
