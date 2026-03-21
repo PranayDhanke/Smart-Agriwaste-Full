@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,39 +40,451 @@ import {
 import {
   Bookmark,
   Camera,
+  ChevronDown,
   Heart,
+  ImagePlus,
   Loader2,
-  MessageSquare,
+  MessageCircle,
   MoreHorizontal,
   Pencil,
-  Tractor,
+  Send,
+  Sprout,
   Trash2,
-  X
+  X,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
+/* ─────────────────────────────────────────────
+   CONSTANTS
+───────────────────────────────────────────── */
 const categories = [
-  { id: "farm-query", label: "Question" },
-  { id: "crop-care", label: "Crop Care" },
-  { id: "market-help", label: "Market/Selling" },
-  { id: "success-story", label: "Harvest/Success" },
-  { id: "equipment", label: "Equipment" },
+  { id: "all",           label: "✨ All",         color: "bg-amber-100 text-amber-800 border-amber-300" },
+  { id: "farm-query",    label: "🌾 Question",    color: "bg-green-100 text-green-800 border-green-300" },
+  { id: "crop-care",     label: "🌿 Crop Care",   color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+  { id: "market-help",   label: "🛒 Marketplace", color: "bg-blue-100 text-blue-800 border-blue-300" },
+  { id: "success-story", label: "🏆 Success",     color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
+  { id: "equipment",     label: "🔧 Equipment",   color: "bg-orange-100 text-orange-800 border-orange-300" },
 ];
 
-export default function CommunityFeed() {
-  const { user } = useUser();
-  const [feedFilter, setFeedFilter] = useState<"all" | "mine" | "others">("all");
+const postCategories = categories.slice(1); // exclude "all" for post creation
+
+const feedFilters = [
+  { id: "all",    label: "All" },
+  { id: "mine",   label: "My Posts" },
+  { id: "others", label: "Community" },
+];
+
+function relativeTime(dateString: string) {
+  const diff = Date.now() - new Date(dateString).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h`;
+  return `${Math.floor(hrs / 24)}d`;
+}
+
+function getCatMeta(id: string) {
+  return categories.find((c) => c.id === id) ?? categories[1];
+}
+
+/* ─────────────────────────────────────────────
+   COMPOSE BOX
+───────────────────────────────────────────── */
+function ComposeBox({
+  user,
+  onPost,
+  isSubmitting,
+}: {
+  user: ReturnType<typeof useUser>["user"];
+  onPost: (payload: { description: string; imageUrl: string; category: string }) => Promise<void>;
+  isSubmitting: boolean;
+}) {
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("farm-query");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
   const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
-  const [editingPostId, setEditingPostId] = useState<string | null>(null);
-  const [postEditDescription, setPostEditDescription] = useState("");
-  const [postEditCategory, setPostEditCategory] = useState("farm-query");
-  const [editingReplyKey, setEditingReplyKey] = useState<string | null>(null);
-  const [replyEditMessage, setReplyEditMessage] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setExpanded(true);
+  };
+
+  const clearImage = () => { setSelectedFile(null); setPreviewUrl(""); };
+
+  const handleSubmit = async () => {
+    if (!description.trim() && !selectedFile) return toast.error("Add text or a photo.");
+    let imageUrl = "";
+    if (selectedFile) {
+      setIsUploadingImage(true);
+      try { imageUrl = await uploadImage(selectedFile, "/community-posts"); }
+      finally { setIsUploadingImage(false); }
+    }
+    await onPost({ description: description.trim(), imageUrl, category: selectedCategory });
+    setDescription(""); setSelectedCategory("farm-query"); clearImage(); setExpanded(false);
+  };
+
+  const busy = isUploadingImage || isSubmitting;
+
+  return (
+    <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden transition-all">
+      {/* Top Row — avatar + placeholder */}
+      <div
+        className="flex items-center gap-3 px-4 pt-4 pb-3 cursor-text"
+        onClick={() => { setExpanded(true); textareaRef.current?.focus(); }}
+      >
+        <Avatar className="h-10 w-10 ring-2 ring-green-200 shrink-0">
+          <AvatarImage src={user?.imageUrl} />
+          <AvatarFallback className="bg-green-700 text-white font-bold">
+            {user?.fullName?.charAt(0) ?? "F"}
+          </AvatarFallback>
+        </Avatar>
+        {!expanded ? (
+          <span className="flex-1 text-stone-400 text-sm bg-stone-50 rounded-full px-4 py-2.5 border border-stone-200 select-none">
+            Share a crop tip, ask a question, list produce…
+          </span>
+        ) : (
+          <Textarea
+            ref={textareaRef}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Share a crop tip, ask a question, list produce…"
+            className="flex-1 min-h-[80px] resize-none border-0 shadow-none focus-visible:ring-0 text-[15px] text-stone-800 placeholder:text-stone-400 p-0 bg-transparent"
+            autoFocus
+          />
+        )}
+      </div>
+
+      {/* Expanded controls */}
+      {expanded && (
+        <>
+          {/* Image preview */}
+          {previewUrl && (
+            <div className="relative mx-4 mb-3 rounded-xl overflow-hidden border border-stone-200">
+              <button
+                onClick={clearImage}
+                className="absolute top-2 right-2 z-10 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <Image src={previewUrl} alt="Preview" width={800} height={500} className="w-full max-h-64 object-cover" unoptimized />
+            </div>
+          )}
+
+          {/* Category pills */}
+          <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
+            {postCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={cn(
+                  "shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all",
+                  selectedCategory === cat.id
+                    ? cat.color + " scale-105 shadow-sm"
+                    : "bg-stone-50 text-stone-500 border-stone-200 hover:bg-stone-100"
+                )}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Action bar */}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-stone-100">
+            <label className="flex items-center gap-2 text-green-700 hover:text-green-900 cursor-pointer text-sm font-semibold transition-colors">
+              <ImagePlus className="h-5 w-5" />
+              <span>Photo</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} disabled={busy} />
+            </label>
+
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setExpanded(false); setDescription(""); clearImage(); }}
+                className="text-stone-500 rounded-full"
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleSubmit}
+                disabled={busy || (!description.trim() && !selectedFile)}
+                className="bg-green-700 hover:bg-green-800 text-white rounded-full px-5 font-semibold shadow-sm"
+              >
+                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Post"}
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   POST CARD
+───────────────────────────────────────────── */
+function PostCard({
+  post,
+  userId,
+  username,
+  userImage,
+  onLike,
+  onSave,
+  onReply,
+  onEditPost,
+  onDeletePost,
+  onEditReply,
+  onDeleteReply,
+}: any) {
+  const likedByUser = userId ? post.likes.includes(userId) : false;
+  const savedByUser = userId ? post.saves.includes(userId) : false;
+  const canManage = userId === post.authorId;
+  const [showReplies, setShowReplies] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [isEditingPost, setIsEditingPost] = useState(false);
+  const [editDesc, setEditDesc] = useState(post.description);
+  const [editCat, setEditCat] = useState(post.category);
+  const [editingReplyId, setEditingReplyId] = useState<string | null>(null);
+  const [editReplyMsg, setEditReplyMsg] = useState("");
+
+  const catMeta = getCatMeta(post.category);
+
+  return (
+    <article className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden group hover:shadow-md transition-shadow duration-200">
+      
+      {/* ── Post Header ── */}
+      <div className="flex items-start gap-3 p-4">
+        <Avatar className="h-11 w-11 ring-2 ring-green-100 shrink-0">
+          <AvatarImage src={post.authorImage} />
+          <AvatarFallback className="bg-green-700 text-white font-bold text-base">
+            {post.authorName.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-[15px] text-stone-900 truncate">{post.authorName}</span>
+            <span
+              className={cn(
+                "text-[11px] font-semibold px-2 py-0.5 rounded-full border",
+                catMeta.color
+              )}
+            >
+              {catMeta.label}
+            </span>
+          </div>
+          <span className="text-xs text-stone-400 font-medium">{relativeTime(post.createdAt)}</span>
+        </div>
+
+        {canManage && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-full hover:bg-stone-100 text-stone-400">
+                <MoreHorizontal className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40 rounded-xl shadow-lg border-stone-200">
+              <DropdownMenuItem onClick={() => { setIsEditingPost(true); setEditDesc(post.description); setEditCat(post.category); }}>
+                <Pencil className="mr-2 h-4 w-4" /> Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDeletePost(post._id)} className="text-red-500 focus:text-red-600">
+                <Trash2 className="mr-2 h-4 w-4" /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+
+      {/* ── Post Body ── */}
+      <div className="px-4 pb-3">
+        {isEditingPost ? (
+          <div className="space-y-3">
+            <div className="flex gap-1.5 flex-wrap">
+              {postCategories.map((c) => (
+                <button key={c.id} onClick={() => setEditCat(c.id)}
+                  className={cn("text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-all", editCat === c.id ? c.color : "bg-stone-50 text-stone-500 border-stone-200")}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+            <Textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)}
+              className="min-h-[90px] text-[15px] rounded-xl border-stone-300 focus-visible:ring-green-600 bg-stone-50" />
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setIsEditingPost(false)} className="rounded-full">Cancel</Button>
+              <Button size="sm" onClick={() => { onEditPost(post._id, editDesc, editCat); setIsEditingPost(false); }}
+                disabled={!editDesc.trim()} className="bg-green-700 hover:bg-green-800 text-white rounded-full px-5">Save</Button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-[15px] text-stone-800 leading-relaxed whitespace-pre-wrap">{post.description}</p>
+        )}
+      </div>
+
+      {/* ── Image ── */}
+      {post.imageUrl && (
+        <div className="mx-4 mb-3 rounded-xl overflow-hidden border border-stone-100">
+          <Image src={post.imageUrl} alt="Post" width={800} height={500}
+            className="w-full max-h-[420px] object-cover" unoptimized />
+        </div>
+      )}
+
+      {/* ── Action Bar ── */}
+      <div className="flex items-center gap-1 px-3 py-2 border-t border-stone-100">
+        {/* Like */}
+        <button
+          onClick={() => onLike(post._id)}
+          className={cn(
+            "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-all active:scale-90",
+            likedByUser ? "text-red-500 bg-red-50 hover:bg-red-100" : "text-stone-500 hover:bg-stone-100"
+          )}
+        >
+          <Heart className={cn("h-5 w-5", likedByUser && "fill-red-500")} />
+          <span>{post.likes.length}</span>
+        </button>
+
+        {/* Comment */}
+        <button
+          onClick={() => { setShowReplies(true); setShowReplyInput(!showReplyInput); }}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold text-stone-500 hover:bg-stone-100 transition-all"
+        >
+          <MessageCircle className="h-5 w-5" />
+          <span>{post.replies.length}</span>
+        </button>
+
+        <div className="flex-1" />
+
+        {/* Save */}
+        <button
+          onClick={() => onSave(post._id)}
+          className={cn(
+            "p-2 rounded-full transition-all active:scale-90",
+            savedByUser ? "text-amber-500 bg-amber-50 hover:bg-amber-100" : "text-stone-400 hover:bg-stone-100"
+          )}
+        >
+          <Bookmark className={cn("h-5 w-5", savedByUser && "fill-amber-500")} />
+        </button>
+      </div>
+
+      {/* ── Replies ── */}
+      {(showReplies || post.replies.length > 0) && (
+        <div className="border-t border-stone-100 bg-stone-50/60">
+          {/* Show/hide toggle */}
+          {post.replies.length > 0 && (
+            <button
+              onClick={() => setShowReplies((v) => !v)}
+              className="flex items-center gap-1 px-4 py-2.5 text-xs font-bold text-stone-500 hover:text-stone-700 transition-colors w-full"
+            >
+              <ChevronDown className={cn("h-4 w-4 transition-transform", showReplies && "rotate-180")} />
+              {showReplies ? "Hide" : `View ${post.replies.length} ${post.replies.length === 1 ? "reply" : "replies"}`}
+            </button>
+          )}
+
+          {showReplies && (
+            <div className="px-4 pb-3 space-y-3">
+              {post.replies.map((reply: any) => (
+                <div key={reply._id} className="flex gap-2.5">
+                  <Avatar className="h-8 w-8 shrink-0 mt-0.5">
+                    <AvatarImage src={reply.userImage} />
+                    <AvatarFallback className="bg-stone-300 text-stone-700 font-bold text-xs">
+                      {reply.username?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="bg-white rounded-2xl rounded-tl-sm px-3 py-2 border border-stone-200 shadow-sm">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="font-bold text-xs text-stone-800">{reply.username}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-stone-400">{relativeTime(reply.createdAt)}</span>
+                          {userId === reply.userId && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="text-stone-400 hover:text-stone-600 p-0.5 rounded">
+                                  <MoreHorizontal className="h-3.5 w-3.5" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-36 rounded-xl">
+                                <DropdownMenuItem onClick={() => { setEditingReplyId(reply._id); setEditReplyMsg(reply.message); }}>
+                                  <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => onDeleteReply(post._id, reply._id)} className="text-red-500">
+                                  <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                        </div>
+                      </div>
+                      {editingReplyId === reply._id ? (
+                        <div className="space-y-2">
+                          <Textarea value={editReplyMsg} onChange={(e) => setEditReplyMsg(e.target.value)}
+                            className="min-h-[60px] text-sm rounded-lg border-stone-300 focus-visible:ring-green-600 bg-stone-50" />
+                          <div className="flex justify-end gap-1.5">
+                            <Button variant="ghost" size="sm" onClick={() => setEditingReplyId(null)} className="h-7 px-3 rounded-full text-xs">Cancel</Button>
+                            <Button size="sm" onClick={() => { onEditReply(post._id, reply._id, editReplyMsg); setEditingReplyId(null); }}
+                              className="h-7 px-3 rounded-full text-xs bg-green-700 hover:bg-green-800 text-white">Save</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-stone-700 whitespace-pre-wrap">{reply.message}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Reply input */}
+          {showReplyInput && (
+            <div className="flex items-end gap-2.5 px-4 pb-4 pt-1">
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarImage src={userImage} />
+                <AvatarFallback className="bg-green-700 text-white font-bold text-xs">
+                  {username?.charAt(0) ?? "F"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 flex items-end gap-2 bg-white border border-stone-300 rounded-2xl pl-3 pr-2 py-2 shadow-sm focus-within:border-green-400 transition-colors">
+                <Textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Write a reply…"
+                  className="flex-1 min-h-[36px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm text-stone-800 placeholder:text-stone-400 p-0 bg-transparent"
+                  rows={1}
+                />
+                <button
+                  onClick={() => { onReply(post._id, replyText); setReplyText(""); setShowReplyInput(false); }}
+                  disabled={!replyText.trim()}
+                  className="shrink-0 p-1.5 rounded-full bg-green-700 text-white disabled:opacity-40 hover:bg-green-800 transition-colors"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   MAIN PAGE
+───────────────────────────────────────────── */
+export default function CommunityFeed() {
+  const { user } = useUser();
+  const [feedFilter, setFeedFilter] = useState<"all" | "mine" | "others">("all");
+  const [catFilter, setCatFilter] = useState("all");
   const [deleteTarget, setDeleteTarget] = useState<
     | { type: "post"; postId: string }
     | { type: "reply"; postId: string; replyId: string }
@@ -85,650 +497,198 @@ export default function CommunityFeed() {
   const [deletePost, { isLoading: isDeletingPost }] = useDeleteCommunityPostMutation();
   const [toggleLike] = useToggleCommunityLikeMutation();
   const [toggleSave] = useToggleCommunitySaveMutation();
-  const [addReply, { isLoading: isReplying }] = useAddCommunityReplyMutation();
-  const [updateReply, { isLoading: isUpdatingReply }] = useUpdateCommunityReplyMutation();
+  const [addReply] = useAddCommunityReplyMutation();
+  const [updateReply] = useUpdateCommunityReplyMutation();
   const [deleteReply, { isLoading: isDeletingReply }] = useDeleteCommunityReplyMutation();
 
   useEffect(() => {
     const socket = connectSocketForUser(user?.id);
-    const refreshFeed = () => refetch();
-
-    socket.on("community:post-created", refreshFeed);
-    socket.on("community:post-updated", refreshFeed);
-    socket.on("community:post-deleted", refreshFeed);
-
+    const refresh = () => refetch();
+    socket.on("community:post-created", refresh);
+    socket.on("community:post-updated", refresh);
+    socket.on("community:post-deleted", refresh);
     return () => {
-      socket.off("community:post-created", refreshFeed);
-      socket.off("community:post-updated", refreshFeed);
-      socket.off("community:post-deleted", refreshFeed);
+      socket.off("community:post-created", refresh);
+      socket.off("community:post-updated", refresh);
+      socket.off("community:post-deleted", refresh);
     };
   }, [refetch, user?.id]);
 
-  const signedInName = useMemo(
-    () => user?.fullName || user?.username || "Farmer",
-    [user],
-  );
+  const signedInName = useMemo(() => user?.fullName || user?.username || "Farmer", [user]);
 
   const posts = useMemo(() => data?.posts ?? [], [data?.posts]);
   const filteredPosts = useMemo(() => {
-    if (feedFilter === "all") {
-      return posts;
-    }
+    let list = posts;
+    if (feedFilter === "mine") list = list.filter((p) => p.authorId === user?.id);
+    else if (feedFilter === "others") list = list.filter((p) => p.authorId !== user?.id);
+    if (catFilter !== "all") list = list.filter((p) => p.category === catFilter);
+    return list;
+  }, [feedFilter, catFilter, posts, user?.id]);
 
-    if (!user) {
-      return feedFilter === "others" ? posts : [];
-    }
-
-    return posts.filter((post) =>
-      feedFilter === "mine" ? post.authorId === user.id : post.authorId !== user.id,
-    );
-  }, [feedFilter, posts, user]);
-  const isSubmittingPost = isUploadingImage || isCreatingPost;
-
-  const emptyState = useMemo(() => {
-    if (posts.length === 0) {
-      return {
-        title: "The board is empty.",
-        description: "Be the first to share an update or ask a question.",
-      };
-    }
-
-    if (feedFilter === "mine") {
-      return user
-        ? {
-            title: "You have not posted yet.",
-            description: "Create your first post to see it here.",
-          }
-        : {
-            title: "Sign in to view your posts.",
-            description: "Your own community posts will appear here after you sign in.",
-          };
-    }
-
-    if (feedFilter === "others") {
-      return {
-        title: "No posts from other members yet.",
-        description: "Check back later for updates from the community.",
-      };
-    }
-
-    return {
-      title: "No posts found.",
-      description: "Try a different filter or create a new post.",
-    };
-  }, [feedFilter, posts.length, user]);
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    setSelectedFile(file);
-    setPreviewUrl(URL.createObjectURL(file));
-  };
-
-  const clearImage = () => {
-    setSelectedFile(null);
-    setPreviewUrl("");
-  };
-
-  const handleCreatePost = async () => {
-    if (isSubmittingPost) return;
+  const handleCreatePost = async ({ description, imageUrl, category }: any) => {
     if (!user) return toast.error("Sign in to post.");
-    if (!description.trim() && !selectedFile) return toast.error("Add text or a photo.");
-
     try {
-      let imageUrl = "";
-      if (selectedFile) {
-        setIsUploadingImage(true);
-        imageUrl = await uploadImage(selectedFile, "/community-posts");
-        setIsUploadingImage(false);
-      }
-
-      await createPost({
-        authorId: user.id,
-        authorName: signedInName,
-        authorImage: user.imageUrl,
-        description: description.trim(),
-        imageUrl,
-        category: selectedCategory,
-      }).unwrap();
-
+      await createPost({ authorId: user.id, authorName: signedInName, authorImage: user.imageUrl, description, imageUrl, category }).unwrap();
       await refetch();
-      setDescription("");
-      setSelectedCategory("farm-query");
-      clearImage();
-      toast.success("Post published!");
-    } catch {
-      toast.error("Could not publish post.");
-    } finally {
-      setIsUploadingImage(false);
-    }
+      toast.success("Posted! 🌾");
+    } catch { toast.error("Could not publish post."); }
   };
 
-  const handleToggleLike = async (postId: string) => {
-    if (!user) return toast.error("Sign in to like posts.");
-    try {
-      await toggleLike({ postId, userId: user.id, username: signedInName }).unwrap();
-    } catch {
-      toast.error("Could not update like.");
-    }
+  const handleLike = async (postId: string) => {
+    if (!user) return toast.error("Sign in to like.");
+    try { await toggleLike({ postId, userId: user.id, username: signedInName }).unwrap(); }
+    catch { toast.error("Could not update like."); }
   };
 
-  const handleToggleSave = async (postId: string) => {
-    if (!user) return toast.error("Sign in to save posts.");
-    try {
-      await toggleSave({ postId, userId: user.id }).unwrap();
-    } catch {
-      toast.error("Could not save post.");
-    }
+  const handleSave = async (postId: string) => {
+    if (!user) return toast.error("Sign in to save.");
+    try { await toggleSave({ postId, userId: user.id }).unwrap(); }
+    catch { toast.error("Could not save."); }
   };
 
-  const handleReply = async (postId: string) => {
+  const handleReply = async (postId: string, message: string) => {
     if (!user) return toast.error("Sign in to reply.");
-    const message = replyDrafts[postId]?.trim();
-    if (!message) return toast.error("Write a reply first.");
-
+    if (!message.trim()) return;
     try {
-      await addReply({
-        postId,
-        userId: user.id,
-        username: signedInName,
-        userImage: user.imageUrl,
-        message,
-      }).unwrap();
-
-      setReplyDrafts((prev) => ({ ...prev, [postId]: "" }));
-      setActiveReplyId(null);
+      await addReply({ postId, userId: user.id, username: signedInName, userImage: user.imageUrl, message }).unwrap();
       toast.success("Reply added!");
-    } catch {
-      toast.error("Could not add reply.");
-    }
+    } catch { toast.error("Could not add reply."); }
   };
 
-  const handleStartPostEdit = (
-    postId: string,
-    currentDescription: string,
-    currentCategory: string,
-  ) => {
-    setEditingPostId(postId);
-    setPostEditDescription(currentDescription);
-    setPostEditCategory(currentCategory);
-  };
-
-  const handleUpdatePost = async (postId: string) => {
-    if (!user) return toast.error("Sign in to edit posts.");
-    if (!postEditDescription.trim()) return toast.error("Post text cannot be empty.");
-
+  const handleEditPost = async (postId: string, description: string, category: string) => {
+    if (!user) return;
     try {
-      await updatePost({
-        postId,
-        userId: user.id,
-        description: postEditDescription.trim(),
-        category: postEditCategory,
-      }).unwrap();
-
-      setEditingPostId(null);
+      await updatePost({ postId, userId: user.id, description, category }).unwrap();
       toast.success("Post updated!");
-    } catch {
-      toast.error("Could not update post.");
-    }
+    } catch { toast.error("Could not update post."); }
   };
 
-  const handleStartReplyEdit = (postId: string, replyId: string, message: string) => {
-    setActiveReplyId(postId);
-    setEditingReplyKey(`${postId}:${replyId}`);
-    setReplyEditMessage(message);
-  };
-
-  const handleUpdateReply = async (postId: string, replyId: string) => {
-    if (!user) return toast.error("Sign in to edit replies.");
-    if (!replyEditMessage.trim()) return toast.error("Reply cannot be empty.");
-
+  const handleEditReply = async (postId: string, replyId: string, message: string) => {
+    if (!user) return;
     try {
-      await updateReply({
-        postId,
-        replyId, 
-        userId: user.id,
-        message: replyEditMessage.trim(),
-      }).unwrap();
-
-      setEditingReplyKey(null);
-      setReplyEditMessage("");
+      await updateReply({ postId, replyId, userId: user.id, message }).unwrap();
       toast.success("Reply updated!");
-    } catch {
-      toast.error("Could not update reply.");
-    }
+    } catch { toast.error("Could not update reply."); }
   };
 
   const handleConfirmDelete = async () => {
     if (!user || !deleteTarget) return;
-
     try {
       if (deleteTarget.type === "post") {
         await deletePost({ postId: deleteTarget.postId, userId: user.id }).unwrap();
-        if (editingPostId === deleteTarget.postId) {
-          setEditingPostId(null);
-        }
         toast.success("Post deleted.");
       } else {
-        await deleteReply({
-          postId: deleteTarget.postId,
-          replyId: deleteTarget.replyId,
-          userId: user.id,
-        }).unwrap();
-        if (editingReplyKey === `${deleteTarget.postId}:${deleteTarget.replyId}`) {
-          setEditingReplyKey(null);
-          setReplyEditMessage("");
-        }
+        await deleteReply({ postId: deleteTarget.postId, replyId: deleteTarget.replyId, userId: user.id }).unwrap();
         toast.success("Reply deleted.");
       }
-
       setDeleteTarget(null);
-    } catch {
-      toast.error("Could not delete item.");
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' 
-    });
+    } catch { toast.error("Could not delete."); }
   };
 
   return (
-    <main className="min-h-screen bg-stone-100 py-6 px-4 sm:px-6">
-      <div className="mx-auto max-w-3xl space-y-8">
-        
-        {/* Header */}
-        <div className="flex items-center gap-3 bg-green-800 text-white p-6 rounded-2xl shadow-md">
-          <Tractor className="h-10 w-10 text-green-300" />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Community Board</h1>
-            <p className="text-green-100 font-medium mt-1">Connect, ask, and trade with local farmers & buyers.</p>
-          </div>
-        </div>
-
-        {/* Post Creation Box */}
-        <div className="bg-white rounded-2xl shadow-sm border-2 border-green-100 overflow-hidden">
-          <div className="p-5 sm:p-6 space-y-5">
-            <h2 className="text-lg font-bold text-gray-900">Create a New Post</h2>
-            
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${
-                    selectedCategory === cat.id
-                      ? "bg-green-700 text-white shadow-md ring-2 ring-green-700 ring-offset-1"
-                      : "bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your crop issue, list your produce for sale, or ask a question..."
-              className="min-h-[120px] text-lg p-4 bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
-            />
-
-            {previewUrl && (
-              <div className="relative rounded-xl overflow-hidden border-2 border-stone-200">
-                <Button 
-                  variant="destructive" 
-                  className="absolute top-3 right-3 h-10 w-10 rounded-full shadow-lg"
-                  onClick={clearImage}
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  width={800}
-                  height={600}
-                  className="w-full max-h-[400px] object-cover"
-                  unoptimized
-                />
+    <main className="min-h-screen bg-stone-50">
+      {/* ── Sticky Header ── */}
+      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div className="mx-auto max-w-2xl px-4">
+          {/* Title row */}
+          <div className="flex items-center gap-2 py-3">
+            <div className="flex items-center gap-2 flex-1">
+              <div className="h-8 w-8 bg-green-700 rounded-xl flex items-center justify-center shadow-sm">
+                <Sprout className="h-5 w-5 text-white" />
               </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <label className="flex-1 flex justify-center items-center gap-2 cursor-pointer bg-green-50 text-green-800 border-2 border-green-200 rounded-xl py-3 px-4 font-bold hover:bg-green-100 transition">
-                <Camera className="h-6 w-6" />
-                <span>Upload Photo</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                  disabled={isSubmittingPost}
-                />
-              </label>
-              <Button
-                onClick={handleCreatePost}
-                disabled={isSubmittingPost}
-                className="flex-1 bg-green-700 hover:bg-green-800 text-white rounded-xl py-6 text-lg font-bold shadow-md"
-              >
-                {isSubmittingPost ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : "Publish Post"}
-              </Button>
+              <span className="font-black text-[17px] text-stone-900 tracking-tight">Community</span>
             </div>
-          </div>
-        </div>
-
-        {/* Feed */}
-        <div className="space-y-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-3 sm:p-4">
-            <div className="flex flex-wrap gap-2">
-              {[
-                { id: "all" as const, label: "All Posts" },
-                { id: "mine" as const, label: "My Posts" },
-                { id: "others" as const, label: "Other Posts" },
-              ].map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setFeedFilter(option.id)}
-                  className={`px-4 py-2 rounded-lg font-bold text-sm transition-all ${
-                    feedFilter === option.id
-                      ? "bg-green-700 text-white shadow-md ring-2 ring-green-700 ring-offset-1"
-                      : "bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200"
-                  }`}
+            {/* Feed filter pills */}
+            <div className="flex gap-1">
+              {feedFilters.map((f) => (
+                <button key={f.id} onClick={() => setFeedFilter(f.id as any)}
+                  className={cn(
+                    "text-xs font-bold px-3 py-1.5 rounded-full transition-all",
+                    feedFilter === f.id ? "bg-green-700 text-white shadow-sm" : "text-stone-500 hover:bg-stone-100"
+                  )}
                 >
-                  {option.label}
+                  {f.label}
                 </button>
               ))}
             </div>
           </div>
 
-          {isLoading ? (
-            <div className="text-center py-12">
-              <Loader2 className="h-10 w-10 animate-spin text-green-700 mx-auto" />
-              <p className="mt-4 text-stone-500 font-medium">Loading board...</p>
-            </div>
-          ) : filteredPosts.length === 0 ? (
-            <div className="text-center bg-white p-12 rounded-2xl border-2 border-dashed border-stone-300">
-              <p className="text-xl font-bold text-stone-700">{emptyState.title}</p>
-              <p className="text-stone-500 mt-2">{emptyState.description}</p>
-            </div>
-          ) : (
-            filteredPosts.map((post) => {
-              const likedByUser = user ? post.likes.includes(user.id) : false;
-              const savedByUser = user ? post.saves.includes(user.id) : false;
-              const canManagePost = user?.id === post.authorId;
-              const isEditingPost = editingPostId === post._id;
-              const catLabel = categories.find(c => c.id === post.category)?.label || post.category;
-
-              return (
-                <article key={post._id} className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-                  
-                  {/* Post Header */}
-                  <div className="p-5 flex gap-4 items-center bg-stone-50/50">
-                    <Avatar className="h-14 w-14 border-2 border-green-200">
-                      <AvatarImage src={post.authorImage} />
-                      <AvatarFallback className="bg-green-100 text-green-800 font-bold text-xl">
-                        {post.authorName.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900">{post.authorName}</h3>
-                      <p className="text-sm text-gray-500 font-medium">{formatDate(post.createdAt)}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-green-100 text-green-800 hover:bg-green-200 text-sm px-3 py-1 font-bold border-0">
-                        {catLabel}
-                      </Badge>
-                      {canManagePost && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-10 w-10 rounded-full text-stone-500 hover:bg-stone-200"
-                            >
-                              <MoreHorizontal className="h-5 w-5" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem onClick={() => handleStartPostEdit(post._id, post.description, post.category)}>
-                              <Pencil className="mr-2 h-4 w-4" />
-                              Edit post
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setDeleteTarget({ type: "post", postId: post._id })}
-                              className="text-red-600 focus:text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete post
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Image (Edge to Edge) */}
-                  {post.imageUrl && (
-                    <div className="bg-stone-100 border-y border-stone-100">
-                      <Image
-                        src={post.imageUrl}
-                        alt="Post attachment"
-                        width={800}
-                        height={600}
-                        className="w-full h-auto max-h-[500px] object-cover"
-                        unoptimized
-                      />
-                    </div>
-                  )}
-
-                  {/* Body Text */}
-                  <div className="p-6">
-                    {isEditingPost ? (
-                      <div className="space-y-4">
-                        <div className="flex flex-wrap gap-2">
-                          {categories.map((cat) => (
-                            <button
-                              key={cat.id}
-                              onClick={() => setPostEditCategory(cat.id)}
-                              className={`px-3 py-2 rounded-lg font-bold text-sm transition-all ${
-                                postEditCategory === cat.id
-                                  ? "bg-green-700 text-white"
-                                  : "bg-stone-100 text-stone-600 border border-stone-200"
-                              }`}
-                            >
-                              {cat.label}
-                            </button>
-                          ))}
-                        </div>
-                        <Textarea
-                          value={postEditDescription}
-                          onChange={(e) => setPostEditDescription(e.target.value)}
-                          className="min-h-[120px] bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
-                        />
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            onClick={() => setEditingPostId(null)}
-                            disabled={isUpdatingPost}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={() => handleUpdatePost(post._id)}
-                            disabled={isUpdatingPost || !postEditDescription.trim()}
-                            className="bg-green-700 hover:bg-green-800 text-white"
-                          >
-                            {isUpdatingPost ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save changes"}
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap">
-                        {post.description}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Action Bar */}
-                  <div className="px-4 py-3 border-t border-stone-100 flex gap-2">
-                    <Button
-                      variant={likedByUser ? "default" : "outline"}
-                      onClick={() => handleToggleLike(post._id)}
-                      className={`flex-1 rounded-xl font-bold py-6 ${likedByUser ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100' : 'text-gray-600 hover:bg-gray-50 border-gray-200'}`}
-                    >
-                      <Heart className={`mr-2 h-5 w-5 ${likedByUser ? "fill-current" : ""}`} />
-                      {post.likes.length} Helpful
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      onClick={() => setActiveReplyId(activeReplyId === post._id ? null : post._id)}
-                      className="flex-1 rounded-xl font-bold py-6 text-gray-600 hover:bg-gray-50 border-gray-200"
-                    >
-                      <MessageSquare className="mr-2 h-5 w-5" />
-                      {post.replies.length} Replies
-                    </Button>
-
-                    <Button
-                      variant={savedByUser ? "default" : "outline"}
-                      onClick={() => handleToggleSave(post._id)}
-                      className={`flex-none w-16 rounded-xl ${savedByUser ? 'bg-amber-50 text-amber-700 border-amber-200' : 'text-gray-600 border-gray-200'}`}
-                    >
-                      <Bookmark className={`h-5 w-5 ${savedByUser ? "fill-current" : ""}`} />
-                    </Button>
-                  </div>
-
-                  {/* Replies Area */}
-                  {(post.replies.length > 0 || activeReplyId === post._id) && (
-                    <div className="bg-stone-50 border-t border-stone-200 p-5 space-y-5">
-                      {/* List Replies */}
-                      {post.replies.map((reply) => (
-                        <div key={reply._id} className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
-                          <div className="flex justify-between items-start mb-2">
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-gray-900">{reply.username}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-500 font-medium">{formatDate(reply.createdAt)}</span>
-                              {user?.id === reply.userId && (
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 rounded-full text-stone-500 hover:bg-stone-100"
-                                    >
-                                      <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-40">
-                                    <DropdownMenuItem onClick={() => handleStartReplyEdit(post._id, reply._id, reply.message)}>
-                                      <Pencil className="mr-2 h-4 w-4" />
-                                      Edit reply
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => setDeleteTarget({ type: "reply", postId: post._id, replyId: reply._id })}
-                                      className="text-red-600 focus:text-red-600"
-                                    >
-                                      <Trash2 className="mr-2 h-4 w-4" />
-                                      Delete reply
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              )}
-                            </div>
-                          </div>
-                          {editingReplyKey === `${post._id}:${reply._id}` ? (
-                            <div className="space-y-3">
-                              <Textarea
-                                value={replyEditMessage}
-                                onChange={(e) => setReplyEditMessage(e.target.value)}
-                                className="min-h-[90px] bg-stone-50 border-stone-300 rounded-xl focus-visible:ring-green-600"
-                              />
-                              <div className="flex justify-end gap-2">
-                                <Button
-                                  variant="ghost"
-                                  onClick={() => {
-                                    setEditingReplyKey(null);
-                                    setReplyEditMessage("");
-                                  }}
-                                  disabled={isUpdatingReply}
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  onClick={() => handleUpdateReply(post._id, reply._id)}
-                                  disabled={isUpdatingReply || !replyEditMessage.trim()}
-                                  className="bg-green-700 hover:bg-green-800 text-white"
-                                >
-                                  {isUpdatingReply ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save reply"}
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-gray-700 whitespace-pre-wrap">{reply.message}</p>
-                          )}
-                        </div>
-                      ))}
-
-                      {/* Reply Input Box */}
-                      {activeReplyId === post._id && (
-                        <div className="flex flex-col gap-3 pt-2">
-                          <Textarea
-                            value={replyDrafts[post._id] ?? ""}
-                            onChange={(e) => setReplyDrafts(prev => ({ ...prev, [post._id]: e.target.value }))}
-                            placeholder="Write your advice or answer here..."
-                            className="min-h-[80px] bg-white border-stone-300 rounded-xl focus-visible:ring-green-600 p-3"
-                          />
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" onClick={() => setActiveReplyId(null)} className="font-bold">
-                              Cancel
-                            </Button>
-                            <Button 
-                              onClick={() => handleReply(post._id)}
-                              disabled={isReplying || !replyDrafts[post._id]?.trim()}
-                              className="bg-green-700 hover:bg-green-800 text-white font-bold rounded-xl px-6"
-                            >
-                              {isReplying ? <Loader2 className="h-4 w-4 animate-spin" /> : "Post Reply"}
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </article>
-              );
-            })
-          )}
+          {/* Category scroll */}
+          <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
+            {categories.map((cat) => (
+              <button key={cat.id} onClick={() => setCatFilter(cat.id)}
+                className={cn(
+                  "shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all",
+                  catFilter === cat.id ? cat.color + " shadow-sm scale-105" : "bg-white text-stone-500 border-stone-200 hover:bg-stone-50"
+                )}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
+      </header>
+
+      {/* ── Feed ── */}
+      <div className="mx-auto max-w-2xl px-4 py-5 space-y-4">
+        {/* Compose */}
+        <ComposeBox user={user} onPost={handleCreatePost} isSubmitting={isCreatingPost} />
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px bg-stone-200" />
+          <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest">Feed</span>
+          <div className="flex-1 h-px bg-stone-200" />
+        </div>
+
+        {/* Posts */}
+        {isLoading ? (
+          <div className="flex flex-col items-center py-16 gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+            <p className="text-sm text-stone-500 font-medium">Loading community…</p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-stone-200">
+            <Sprout className="h-10 w-10 text-stone-300 mx-auto mb-3" />
+            <p className="font-bold text-stone-600 text-base">Nothing here yet</p>
+            <p className="text-stone-400 text-sm mt-1">Be the first to post in this category!</p>
+          </div>
+        ) : (
+          filteredPosts.map((post) => (
+            <PostCard
+              key={post._id}
+              post={post}
+              userId={user?.id}
+              username={signedInName}
+              userImage={user?.imageUrl}
+              onLike={handleLike}
+              onSave={handleSave}
+              onReply={handleReply}
+              onEditPost={handleEditPost}
+              onDeletePost={(postId: string) => setDeleteTarget({ type: "post", postId })}
+              onEditReply={handleEditReply}
+              onDeleteReply={(postId: string, replyId: string) => setDeleteTarget({ type: "reply", postId, replyId })}
+            />
+          ))
+        )}
       </div>
+
+      {/* ── Delete confirmation ── */}
       <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <AlertDialogContent size="sm">
+        <AlertDialogContent className="rounded-2xl max-w-sm mx-4">
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {deleteTarget?.type === "post" ? "Delete post?" : "Delete reply?"}
+            <AlertDialogTitle className="text-base">
+              {deleteTarget?.type === "post" ? "Delete this post?" : "Delete this reply?"}
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              {deleteTarget?.type === "post"
-                ? "This will permanently remove your post from the community board."
-                : "This will permanently remove your reply from the discussion."}
+            <AlertDialogDescription className="text-sm text-stone-500">
+              This is permanent and cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel variant="outline" disabled={isDeletingPost || isDeletingReply}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              onClick={handleConfirmDelete}
-              disabled={isDeletingPost || isDeletingReply}
-            >
-              {isDeletingPost || isDeletingReply ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                "Delete"
-              )}
+            <AlertDialogCancel className="rounded-full" disabled={isDeletingPost || isDeletingReply}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} disabled={isDeletingPost || isDeletingReply}
+              className="rounded-full bg-red-600 hover:bg-red-700 text-white">
+              {isDeletingPost || isDeletingReply ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
