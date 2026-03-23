@@ -7,32 +7,27 @@
   "copyOrderId": "ऑर्डर आयडी कॉपी करा",
   "copied": "✓ कॉपी झाले!",
   "orderStatusLabel": "ऑर्डर स्थिती",
-
   "metrics": {
     "orderDate": "ऑर्डर तारीख",
     "items": "आयटम",
     "payment": "पेमेंट",
     "totalAmount": "एकूण रक्कम"
   },
-
   "payment": {
     "paid": "देण्यात आले",
     "pending": "प्रलंबित",
     "verifiedTitle": "✓ पेमेंट सत्यापित",
     "verifiedMessage": "पेमेंट पुष्टी झाली आहे. तुमचा ऑर्डर प्रक्रिया मध्ये आहे."
   },
-
   "orderInfo": {
     "title": "ऑर्डर माहिती",
     "paymentMethod": "पेमेंट पद्धत",
     "deliveryMethod": "डिलिव्हरी पद्धत",
     "totalLabel": "ऑर्डर एकूण"
   },
-
   "orderItems": {
     "title": "ऑर्डर आयटम"
   },
-
   "deliveryProgress": {
     "title": "डिलिव्हरी प्रगती"
   },
@@ -41,11 +36,9 @@
     "outForDelivery": "डिलिव्हरीसाठी बाहेर",
     "delivered": "डिलिव्हर केले"
   },
-
   "pickupProgress": {
     "title": "पिकअप प्रगती"
   },
-
   "currentStatusLabel": "सध्याची स्थिती",
   "pickup": {
     "cancelledTitle": "ऑर्डर रद्द केले",
@@ -60,13 +53,11 @@
     "locationTitle": "📍 पिकअप स्थान तपशील",
     "locationMessage": "कृपया पिकअप वेळेसाठी शेतकऱ्याशी समन्वय करा. शेतकऱ्याच्या पुष्टी नंतर आयटम तयार होतील."
   },
-
   "farmerInfo": {
     "title": "शेतकरी माहिती",
     "name": "शेतकऱ्याचे नाव",
     "location": "शेतकऱ्याचे ठिकाण"
   },
-
   "actions": {
     "contact": "संपर्क करा",
     "share": "शेअर करा",
@@ -75,19 +66,16 @@
     "confirmPickup": "पिकअप पुष्टी करा",
     "proceedPayment": "पैसे भरा"
   },
-
   "delivery": {
     "pickupByYou": "तुम्ही पिकअप",
     "deliveredByFarmer": "शेतकरी द्वारे डिलिव्हर"
   },
-
   "cancelled": {
     "banner": "हा ऑर्डर रद्द केला गेला आहे"
   },
   "completed": {
     "banner": "ऑर्डर यशस्वीरित्या पूर्ण झाला ✅"
   },
-
   "toasts": {
     "loadFailed": "ऑर्डर तपशील लोड करण्यात अयशस्वी",
     "statusChanged": "ऑर्डर {status} यशस्वीरित्या",
@@ -98,7 +86,6 @@
     "confirmPickupFailed": "पिकअप पुष्टी करण्यात अयशस्वी",
     "comingSoon": "लवकर येत आहे"
   },
-
   "notifications": {
     "farmerTitle": "खरेदीदाराने ऑर्डर {status}",
     "farmerMessage": "खरेदीदार {buyerName} ने ऑर्डर {status}",
@@ -107,7 +94,6 @@
     "pickupTitle": "ऑर्डर उचलले गेले",
     "pickupMessage": "खरेदीदार {buyerName} ने ऑर्डर उचला"
   },
-
   "notFound": {
     "title": "ऑर्डर सापडले नाही",
     "message": "आम्ही तो ऑर्डर शोधू शकले नाही जो तुम्ही शोधत आहात. कृपया ऑर्डर आयडी तपासा आणि पुन्हा प्रयत्न करा."

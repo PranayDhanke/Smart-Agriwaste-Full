@@ -2,6 +2,7 @@
 
 import { SignIn, useUser } from "@clerk/nextjs";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,7 @@ import { useBootstrapAdminMutation } from "@/redux/api/adminApi";
 
 export default function AdminSignInPage() {
   const router = useRouter();
+  const t = useTranslations("admin.signIn");
   const { isLoaded, isSignedIn, user } = useUser();
   const [bootstrapAdmin, { isLoading }] = useBootstrapAdminMutation();
 
@@ -24,7 +26,7 @@ export default function AdminSignInPage() {
     try {
       await bootstrapAdmin().unwrap();
       await user?.reload();
-      toast.success("Admin access enabled");
+      toast.success(t("toast.accessEnabled"));
       router.replace("/profile/admin");
     } catch (error: unknown) {
       const message =
@@ -36,7 +38,7 @@ export default function AdminSignInPage() {
         "message" in error.data &&
         typeof error.data.message === "string"
           ? error.data.message
-          : "Unable to enable admin access";
+          : t("toast.unableToEnable");
 
       toast.error(message);
     }
@@ -45,7 +47,7 @@ export default function AdminSignInPage() {
   if (!isLoaded) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        Loading...
+        {t("loading")}
       </div>
     );
   }
@@ -56,11 +58,10 @@ export default function AdminSignInPage() {
         <div className="w-full max-w-md rounded-3xl border border-green-200 bg-white/90 p-4 shadow-xl">
           <div className="mb-4 text-center">
             <h1 className="text-2xl font-semibold text-slate-900">
-              Admin Login
+              {t("signedOut.title")}
             </h1>
             <p className="mt-2 text-sm text-slate-600">
-              Sign in with an approved account to unlock the admin control
-              panel.
+              {t("signedOut.description")}
             </p>
           </div>
           <SignIn signUpUrl="/selectSignUp" forceRedirectUrl="/admin/sign-in" />
@@ -74,18 +75,15 @@ export default function AdminSignInPage() {
       <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(135deg,#f7fdf8_0%,#eaf8ee_100%)] px-4">
         <Card className="w-full max-w-lg border-green-100">
           <CardHeader>
-            <CardTitle>Admin access active</CardTitle>
-            <CardDescription>
-              Your account already has admin privileges. Open the panel to
-              manage the application.
-            </CardDescription>
+            <CardTitle>{t("active.title")}</CardTitle>
+            <CardDescription>{t("active.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex gap-3">
             <Button onClick={() => router.push("/profile/admin")}>
-              Open Admin Panel
+              {t("active.openPanel")}
             </Button>
             <Button variant="outline" onClick={() => router.push("/")}>
-              Back Home
+              {t("active.backHome")}
             </Button>
           </CardContent>
         </Card>
@@ -97,25 +95,22 @@ export default function AdminSignInPage() {
     <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(135deg,#f7fdf8_0%,#eaf8ee_100%)] px-4">
       <Card className="w-full max-w-lg border-green-100">
         <CardHeader>
-          <CardTitle>Enable admin privileges</CardTitle>
-          <CardDescription>
-            If this email is included in the server allowlist, you can
-            bootstrap admin access here and open the moderation dashboard.
-          </CardDescription>
+          <CardTitle>{t("enable.title")}</CardTitle>
+          <CardDescription>{t("enable.description")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            Signed in as{" "}
+            {t("enable.signedInAs")}{" "}
             <span className="font-medium text-slate-900">
               {user.primaryEmailAddress?.emailAddress}
             </span>
           </div>
           <div className="flex gap-3">
             <Button onClick={enableAdminAccess} disabled={isLoading}>
-              {isLoading ? "Enabling..." : "Enable Admin Access"}
+              {isLoading ? t("enable.buttonLoading") : t("enable.button")}
             </Button>
             <Button variant="outline" onClick={() => router.push("/")}>
-              Cancel
+              {t("enable.cancel")}
             </Button>
           </div>
         </CardContent>

@@ -5,7 +5,6 @@
     "phone": "+91 123 456 7890",
     "location": "भारत"
   },
-
   "sections": {
     "quickLinks": "द्रुत दुवे",
     "getStarted": "सुरुवात करा",
@@ -14,7 +13,6 @@
     "legal": "कायदेशीर",
     "followUs": "आम्हाला फॉलो करा"
   },
-
   "links": {
     "home": "मुख्यपृष्ठ",
     "marketplace": "बाजारपेठ",
@@ -24,32 +22,27 @@
     "help": "मदत आणि समर्थन",
     "contact": "संपर्क करा"
   },
-
   "auth": {
     "joinFarmer": "शेतकरी म्हणून सामील व्हा",
     "joinBuyer": "खरेदीदार म्हणून सामील व्हा",
     "signIn": "लॉगिन"
   },
-
   "farmer": {
     "listWaste": "तुमचा कचरा नोंदवा",
     "myListings": "माझ्या जाहिराती",
     "myOrders": "माझे ऑर्डर",
     "analytics": "विश्लेषण"
   },
-
   "buyer": {
     "browse": "बाजारपेठ पहा",
     "myPurchases": "माझी खरेदी",
     "profile": "माझे प्रोफाइल"
   },
-
   "legal": {
     "privacy": "गोपनीयता धोरण",
     "terms": "सेवेच्या अटी",
     "refund": "परतावा धोरण"
   },
-
   "bottom": {
     "rights": "सर्व हक्क राखीव.",
     "madeWith": "प्रेमाने तयार केले",

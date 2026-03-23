@@ -1,42 +1,61 @@
 import LegalPage from "@/components/page/legal/LegalPage";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 
-const sections = [
-  {
-    heading: "Information We Collect",
-    body: [
-      "We may collect the details you provide while using Smart Agriwaste, including your name, contact information, account details, location, and information related to waste listings, orders, or negotiations.",
-      "We may also collect technical information such as device type, browser details, log data, and usage activity to keep the platform secure and improve performance.",
-    ],
-  },
-  {
-    heading: "How We Use Information",
-    body: [
-      "We use your information to create and manage accounts, connect farmers and buyers, process activity on the platform, provide support, and communicate important service updates.",
-      "Information may also be used for analytics, fraud prevention, legal compliance, and improving product features that help agricultural waste management workflows.",
-    ],
-  },
-  {
-    heading: "Sharing of Information",
-    body: [
-      "We may share limited information with service providers, technical partners, or other users when it is necessary to operate core features such as authentication, communication, delivery coordination, or payments.",
-      "We do not sell your personal information. We may disclose data when required by law, to protect users, or to enforce our platform policies.",
-    ],
-  },
-  {
-    heading: "Your Choices and Data Security",
-    body: [
-      "You can review or update certain profile details from your account. If you want us to delete your account data or have a privacy concern, please contact the platform support team.",
-      "We use reasonable safeguards to protect stored data, but no online system can guarantee absolute security. You should also keep your login credentials secure.",
-    ],
-  },
-];
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
-export default function PrivacyPage() {
+export default async function PrivacyPage({ params }: Props) {
+  const { locale: requestedLocale } = await params;
+  const locale = hasLocale(routing.locales, requestedLocale)
+    ? requestedLocale
+    : routing.defaultLocale;
+  const messagesByLocale = {
+    en: (await import("@/messages/legal/en.json")).default,
+    hi: (await import("@/messages/legal/hi.json")).default,
+    mr: (await import("@/messages/legal/mr.json")).default,
+  };
+  const messages = messagesByLocale[locale];
+
+  const sections = [
+    {
+      heading: messages.privacy.sections.informationCollected.heading,
+      body: [
+        messages.privacy.sections.informationCollected.body1,
+        messages.privacy.sections.informationCollected.body2,
+      ],
+    },
+    {
+      heading: messages.privacy.sections.howWeUseInformation.heading,
+      body: [
+        messages.privacy.sections.howWeUseInformation.body1,
+        messages.privacy.sections.howWeUseInformation.body2,
+      ],
+    },
+    {
+      heading: messages.privacy.sections.sharing.heading,
+      body: [
+        messages.privacy.sections.sharing.body1,
+        messages.privacy.sections.sharing.body2,
+      ],
+    },
+    {
+      heading: messages.privacy.sections.choicesAndSecurity.heading,
+      body: [
+        messages.privacy.sections.choicesAndSecurity.body1,
+        messages.privacy.sections.choicesAndSecurity.body2,
+      ],
+    },
+  ];
+
   return (
     <LegalPage
-      title="Privacy Policy"
-      description="This Privacy Policy explains how Smart Agriwaste collects, uses, and protects information when you use the platform."
-      lastUpdated="March 21, 2026"
+      legalLabel={messages.common.badge}
+      lastUpdatedLabel={messages.common.lastUpdated}
+      title={messages.privacy.title}
+      description={messages.privacy.description}
+      lastUpdated={messages.privacy.lastUpdated}
       sections={sections}
     />
   );

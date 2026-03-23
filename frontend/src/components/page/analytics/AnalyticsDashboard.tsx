@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import type { ReactNode } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +46,7 @@ const COLORS = {
 export default function AnalyticsDashboard({ role }: { role: Role }) {
   const { user } = useUser();
   const locale = useLocale() as Locale;
+  const t = useTranslations("analytics");
 
   const farmerOrderResult = useGetOrdersByFarmerQuery(
     user?.id && role === "farmer" ? { farmerId: user.id, limit: 50 } : skipToken,
@@ -98,33 +99,36 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
     .slice(0, 5);
 
   const loading = orderResult.isLoading || negotiationResult.isLoading;
-  const heading = role === "farmer" ? "Farmer Analytics" : "Buyer Analytics";
-  const valueLabel = role === "farmer" ? "Revenue tracked" : "Purchases tracked";
+  const heading = role === "farmer" ? t("headingFarmer") : t("headingBuyer");
+  const valueLabel =
+    role === "farmer"
+      ? t("valueLabels.revenueTracked")
+      : t("valueLabels.purchasesTracked");
 
   // --- CHART DATA PREPARATION ---
   
   const negotiationChartData = useMemo(() => [
-    { status: "Pending", count: negotiationStats?.pending ?? 0, fill: COLORS.pending },
-    { status: "Accepted", count: negotiationStats?.accepted ?? 0, fill: COLORS.accepted },
-    { status: "Rejected", count: negotiationStats?.rejected ?? 0, fill: COLORS.rejected },
-  ], [negotiationStats]);
+    { status: t("status.pending"), count: negotiationStats?.pending ?? 0, fill: COLORS.pending },
+    { status: t("status.accepted"), count: negotiationStats?.accepted ?? 0, fill: COLORS.accepted },
+    { status: t("status.rejected"), count: negotiationStats?.rejected ?? 0, fill: COLORS.rejected },
+  ], [negotiationStats, t]);
 
   const orderChartData = useMemo(() => [
-    { status: "Pending", count: metrics.pendingOrders, fill: COLORS.pending },
-    { status: "Confirmed", count: metrics.confirmedOrders, fill: COLORS.accepted },
-    { status: "Cancelled", count: metrics.cancelledOrders, fill: COLORS.rejected },
-    { status: "Delivered", count: metrics.deliveredOrders, fill: COLORS.delivered },
-  ], [metrics]);
+    { status: t("status.pending"), count: metrics.pendingOrders, fill: COLORS.pending },
+    { status: t("status.confirmed"), count: metrics.confirmedOrders, fill: COLORS.accepted },
+    { status: t("status.cancelled"), count: metrics.cancelledOrders, fill: COLORS.rejected },
+    { status: t("status.delivered"), count: metrics.deliveredOrders, fill: COLORS.delivered },
+  ], [metrics, t]);
 
   const negotiationChartConfig = {
-    count: { label: "Count" },
-    Pending: { label: "Pending", color: COLORS.pending },
-    Accepted: { label: "Accepted", color: COLORS.accepted },
-    Rejected: { label: "Rejected", color: COLORS.rejected },
+    count: { label: t("chartUnits.count") },
+    [t("status.pending")]: { label: t("status.pending"), color: COLORS.pending },
+    [t("status.accepted")]: { label: t("status.accepted"), color: COLORS.accepted },
+    [t("status.rejected")]: { label: t("status.rejected"), color: COLORS.rejected },
   } satisfies ChartConfig;
 
   const orderChartConfig = {
-    count: { label: "Orders" },
+    count: { label: t("chartUnits.orders") },
   } satisfies ChartConfig;
 
   return (
@@ -134,17 +138,17 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
         <section className="rounded-3xl border border-emerald-100 bg-white/80 backdrop-blur-md p-8 shadow-sm">
           <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 text-sm">{heading}</Badge>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Overview & Performance
+            {t("overviewTitle")}
           </h1>
           <p className="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
-            Track active negotiations, monitor your order pipeline, and analyze the total value flowing through your account.
+            {t("overviewDescription")}
           </p>
         </section>
 
         {loading ? (
           <Card className="flex items-center justify-center min-h-[400px]">
             <CardContent className="text-slate-500 animate-pulse font-medium text-lg">
-              Loading your analytics...
+              {t("loading")}
             </CardContent>
           </Card>
         ) : (
@@ -152,27 +156,27 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
             {/* Metrics Grid */}
             <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <MetricCard
-                title="Total negotiations"
+                title={t("metrics.totalNegotiations")}
                 value={negotiationStats?.total ?? 0}
-                note={`${negotiationStats?.pending ?? 0} pending now`}
+                note={t("metrics.pendingNow", { count: negotiationStats?.pending ?? 0 })}
                 icon={<Handshake className="h-6 w-6 text-emerald-600" />}
               />
               <MetricCard
-                title="Total orders"
+                title={t("metrics.totalOrders")}
                 value={metrics.totalOrders}
-                note={`${metrics.confirmedOrders} confirmed`}
+                note={t("metrics.confirmedCount", { count: metrics.confirmedOrders })}
                 icon={<Package className="h-6 w-6 text-sky-600" />}
               />
               <MetricCard
                 title={valueLabel}
                 value={formatMoney(metrics.totalOrderValue)}
-                note={`Avg. ${formatMoney(metrics.averageOrderValue)}`}
+                note={t("metrics.average", { value: formatMoney(metrics.averageOrderValue) })}
                 icon={<IndianRupee className="h-6 w-6 text-amber-600" />}
               />
               <MetricCard
-                title="Delivered orders"
+                title={t("metrics.deliveredOrders")}
                 value={metrics.deliveredOrders}
-                note={`${metrics.outForDelivery} out for delivery`}
+                note={t("metrics.outForDelivery", { count: metrics.outForDelivery })}
                 icon={<Truck className="h-6 w-6 text-violet-600" />}
               />
             </section>
@@ -185,9 +189,9 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Handshake className="h-5 w-5 text-slate-700" />
-                    Negotiation Breakdown
+                    {t("charts.negotiationBreakdown")}
                   </CardTitle>
-                  <CardDescription>Current status of all tracked negotiations</CardDescription>
+                  <CardDescription>{t("charts.negotiationDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 pb-0">
                   <ChartContainer config={negotiationChartConfig} className="mx-auto aspect-square max-h-[300px]">
@@ -209,7 +213,7 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                                     {negotiationStats?.total ?? 0}
                                   </tspan>
                                   <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-slate-500 text-sm">
-                                    Total
+                                    {t("charts.total")}
                                   </tspan>
                                 </text>
                               )
@@ -228,9 +232,9 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5 text-slate-700" />
-                    Order Pipeline
+                    {t("charts.orderPipeline")}
                   </CardTitle>
-                  <CardDescription>Quantity of orders across different stages</CardDescription>
+                  <CardDescription>{t("charts.orderDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ChartContainer config={orderChartConfig} className="aspect-auto h-[300px] w-full">
@@ -265,13 +269,13 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
             <section className="grid gap-6 lg:grid-cols-2">
               <Card className="shadow-sm">
                 <CardHeader>
-                  <CardTitle>Recent Negotiations</CardTitle>
-                  <CardDescription>Your latest offers and counter-offers.</CardDescription>
+                  <CardTitle>{t("recent.negotiationsTitle")}</CardTitle>
+                  <CardDescription>{t("recent.negotiationsDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentNegotiations.length === 0 ? (
                     <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
-                      No active negotiations to show.
+                      {t("recent.noNegotiations")}
                     </div>
                   ) : (
                     recentNegotiations.map((negotiation) => (
@@ -279,11 +283,11 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
                         <div>
                           <p className="font-semibold text-slate-900">{negotiation.item.title[locale]}</p>
                           <p className="mt-1 text-sm font-medium text-emerald-600">
-                            Offer: {formatMoney(negotiation.negotiatedPrice)}
+                            {t("recent.offer", { value: formatMoney(negotiation.negotiatedPrice) })}
                           </p>
                         </div>
                         <Badge variant="outline" className={`capitalize ${negotiation.status === 'accepted' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : negotiation.status === 'rejected' ? 'border-rose-200 bg-rose-50 text-rose-700' : 'bg-white'}`}>
-                          {negotiation.status}
+                          {t(`status.${negotiation.status}`)}
                         </Badge>
                       </div>
                     ))
@@ -293,25 +297,25 @@ export default function AnalyticsDashboard({ role }: { role: Role }) {
 
               <Card className="shadow-sm">
                 <CardHeader>
-                  <CardTitle>Recent Orders</CardTitle>
-                  <CardDescription>The latest transactions processed.</CardDescription>
+                  <CardTitle>{t("recent.ordersTitle")}</CardTitle>
+                  <CardDescription>{t("recent.ordersDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {recentOrders.length === 0 ? (
                     <div className="rounded-xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
-                      No recent orders to show.
+                      {t("recent.noOrders")}
                     </div>
                   ) : (
                     recentOrders.map((order) => (
                       <div key={order._id} className="group flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 p-4 transition-colors">
                         <div>
-                          <p className="font-semibold text-slate-900">{order.items[0]?.title?.[locale] || "Marketplace Order"}</p>
+                          <p className="font-semibold text-slate-900">{order.items[0]?.title?.[locale] || t("recent.marketplaceOrder")}</p>
                           <p className="mt-1 text-sm font-medium text-slate-600">
-                            Total: {formatMoney(order.totalAmount)}
+                            {t("recent.total", { value: formatMoney(order.totalAmount) })}
                           </p>
                         </div>
                         <Badge variant="secondary" className="capitalize">
-                          {order.status}
+                          {t(`status.${order.status}`)}
                         </Badge>
                       </div>
                     ))

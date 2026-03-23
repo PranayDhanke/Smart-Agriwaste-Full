@@ -10,7 +10,6 @@
   "offlinePlaceholder": "ऑफ़लाइन होने पर भेजा नहीं जा सकता",
   "signInToChat": "चैट के लिए साइन इन करें",
   "sendAria": "संदेश भेजें",
-
   "errors": {
     "disconnected": "चैट से कनेक्शन अलग हो गया।",
     "historyFailed": "चैट इतिहास लोड करने में विफल।",

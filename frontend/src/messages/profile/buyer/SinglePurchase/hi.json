@@ -7,32 +7,27 @@
   "copyOrderId": "ऑर्डर आईडी कॉपी करें",
   "copied": "✓ कॉपी हो गया!",
   "orderStatusLabel": "ऑर्डर स्टेटस",
-
   "metrics": {
     "orderDate": "ऑर्डर तिथि",
     "items": "आइटम",
     "payment": "भुगतान",
     "totalAmount": "कुल राशि"
   },
-
   "payment": {
     "paid": "भुगतान किया गया",
     "pending": "लंबित",
     "verifiedTitle": "✓ भुगतान सत्यापित",
     "verifiedMessage": "भुगतान की पुष्टि हो गई है। आपका ऑर्डर संसाधित हो रहा है।"
   },
-
   "orderInfo": {
     "title": "ऑर्डर जानकारी",
     "paymentMethod": "भुगतान विधि",
     "deliveryMethod": "डिलीवरी विधि",
     "totalLabel": "ऑर्डर कुल"
   },
-
   "orderItems": {
     "title": "ऑर्डर आइटम"
   },
-
   "deliveryProgress": {
     "title": "डिलीवरी प्रगति"
   },
@@ -41,11 +36,9 @@
     "outForDelivery": "डिलीवरी के लिए बाहर",
     "delivered": "डिलीवर किया गया"
   },
-
   "pickupProgress": {
     "title": "पिकअप प्रगति"
   },
-
   "currentStatusLabel": "वर्तमान स्थिति",
   "pickup": {
     "cancelledTitle": "ऑर्डर रद्द किया गया",
@@ -60,13 +53,11 @@
     "locationTitle": "📍 पिकअप स्थान विवरण",
     "locationMessage": "कृपया पिकअप समय के लिए किसान के साथ समन्वय करें। आइटम किसान की पुष्टि होने पर तैयार होंगे।"
   },
-
   "farmerInfo": {
     "title": "किसान जानकारी",
     "name": "किसान का नाम",
     "location": "किसान स्थान"
   },
-
   "actions": {
     "contact": "संपर्क करें",
     "share": "शेयर",
@@ -75,19 +66,16 @@
     "confirmPickup": "पिकअप की पुष्टि करें",
     "proceedPayment": "भुगतान करें"
   },
-
   "delivery": {
     "pickupByYou": "आप द्वारा पिकअप",
     "deliveredByFarmer": "किसान द्वारा डिलीवर किया गया"
   },
-
   "cancelled": {
     "banner": "यह ऑर्डर रद्द कर दिया गया है"
   },
   "completed": {
     "banner": "ऑर्डर सफलतापूर्वक पूरा हुआ ✅"
   },
-
   "toasts": {
     "loadFailed": "ऑर्डर विवरण लोड करने में विफल",
     "statusChanged": "ऑर्डर {status} успешно",
@@ -98,7 +86,6 @@
     "confirmPickupFailed": "पिकअप की पुष्टि करने में विफल",
     "comingSoon": "जल्द आ रहा है"
   },
-
   "notifications": {
     "farmerTitle": "खरीदार ने ऑर्डर {status} किया",
     "farmerMessage": "खरीदार {buyerName} ने ऑर्डर {status} किया",
@@ -107,7 +94,6 @@
     "pickupTitle": "ऑर्डर उठाया गया",
     "pickupMessage": "खरीदार {buyerName} ने ऑर्डर उठाया है"
   },
-
   "notFound": {
     "title": "ऑर्डर नहीं मिला",
     "message": "हम वह ऑर्डर नहीं पा सके जो आप ढूंढ रहे हैं। कृपया ऑर्डर आईडी जांचें और पुनः प्रयास करें।"

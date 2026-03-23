@@ -14,12 +14,24 @@
     "farmDetails": "शेत तपशील"
   },
   "sections": {
-    "identity": { "title": "ओळख सत्यापन" },
-    "contact": { "title": "संपर्क माहिती" },
-    "location": { "title": "ठिकाण तपशील" },
-    "address": { "title": "पत्ता तपशील" },
-    "farmDocs": { "title": "शेत दस्तऐवज" },
-    "farmArea": { "title": "शेत क्षेत्र" }
+    "identity": {
+      "title": "ओळख सत्यापन"
+    },
+    "contact": {
+      "title": "संपर्क माहिती"
+    },
+    "location": {
+      "title": "ठिकाण तपशील"
+    },
+    "address": {
+      "title": "पत्ता तपशील"
+    },
+    "farmDocs": {
+      "title": "शेत दस्तऐवज"
+    },
+    "farmArea": {
+      "title": "शेत क्षेत्र"
+    }
   },
   "fields": {
     "aadhaarNumber": "आधार क्रमांक",
@@ -64,14 +76,18 @@
     "creating": "प्रोफाइल तयार केली जात आहे...",
     "complete": "नोंदणी पूर्ण करा"
   },
-  "warnings": { "fillRequired": "कृपया सर्व आवश्यक फील्ड बरोबर भरा" },
+  "warnings": {
+    "fillRequired": "कृपया सर्व आवश्यक फील्ड बरोबर भरा"
+  },
   "units": {
     "hectare": "हेक्टअर (ha)",
     "acre": "एकर",
     "hectarePlural": "हेक्टेअर",
     "acrePlural": "एकर"
   },
-  "labels": { "totalFarmArea": "एकूण व्यवस्थापित क्षेत्र:" },
+  "labels": {
+    "totalFarmArea": "एकूण व्यवस्थापित क्षेत्र:"
+  },
   "errors": {
     "aadhaarRequired": "आधार आवश्यक आहे",
     "aadhaarDigits": "आधार 12 अंकांचा असणे आवश्यक आहे",
@@ -93,6 +109,12 @@
     "createFailed": "प्रोफाइल तयार करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
     "somethingWrong": "काहीतरी चूकीचे झाले आहे. कृपया पुन्हा प्रयत्न करा."
   },
-  "legal": { "prefix": "नोंदणी पूर्ण करताना, आपण आमच्या स्वीकारता", "and": "आणि" },
-  "links": { "terms": "सेवा अटी", "privacy": "गोपनीयता धोरण" }
+  "legal": {
+    "prefix": "नोंदणी पूर्ण करताना, आपण आमच्या स्वीकारता",
+    "and": "आणि"
+  },
+  "links": {
+    "terms": "सेवा अटी",
+    "privacy": "गोपनीयता धोरण"
+  }
 }

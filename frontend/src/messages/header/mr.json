@@ -1,37 +1,39 @@
 {
   "nav": {
     "home": "मुख्यपृष्ठ",
-    "marketplace": "बाजारपेठ",
+    "marketplace": "मार्केटप्लेस",
     "community": "समुदाय",
     "myListings": "माझ्या नोंदी",
-    "orders": "ऑर्डर्स",
+    "orders": "ऑर्डर",
     "analytics": "विश्लेषण",
     "myPurchases": "माझी खरेदी",
-    "Nego": "चर्चा",
+    "Nego": "वाटाघाटी",
     "admin": "प्रशासन पॅनेल"
   },
-
   "auth": {
     "login": "लॉगिन",
     "signup": "नोंदणी करा",
-    "signupAs": "म्हणून नोंदणी करा",
+    "signupAs": "या रूपात सामील व्हा",
     "signOut": "लॉगआउट",
     "listWaste": "कचरा सूचीबद्ध करा"
   },
-
   "role": {
     "farmer": "शेतकरी",
     "buyer": "खरेदीदार",
     "admin": "प्रशासक"
   },
-
   "profile": {
     "myAccount": "माझे खाते",
     "profile": "प्रोफाइल",
-    "settings": "सेटिंग्स"
+    "settings": "सेटिंग्ज"
   },
-
   "notification": {
     "title": "सूचना"
+  },
+  "language": {
+    "label": "भाषा निवडा",
+    "en": "English",
+    "hi": "हिन्दी",
+    "mr": "मराठी"
   }
 }

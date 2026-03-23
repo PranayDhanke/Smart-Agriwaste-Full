@@ -31,6 +31,11 @@ export default getRequestConfig(async ({ requestLocale }) => {
       },
       faq: (await import(`../messages/home/FAQ/${locale}.json`)).default,
       footer: (await import(`../messages/footer/${locale}.json`)).default,
+      analytics: (await import(`../messages/analytics/${locale}.json`)).default,
+      admin: {
+        signIn: (await import(`../messages/admin/signIn/${locale}.json`)).default,
+      },
+      legal: (await import(`../messages/legal/${locale}.json`)).default,
       marketplace: {
         Marketplace: (await import(`../messages/marketplace/Marketplace/${locale}.json`)).default,
         CartDrawer: (await import(`../messages/marketplace/CartDrawer/${locale}.json`)).default,
@@ -38,6 +43,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
         NegotiationPanel: (await import(`../messages/marketplace/NegotiationPanel/${locale}.json`)).default,
         Singlemarketplace: (await import(`../messages/marketplace/Singlemarketplace/${locale}.json`)).default,
       },
+      report: (await import(`../messages/report/${locale}.json`)).default,
       profile: {
         buyer: {
           CreateAccount: (await import(`../messages/profile/buyer/CreateAccount/${locale}.json`)).default,

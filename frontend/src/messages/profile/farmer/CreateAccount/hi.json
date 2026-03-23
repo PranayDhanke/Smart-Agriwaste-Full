@@ -14,12 +14,24 @@
     "farmDetails": "खेत विवरण"
   },
   "sections": {
-    "identity": { "title": "पहचान सत्यापन" },
-    "contact": { "title": "संपर्क जानकारी" },
-    "location": { "title": "स्थान विवरण" },
-    "address": { "title": "पता विवरण" },
-    "farmDocs": { "title": "खेत दस्तावेज़" },
-    "farmArea": { "title": "खेत क्षेत्र" }
+    "identity": {
+      "title": "पहचान सत्यापन"
+    },
+    "contact": {
+      "title": "संपर्क जानकारी"
+    },
+    "location": {
+      "title": "स्थान विवरण"
+    },
+    "address": {
+      "title": "पता विवरण"
+    },
+    "farmDocs": {
+      "title": "खेत दस्तावेज़"
+    },
+    "farmArea": {
+      "title": "खेत क्षेत्र"
+    }
   },
   "fields": {
     "aadhaarNumber": "आधार नंबर",
@@ -64,14 +76,18 @@
     "creating": "प्रोफ़ाइल बना रहे हैं...",
     "complete": "पंजीकरण पूर्ण करें"
   },
-  "warnings": { "fillRequired": "कृपया सभी आवश्यक फ़ील्ड सही तरीके से भरें" },
+  "warnings": {
+    "fillRequired": "कृपया सभी आवश्यक फ़ील्ड सही तरीके से भरें"
+  },
   "units": {
     "hectare": "हेक्टर (ha)",
     "acre": "एकड़",
     "hectarePlural": "हेक्टेयर",
     "acrePlural": "एकड़"
   },
-  "labels": { "totalFarmArea": "कुल प्राशिक क्षेत्र:" },
+  "labels": {
+    "totalFarmArea": "कुल प्राशिक क्षेत्र:"
+  },
   "errors": {
     "aadhaarRequired": "आधार आवश्यक है",
     "aadhaarDigits": "आधार 12 अंक का होना चाहिए",
@@ -93,6 +109,12 @@
     "createFailed": "प्रोफ़ाइल बनाने में विफल। कृपया पुनः प्रयास करें।",
     "somethingWrong": "कुछ गलत हुआ। कृपया पुनः प्रयास करें।"
   },
-  "legal": { "prefix": "पंजीकरण पूरा करके, आप हमारी स्वीकार करते हैं", "and": "और" },
-  "links": { "terms": "सेवा की शर्तें", "privacy": "गोपनीयता नीति" }
+  "legal": {
+    "prefix": "पंजीकरण पूरा करके, आप हमारी स्वीकार करते हैं",
+    "and": "और"
+  },
+  "links": {
+    "terms": "सेवा की शर्तें",
+    "privacy": "गोपनीयता नीति"
+  }
 }

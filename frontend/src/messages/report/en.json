@@ -1,0 +1,57 @@
+{
+  "toast": {
+    "required": "Target and reason are required.",
+    "success": "Report submitted successfully.",
+    "error": "Unable to submit report."
+  },
+  "auth": {
+    "title": "Sign in required",
+    "description": "You need to sign in before you can submit a moderation report.",
+    "button": "Go to sign in"
+  },
+  "badge": "Moderation report",
+  "title": "Report a buyer, farmer, or waste listing",
+  "description": "Submit a report if something looks suspicious, misleading, abusive, or poor quality.",
+  "fields": {
+    "reportType": "Report type",
+    "targetId": "Target ID",
+    "reason": "Reason",
+    "extraDetails": "Extra details"
+  },
+  "placeholders": {
+    "reportType": "Select report type",
+    "targetId": "Paste the buyer, farmer, or waste ID",
+    "reason": "Select a reason",
+    "extraDetails": "Optional explanation for the admin team"
+  },
+  "types": {
+    "buyer": "Buyer",
+    "farmer": "Farmer",
+    "waste": "Waste listing"
+  },
+  "reasons": {
+    "buyer": {
+      "spam": "Spam",
+      "abusiveBehavior": "Abusive behavior",
+      "fraudConcern": "Fraud concern",
+      "other": "Other"
+    },
+    "farmer": {
+      "spam": "Spam",
+      "fakeIdentity": "Fake identity",
+      "lowQualityListing": "Low quality listing",
+      "other": "Other"
+    },
+    "waste": {
+      "misleadingDetails": "Misleading details",
+      "poorQuality": "Poor quality",
+      "wrongCategory": "Wrong category",
+      "other": "Other"
+    }
+  },
+  "actions": {
+    "submit": "Submit report",
+    "submitting": "Submitting...",
+    "cancel": "Cancel"
+  }
+}
