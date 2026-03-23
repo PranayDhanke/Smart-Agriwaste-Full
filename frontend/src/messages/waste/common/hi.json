@@ -4,13 +4,11 @@
     "vegetable": "भाजीपाला",
     "fruit": "फळे"
   },
-
   "moisture": {
     "dry": "कोरडे",
     "semi_wet": "अर्धओले",
     "wet": "ओले"
   },
-
   "wasteCat": {
     "grain_crop": "धान्य पिके",
     "pulses": "डाळी व कडधान्ये",
@@ -28,7 +26,6 @@
     "temperate": "समशीतोष्ण फळे",
     "melons": "कलिंगड व खरबूज वर्ग"
   },
-
   "productSet": {
     "wheat": "गहू",
     "rice": "तांदूळ (भात)",

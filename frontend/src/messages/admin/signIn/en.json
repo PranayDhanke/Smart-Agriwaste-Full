@@ -1,0 +1,25 @@
+{
+  "toast": {
+    "accessEnabled": "Admin access enabled",
+    "unableToEnable": "Unable to enable admin access"
+  },
+  "loading": "Loading...",
+  "signedOut": {
+    "title": "Admin Login",
+    "description": "Sign in with an approved account to unlock the admin control panel."
+  },
+  "active": {
+    "title": "Admin access active",
+    "description": "Your account already has admin privileges. Open the panel to manage the application.",
+    "openPanel": "Open Admin Panel",
+    "backHome": "Back Home"
+  },
+  "enable": {
+    "title": "Enable admin privileges",
+    "description": "If this email is included in the server allowlist, you can bootstrap admin access here and open the moderation dashboard.",
+    "signedInAs": "Signed in as",
+    "button": "Enable Admin Access",
+    "buttonLoading": "Enabling...",
+    "cancel": "Cancel"
+  }
+}

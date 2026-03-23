@@ -7,6 +7,8 @@ type LegalPageProps = {
   title: string;
   description: string;
   lastUpdated: string;
+  legalLabel: string;
+  lastUpdatedLabel: string;
   sections: LegalSection[];
 };
 
@@ -14,6 +16,8 @@ export default function LegalPage({
   title,
   description,
   lastUpdated,
+  legalLabel,
+  lastUpdatedLabel,
   sections,
 }: LegalPageProps) {
   return (
@@ -21,7 +25,7 @@ export default function LegalPage({
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 rounded-3xl border border-green-100 bg-white p-8 shadow-sm">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-green-700">
-            Legal
+            {legalLabel}
           </p>
           <h1 className="mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
             {title}
@@ -29,7 +33,7 @@ export default function LegalPage({
           <p className="mb-4 text-base leading-7 text-slate-600">
             {description}
           </p>
-          <p className="text-sm text-slate-500">Last updated: {lastUpdated}</p>
+          <p className="text-sm text-slate-500">{lastUpdatedLabel}: {lastUpdated}</p>
         </div>
 
         <div className="space-y-6">

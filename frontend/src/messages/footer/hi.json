@@ -5,7 +5,6 @@
     "phone": "+91 123 456 7890",
     "location": "भारत"
   },
-
   "sections": {
     "quickLinks": "त्वरित लिंक",
     "getStarted": "शुरू करें",
@@ -14,7 +13,6 @@
     "legal": "कानूनी",
     "followUs": "हमें फ़ॉलो करें"
   },
-
   "links": {
     "home": "होम",
     "marketplace": "मार्केटप्लेस",
@@ -24,32 +22,27 @@
     "help": "सहायता और समर्थन",
     "contact": "संपर्क करें"
   },
-
   "auth": {
     "joinFarmer": "किसान के रूप में जुड़ें",
     "joinBuyer": "खरीदार के रूप में जुड़ें",
     "signIn": "साइन इन"
   },
-
   "farmer": {
     "listWaste": "अपना कचरा सूचीबद्ध करें",
     "myListings": "मेरी लिस्टिंग",
     "myOrders": "मेरे ऑर्डर",
     "analytics": "विश्लेषण"
   },
-
   "buyer": {
     "browse": "मार्केटप्लेस देखें",
     "myPurchases": "मेरी खरीदारी",
     "profile": "मेरी प्रोफ़ाइल"
   },
-
   "legal": {
     "privacy": "गोपनीयता नीति",
     "terms": "सेवा की शर्तें",
     "refund": "रिफंड नीति"
   },
-
   "bottom": {
     "rights": "सर्वाधिकार सुरक्षित।",
     "madeWith": "प्यार से बनाया गया",

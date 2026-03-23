@@ -1,0 +1,50 @@
+{
+  "headingFarmer": "शेतकरी विश्लेषण",
+  "headingBuyer": "खरेदीदार विश्लेषण",
+  "overviewTitle": "आढावा आणि कामगिरी",
+  "overviewDescription": "सक्रिय वाटाघाटी ट्रॅक करा, तुमची ऑर्डर पाइपलाइन पाहा आणि तुमच्या खात्यातून होणाऱ्या एकूण मूल्यप्रवाहाचे विश्लेषण करा.",
+  "loading": "तुमचे विश्लेषण लोड होत आहे...",
+  "valueLabels": {
+    "revenueTracked": "नोंदवलेले उत्पन्न",
+    "purchasesTracked": "नोंदवलेल्या खरेदी"
+  },
+  "metrics": {
+    "totalNegotiations": "एकूण वाटाघाटी",
+    "pendingNow": "सध्या {count} प्रलंबित",
+    "totalOrders": "एकूण ऑर्डर",
+    "confirmedCount": "{count} पुष्टी झालेल्या",
+    "average": "सरासरी {value}",
+    "deliveredOrders": "वितरित ऑर्डर",
+    "outForDelivery": "{count} डिलिव्हरीसाठी पाठवलेल्या"
+  },
+  "charts": {
+    "negotiationBreakdown": "वाटाघाटींचा विभागवार आढावा",
+    "negotiationDescription": "ट्रॅक केलेल्या सर्व वाटाघाटींची सद्यस्थिती",
+    "total": "एकूण",
+    "orderPipeline": "ऑर्डर पाइपलाइन",
+    "orderDescription": "विविध टप्प्यांतील ऑर्डरची संख्या"
+  },
+  "recent": {
+    "negotiationsTitle": "अलिकडील वाटाघाटी",
+    "negotiationsDescription": "तुमचे नवीनतम ऑफर आणि प्रतिऑफर.",
+    "noNegotiations": "दाखवण्यासाठी कोणत्याही सक्रिय वाटाघाटी नाहीत.",
+    "offer": "ऑफर: {value}",
+    "ordersTitle": "अलिकडील ऑर्डर",
+    "ordersDescription": "अलीकडे प्रक्रिया केलेले व्यवहार.",
+    "noOrders": "दाखवण्यासाठी अलीकडील ऑर्डर नाहीत.",
+    "marketplaceOrder": "मार्केटप्लेस ऑर्डर",
+    "total": "एकूण: {value}"
+  },
+  "status": {
+    "pending": "प्रलंबित",
+    "accepted": "स्वीकृत",
+    "rejected": "नाकारलेले",
+    "confirmed": "पुष्टी झालेले",
+    "cancelled": "रद्द",
+    "delivered": "वितरित"
+  },
+  "chartUnits": {
+    "count": "संख्या",
+    "orders": "ऑर्डर"
+  }
+}

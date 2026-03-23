@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
@@ -20,13 +21,8 @@ import {
 } from "@/components/ui/select";
 import { useCreateReportMutation } from "@/redux/api/reportApi";
 
-const reasonsByType = {
-  buyer: ["Spam", "Abusive behavior", "Fraud concern", "Other"],
-  farmer: ["Spam", "Fake identity", "Low quality listing", "Other"],
-  waste: ["Misleading details", "Poor quality", "Wrong category", "Other"],
-} as const;
-
 export default function ReportPage() {
+  const t = useTranslations("report");
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoaded, isSignedIn } = useUser();
@@ -42,10 +38,34 @@ export default function ReportPage() {
   const [targetId, setTargetId] = useState(initialTargetId);
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
+  const reasonOptions = useMemo(
+    () =>
+      ({
+        buyer: [
+          { value: "Spam", label: "spam" },
+          { value: "Abusive behavior", label: "abusiveBehavior" },
+          { value: "Fraud concern", label: "fraudConcern" },
+          { value: "Other", label: "other" },
+        ],
+        farmer: [
+          { value: "Spam", label: "spam" },
+          { value: "Fake identity", label: "fakeIdentity" },
+          { value: "Low quality listing", label: "lowQualityListing" },
+          { value: "Other", label: "other" },
+        ],
+        waste: [
+          { value: "Misleading details", label: "misleadingDetails" },
+          { value: "Poor quality", label: "poorQuality" },
+          { value: "Wrong category", label: "wrongCategory" },
+          { value: "Other", label: "other" },
+        ],
+      }) as const,
+    [],
+  );
 
   const handleSubmit = async () => {
     if (!targetId || !reason) {
-      toast.error("Target and reason are required.");
+      toast.error(t("toast.required"));
       return;
     }
 
@@ -57,7 +77,7 @@ export default function ReportPage() {
         description,
       }).unwrap();
 
-      toast.success("Report submitted successfully.");
+      toast.success(t("toast.success"));
       router.push("/");
     } catch (error: unknown) {
       const message =
@@ -69,7 +89,7 @@ export default function ReportPage() {
         "message" in error.data &&
         typeof error.data.message === "string"
           ? error.data.message
-          : "Unable to submit report.";
+          : t("toast.error");
 
       toast.error(message);
     }
@@ -88,11 +108,11 @@ export default function ReportPage() {
       <div className="mx-auto flex min-h-[70vh] max-w-lg items-center px-4">
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Sign in required</CardTitle>
-            <CardDescription>You need to sign in before you can submit a moderation report.</CardDescription>
+            <CardTitle>{t("auth.title")}</CardTitle>
+            <CardDescription>{t("auth.description")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => router.push("/sign-in")}>Go to sign in</Button>
+            <Button onClick={() => router.push("/sign-in")}>{t("auth.button")}</Button>
           </CardContent>
         </Card>
       </div>
@@ -106,47 +126,45 @@ export default function ReportPage() {
           <CardHeader>
             <div className="mb-2 inline-flex w-fit items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
               <AlertTriangle className="h-3.5 w-3.5" />
-              Moderation report
+              {t("badge")}
             </div>
-            <CardTitle>Report a buyer, farmer, or waste listing</CardTitle>
-            <CardDescription>
-              Submit a report if something looks suspicious, misleading, abusive, or poor quality.
-            </CardDescription>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="space-y-2">
-              <Label>Report type</Label>
+              <Label>{t("fields.reportType")}</Label>
               <Select value={targetType} onValueChange={(value) => setTargetType(value as "buyer" | "farmer" | "waste")}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select report type" />
+                  <SelectValue placeholder={t("placeholders.reportType")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="buyer">Buyer</SelectItem>
-                  <SelectItem value="farmer">Farmer</SelectItem>
-                  <SelectItem value="waste">Waste listing</SelectItem>
+                  <SelectItem value="buyer">{t("types.buyer")}</SelectItem>
+                  <SelectItem value="farmer">{t("types.farmer")}</SelectItem>
+                  <SelectItem value="waste">{t("types.waste")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Target ID</Label>
+              <Label>{t("fields.targetId")}</Label>
               <Input
                 value={targetId}
                 onChange={(event) => setTargetId(event.target.value)}
-                placeholder="Paste the buyer, farmer, or waste ID"
+                placeholder={t("placeholders.targetId")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Reason</Label>
+              <Label>{t("fields.reason")}</Label>
               <Select value={reason} onValueChange={setReason}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a reason" />
+                  <SelectValue placeholder={t("placeholders.reason")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {reasonsByType[targetType].map((entry) => (
-                    <SelectItem key={entry} value={entry}>
-                      {entry}
+                  {reasonOptions[targetType].map((entry) => (
+                    <SelectItem key={entry.value} value={entry.value}>
+                      {t(`reasons.${targetType}.${entry.label}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -154,21 +172,21 @@ export default function ReportPage() {
             </div>
 
             <div className="space-y-2">
-              <Label>Extra details</Label>
+              <Label>{t("fields.extraDetails")}</Label>
               <Textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Optional explanation for the admin team"
+                placeholder={t("placeholders.extraDetails")}
                 rows={5}
               />
             </div>
 
             <div className="flex gap-3">
               <Button className="bg-green-600 hover:bg-green-700" onClick={handleSubmit} disabled={isLoading}>
-                {isLoading ? "Submitting..." : "Submit report"}
+                {isLoading ? t("actions.submitting") : t("actions.submit")}
               </Button>
               <Button variant="outline" onClick={() => router.back()}>
-                Cancel
+                {t("actions.cancel")}
               </Button>
             </div>
           </CardContent>

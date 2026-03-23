@@ -1,42 +1,61 @@
 import LegalPage from "@/components/page/legal/LegalPage";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 
-const sections = [
-  {
-    heading: "Acceptance of Terms",
-    body: [
-      "By accessing or using Smart Agriwaste, you agree to follow these Terms of Service and any applicable laws or platform guidelines.",
-      "If you do not agree with these terms, you should not use the platform.",
-    ],
-  },
-  {
-    heading: "Use of the Platform",
-    body: [
-      "You agree to provide accurate account information and to use the platform only for lawful activities related to agricultural waste management, marketplace participation, and community engagement.",
-      "You must not misuse the service, interfere with its operation, attempt unauthorized access, or submit false, harmful, or misleading content.",
-    ],
-  },
-  {
-    heading: "Listings, Orders, and User Responsibilities",
-    body: [
-      "Users are responsible for the accuracy of listings, pricing, availability, negotiations, and communication with other users. Smart Agriwaste may facilitate discovery and coordination, but it does not guarantee every transaction.",
-      "Each user is responsible for complying with local laws, safety requirements, transportation obligations, and quality standards connected to their activities on the platform.",
-    ],
-  },
-  {
-    heading: "Suspension and Limitation of Liability",
-    body: [
-      "We may suspend or terminate accounts that violate these terms, create risk for other users, or harm the platform.",
-      "To the fullest extent permitted by law, Smart Agriwaste is not liable for indirect losses, user disputes, or damages arising from third-party actions, failed transactions, or temporary service interruptions.",
-    ],
-  },
-];
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
-export default function TermsPage() {
+export default async function TermsPage({ params }: Props) {
+  const { locale: requestedLocale } = await params;
+  const locale = hasLocale(routing.locales, requestedLocale)
+    ? requestedLocale
+    : routing.defaultLocale;
+  const messagesByLocale = {
+    en: (await import("@/messages/legal/en.json")).default,
+    hi: (await import("@/messages/legal/hi.json")).default,
+    mr: (await import("@/messages/legal/mr.json")).default,
+  };
+  const messages = messagesByLocale[locale];
+
+  const sections = [
+    {
+      heading: messages.terms.sections.acceptance.heading,
+      body: [
+        messages.terms.sections.acceptance.body1,
+        messages.terms.sections.acceptance.body2,
+      ],
+    },
+    {
+      heading: messages.terms.sections.platformUse.heading,
+      body: [
+        messages.terms.sections.platformUse.body1,
+        messages.terms.sections.platformUse.body2,
+      ],
+    },
+    {
+      heading: messages.terms.sections.responsibilities.heading,
+      body: [
+        messages.terms.sections.responsibilities.body1,
+        messages.terms.sections.responsibilities.body2,
+      ],
+    },
+    {
+      heading: messages.terms.sections.liability.heading,
+      body: [
+        messages.terms.sections.liability.body1,
+        messages.terms.sections.liability.body2,
+      ],
+    },
+  ];
+
   return (
     <LegalPage
-      title="Terms of Service"
-      description="These Terms of Service describe the rules, responsibilities, and conditions for using Smart Agriwaste."
-      lastUpdated="March 21, 2026"
+      legalLabel={messages.common.badge}
+      lastUpdatedLabel={messages.common.lastUpdated}
+      title={messages.terms.title}
+      description={messages.terms.description}
+      lastUpdated={messages.terms.lastUpdated}
       sections={sections}
     />
   );

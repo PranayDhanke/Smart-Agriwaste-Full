@@ -1,0 +1,50 @@
+{
+  "headingFarmer": "Farmer Analytics",
+  "headingBuyer": "Buyer Analytics",
+  "overviewTitle": "Overview & Performance",
+  "overviewDescription": "Track active negotiations, monitor your order pipeline, and analyze the total value flowing through your account.",
+  "loading": "Loading your analytics...",
+  "valueLabels": {
+    "revenueTracked": "Revenue tracked",
+    "purchasesTracked": "Purchases tracked"
+  },
+  "metrics": {
+    "totalNegotiations": "Total negotiations",
+    "pendingNow": "{count} pending now",
+    "totalOrders": "Total orders",
+    "confirmedCount": "{count} confirmed",
+    "average": "Avg. {value}",
+    "deliveredOrders": "Delivered orders",
+    "outForDelivery": "{count} out for delivery"
+  },
+  "charts": {
+    "negotiationBreakdown": "Negotiation Breakdown",
+    "negotiationDescription": "Current status of all tracked negotiations",
+    "total": "Total",
+    "orderPipeline": "Order Pipeline",
+    "orderDescription": "Quantity of orders across different stages"
+  },
+  "recent": {
+    "negotiationsTitle": "Recent Negotiations",
+    "negotiationsDescription": "Your latest offers and counter-offers.",
+    "noNegotiations": "No active negotiations to show.",
+    "offer": "Offer: {value}",
+    "ordersTitle": "Recent Orders",
+    "ordersDescription": "The latest transactions processed.",
+    "noOrders": "No recent orders to show.",
+    "marketplaceOrder": "Marketplace Order",
+    "total": "Total: {value}"
+  },
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled",
+    "delivered": "Delivered"
+  },
+  "chartUnits": {
+    "count": "Count",
+    "orders": "Orders"
+  }
+}

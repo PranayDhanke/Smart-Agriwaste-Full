@@ -10,7 +10,6 @@
     "Nego": "Negotiations",
     "admin": "Admin Panel"
   },
-
   "auth": {
     "login": "Login",
     "signup": "Sign Up",
@@ -18,20 +17,23 @@
     "signOut": "Sign Out",
     "listWaste": "List Waste"
   },
-
   "role": {
     "farmer": "Farmer",
     "buyer": "Buyer",
     "admin": "Admin"
   },
-
   "profile": {
     "myAccount": "My Account",
     "profile": "Profile",
     "settings": "Settings"
   },
-
   "notification": {
     "title": "Notifications"
+  },
+  "language": {
+    "label": "Select language",
+    "en": "English",
+    "hi": "Hindi",
+    "mr": "Marathi"
   }
 }

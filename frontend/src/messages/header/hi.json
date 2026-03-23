@@ -3,35 +3,37 @@
     "home": "होम",
     "marketplace": "मार्केटप्लेस",
     "community": "समुदाय",
-    "myListings": "मेरी लिस्टिंग्स",
-    "orders": "ऑर्डर्स",
-    "analytics": "एनालिटिक्स",
+    "myListings": "मेरी लिस्टिंग",
+    "orders": "ऑर्डर",
+    "analytics": "विश्लेषण",
     "myPurchases": "मेरी खरीदारी",
-    "Nego": "मोलभाव",
+    "Nego": "बातचीत",
     "admin": "एडमिन पैनल"
   },
-
   "auth": {
     "login": "लॉगिन",
     "signup": "साइन अप करें",
-    "signupAs": "के रूप में साइन अप करें",
+    "signupAs": "इस रूप में जुड़ें",
     "signOut": "लॉगआउट",
     "listWaste": "कचरा सूचीबद्ध करें"
   },
-
   "role": {
     "farmer": "किसान",
     "buyer": "खरीदार",
     "admin": "प्रशासक"
   },
-
   "profile": {
     "myAccount": "मेरा खाता",
-    "profile": "प्रोफाइल",
+    "profile": "प्रोफ़ाइल",
     "settings": "सेटिंग्स"
   },
-
   "notification": {
-    "title": "सूचनाएं"
+    "title": "सूचनाएँ"
+  },
+  "language": {
+    "label": "भाषा चुनें",
+    "en": "English",
+    "hi": "हिन्दी",
+    "mr": "मराठी"
   }
 }

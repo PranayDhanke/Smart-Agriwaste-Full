@@ -1,0 +1,50 @@
+{
+  "headingFarmer": "किसान विश्लेषण",
+  "headingBuyer": "खरीदार विश्लेषण",
+  "overviewTitle": "सारांश और प्रदर्शन",
+  "overviewDescription": "सक्रिय बातचीत को ट्रैक करें, अपने ऑर्डर पाइपलाइन की निगरानी करें और अपने खाते से गुजरने वाले कुल मूल्य का विश्लेषण करें।",
+  "loading": "आपका विश्लेषण लोड किया जा रहा है...",
+  "valueLabels": {
+    "revenueTracked": "ट्रैक की गई आय",
+    "purchasesTracked": "ट्रैक की गई खरीद"
+  },
+  "metrics": {
+    "totalNegotiations": "कुल बातचीत",
+    "pendingNow": "अभी {count} लंबित",
+    "totalOrders": "कुल ऑर्डर",
+    "confirmedCount": "{count} पुष्टि किए गए",
+    "average": "औसत {value}",
+    "deliveredOrders": "डिलीवर किए गए ऑर्डर",
+    "outForDelivery": "{count} डिलीवरी के लिए भेजे गए"
+  },
+  "charts": {
+    "negotiationBreakdown": "बातचीत का विभाजन",
+    "negotiationDescription": "ट्रैक की गई सभी बातचीत की वर्तमान स्थिति",
+    "total": "कुल",
+    "orderPipeline": "ऑर्डर पाइपलाइन",
+    "orderDescription": "विभिन्न चरणों में ऑर्डर की संख्या"
+  },
+  "recent": {
+    "negotiationsTitle": "हाल की बातचीत",
+    "negotiationsDescription": "आपके नवीनतम ऑफर और काउंटर-ऑफर।",
+    "noNegotiations": "दिखाने के लिए कोई सक्रिय बातचीत नहीं है।",
+    "offer": "ऑफर: {value}",
+    "ordersTitle": "हाल के ऑर्डर",
+    "ordersDescription": "हाल ही में प्रोसेस किए गए लेनदेन।",
+    "noOrders": "दिखाने के लिए कोई हाल का ऑर्डर नहीं है।",
+    "marketplaceOrder": "मार्केटप्लेस ऑर्डर",
+    "total": "कुल: {value}"
+  },
+  "status": {
+    "pending": "लंबित",
+    "accepted": "स्वीकृत",
+    "rejected": "अस्वीकृत",
+    "confirmed": "पुष्टि की गई",
+    "cancelled": "रद्द",
+    "delivered": "डिलीवर"
+  },
+  "chartUnits": {
+    "count": "संख्या",
+    "orders": "ऑर्डर"
+  }
+}
