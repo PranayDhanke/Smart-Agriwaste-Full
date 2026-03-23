@@ -13,14 +13,12 @@ export const buyerAccountSchema = z.object({
       },
       {
         message: "Entre a valid phone number",
-      }
+      },
     ),
   aadharnumber: z
     .string()
-    .min(1, "Aadhar number is required")
-    .refine((p) => cleanDigits(p).length === 12, {
-      message: "Aadhar must be 12 digit",
-    }),
+    .transform((val) => val.replace(/\s/g, "")) // remove spaces
+    .refine((val) => /^\d{12}$/.test(val), "Aadhaar must be exactly 12 digits"),
   houseBuildingName: z.string().min(1, "House or building name is required"),
   roadarealandmarkName: z.string().min(1, "Road/Area/Landmark is required"),
   state: z.string().min(1, "State is required"),

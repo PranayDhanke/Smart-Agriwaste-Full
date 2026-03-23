@@ -57,7 +57,10 @@ declare global {
 
 /* ------------------ Hook ------------------ */
 
-export function useVoiceInput(onResult: (text: string) => void) {
+export function useVoiceInput(
+  onResult: (text: string) => void,
+  locale: string,
+) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const [listening, setListening] = useState(false);
 
@@ -69,7 +72,14 @@ export function useVoiceInput(onResult: (text: string) => void) {
 
     const recognition = new window.webkitSpeechRecognition();
 
-    recognition.lang = "en-IN"; // or "hi-IN"
+    const langMap: Record<string, string> = {
+      en: "en-IN",
+      hi: "hi-IN",
+      mr: "mr-IN",
+    };
+
+    recognition.lang = langMap[locale] || "en-IN";
+
     recognition.continuous = false;
     recognition.interimResults = false;
 

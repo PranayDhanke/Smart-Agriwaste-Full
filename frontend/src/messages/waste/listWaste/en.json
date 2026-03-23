@@ -1,20 +1,23 @@
 {
   "pageTitle": "List Your Agricultural Waste",
   "pageSubtitle": "Connect with buyers and turn your waste into value",
-
+  
   "pageTitleEdit": "Edit Waste",
   "pageSubtitleEdit": "Update your listing details",
-
+  
   "formCompletion": "Form Completion",
   "percentage": "{value}%",
-
+  
   "sections": {
     "wasteDetails": "Waste Details",
+    "wasteDetailsDesc": "Tell us about your agricultural waste",
     "basicInfo": "Basic Information",
     "specifications": "Specifications",
-    "productImage": "Product Image"
+    "specificationsDesc": "Add quantity, price, and condition details",
+    "productImage": "Product Image",
+    "productImageDesc": "Upload a clear, well-lit photo of your waste product. This helps buyers trust your listing."
   },
-
+  
   "fields": {
     "title": {
       "label": "Listing Title",
@@ -27,7 +30,7 @@
     "wasteCategory": {
       "label": "Waste Category",
       "placeholder": "Choose category",
-      "disabledPlaceholder": "Select Typew first"
+      "disabledPlaceholder": "Select Type first"
     },
     "wasteProduct": {
       "label": "Specific Product",
@@ -43,8 +46,8 @@
       "placeholder": "Select unit"
     },
     "price": {
-      "label": "Expected Price",
-      "placeholder": "e.g., ₹2000"
+      "label": "Expected Price (₹)",
+      "placeholder": "e.g., 2000"
     },
     "moisture": {
       "label": "Moisture Level",
@@ -58,28 +61,45 @@
       "label": "Upload Photo",
       "click": "Click to upload",
       "or": "or drag and drop",
-      "helper": "PNG, JPG or JPEG (MAX. 5MB)",
-      "change": "Change Image" ,
-      "noImageSelected" : "Image not Selected"
+      "helper": "PNG, JPG or JPEG (MAX. 10MB)",
+      "change": "Change Image",
+      "noImageSelected": "Image not Selected"
     }
   },
-
+  
   "unit": {
-    "kg": "Kilogram",
-    "ton": "Ton",
-    "gram": "Gram"
+    "kg": "Kilogram (kg)",
+    "ton": "Metric Ton",
+    "gram": "Gram (g)"
   },
-
+  
   "buttons": {
-    "submit": "List Waste Now",
-    "submitting": "Listing Your Waste...",
-    "save":"Edit Waste"
+    "continue": "Continue",
+    "back": "Back",
+    "submit": "Publish Listing",
+    "submitting": "Publishing...",
+    "save": "Edit Waste"
   },
-
+  
   "messages": {
     "success": "Waste listed successfully!",
     "failure": "Failed to list waste. Please try again.",
     "uploadingImage": "Uploading image...",
     "genericError": "Something went wrong. Please try again."
+  },
+
+  "infoCards": {
+    "photos": {
+      "title": "Quality Photos",
+      "desc": "Clear images increase buyer interest"
+    },
+    "pricing": {
+      "title": "Fair Pricing",
+      "desc": "Competitive prices attract more buyers"
+    },
+    "details": {
+      "title": "Good Details",
+      "desc": "Complete information builds trust"
+    }
   }
 }

@@ -46,20 +46,20 @@ export default function Footer() {
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
                 <a
-                  href={`mailto:${t("brand.email")}`}
+                  href={`mailto:${("pranaydhanke33@gmail.com")}`}
                   className="hover:text-white transition"
                 >
-                  {t("brand.email")}
+                  {"pranaydhanke33@gmail.com"}
                 </a>
               </div>
 
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 <a
-                  href={`tel:${t("brand.phone")}`}
+                  href={`tel:${("8329123649")}`}
                   className="hover:text-white transition"
                 >
-                  {t("brand.phone")}
+                  {"+91 8329123649"}
                 </a>
               </div>
 

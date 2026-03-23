@@ -1,85 +1,105 @@
 {
-  "pageTitle": "कृषी कचरा सूचीबद्ध करा",
-  "pageSubtitle": "खरेदीदारांशी जोडा आणि कचर्‍यातून मूल्य निर्माण करा",
-
-  "formCompletion": "फॉर्म पूर्णता",
-  "percentage": "{value}%",
+  "pageTitle": "आपला कृषी कचरा सूचीबद्ध करा",
+  "pageSubtitle": "खरेदीदारांशी जोडा आणि आपल्या कचर्‍याला मूल्य द्या",
 
   "pageTitleEdit": "कचरा संपादित करा",
-  "pageSubtitleEdit": "तुमच्या सूचीचे तपशील अपडेट करा",
+  "pageSubtitleEdit": "आपली सूची अद्ययावत करा",
+
+  "formCompletion": "फॉर्म प्रगती",
+  "percentage": "{value}%",
 
   "sections": {
     "wasteDetails": "कचरा तपशील",
+    "wasteDetailsDesc": "आपल्या कृषी कचर्‍याबद्दल माहिती द्या",
     "basicInfo": "मूलभूत माहिती",
     "specifications": "तपशील",
-    "productImage": "उत्पादन प्रतिमा"
+    "specificationsDesc": "प्रमाण, किंमत आणि स्थितीची माहिती जोडा",
+    "productImage": "उत्पादन फोटो",
+    "productImageDesc": "आपल्या कचर्‍याचा स्पष्ट आणि चांगल्या प्रकाशातील फोटो अपलोड करा. यामुळे खरेदीदारांचा विश्वास वाढतो."
   },
 
   "fields": {
     "title": {
       "label": "सूची शीर्षक",
-      "placeholder": "उदा. ताजे कापूस पीक अवशेष उपलब्ध"
+      "placeholder": "उदा: ताजे कापूस अवशेष उपलब्ध"
     },
     "wasteType": {
       "label": "कचरा प्रकार",
       "placeholder": "प्रकार निवडा"
     },
     "wasteCategory": {
-      "label": "उत्पादन श्रेणी",
+      "label": "कचरा श्रेणी",
       "placeholder": "श्रेणी निवडा",
-      "disabledPlaceholder": "आधी प्रकार निवडा"
+      "disabledPlaceholder": "प्रथम प्रकार निवडा"
     },
     "wasteProduct": {
       "label": "विशिष्ट उत्पादन",
       "placeholder": "उत्पादन निवडा",
-      "disabledPlaceholder": "आधी श्रेणी निवडा"
+      "disabledPlaceholder": "प्रथम श्रेणी निवडा"
     },
     "quantity": {
       "label": "उपलब्ध प्रमाण",
-      "placeholder": "उदा. 500"
+      "placeholder": "उदा: 500"
     },
     "unit": {
       "label": "एकक",
       "placeholder": "एकक निवडा"
     },
     "price": {
-      "label": "अपेक्षित किंमत",
-      "placeholder": "उदा. ₹2000"
+      "label": "अपेक्षित किंमत (₹)",
+      "placeholder": "उदा: 2000"
     },
     "moisture": {
-      "label": "ओलावा पातळी",
-      "placeholder": "ओलावा पातळी निवडा"
+      "label": "आर्द्रता पातळी",
+      "placeholder": "आर्द्रता पातळी निवडा"
     },
     "description": {
       "label": "वर्णन",
-      "placeholder": "स्थिती, साठवण, स्थान यांचे वर्णन करा..."
+      "placeholder": "स्थिती, साठवण, स्थान आणि इतर आवश्यक माहिती लिहा..."
     },
     "image": {
       "label": "फोटो अपलोड करा",
       "click": "अपलोड करण्यासाठी क्लिक करा",
       "or": "किंवा ड्रॅग आणि ड्रॉप करा",
-      "helper": "PNG, JPG किंवा JPEG (कमाल 5MB)",
-      "change": "प्रतिमा बदला",
-      "noImageSelected" : "प्रतिमा निवडलेली नाही  "
+      "helper": "PNG, JPG किंवा JPEG (कमाल 10MB)",
+      "change": "फोटो बदला",
+      "noImageSelected": "कोणताही फोटो निवडलेला नाही"
     }
   },
 
   "unit": {
-    "kg": "किलोग्रॅम",
-    "ton": "टन",
-    "gram": "ग्रॅम"
+    "kg": "किलोग्राम (kg)",
+    "ton": "मेट्रिक टन",
+    "gram": "ग्रॅम (g)"
   },
 
   "buttons": {
-    "submit": "कचरा सूचीबद्ध करा",
-    "submitting": "कचरा सूचीबद्ध होत आहे...",
-    "save" : "संपादित करा"
-  }, 
+    "continue": "पुढे",
+    "back": "मागे",
+    "submit": "सूची प्रकाशित करा",
+    "submitting": "प्रकाशित होत आहे...",
+    "save": "कचरा संपादित करा"
+  },
 
   "messages": {
-    "success": "कचरा यशस्वीपणे सूचीबद्ध केला!",
+    "success": "कचरा यशस्वीरित्या सूचीबद्ध झाला!",
     "failure": "कचरा सूचीबद्ध करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
-    "uploadingImage": "प्रतिमा अपलोड होत आहे...",
+    "uploadingImage": "फोटो अपलोड होत आहे...",
     "genericError": "काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा."
+  },
+
+  "infoCards": {
+    "photos": {
+      "title": "चांगले फोटो",
+      "desc": "स्पष्ट फोटो अधिक खरेदीदार आकर्षित करतात"
+    },
+    "pricing": {
+      "title": "योग्य किंमत",
+      "desc": "स्पर्धात्मक किंमत अधिक खरेदीदार आकर्षित करते"
+    },
+    "details": {
+      "title": "पूर्ण माहिती",
+      "desc": "संपूर्ण माहिती विश्वास वाढवते"
+    }
   }
 }

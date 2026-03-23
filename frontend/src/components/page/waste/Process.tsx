@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
+import ReadAloud from "@/components/provider/ReadAloud";
 
 type SupportedLocale = "en" | "mr" | "hi";
 type ProductOption = {
@@ -186,66 +187,93 @@ export default function Process() {
                     >
                       {step === 1 && (
                         <div className="animate-fadeIn space-y-6">
-                          <ProcessSelectInput
-                            isProduct={false}
-                            control={control}
-                            label={`${t("form.wasteType")} *`}
-                            name="wasteType"
-                            option={[
-                              {
-                                value: "crop",
-                                icon: "🌾",
-                                name: c("wasteTypes.crop"),
-                              },
-                              {
-                                value: "vegetable",
-                                icon: "🥬",
-                                name: c("wasteTypes.vegetable"),
-                              },
-                              {
-                                value: "fruit",
-                                icon: "🍎",
-                                name: c("wasteTypes.fruit"),
-                              },
-                            ]}
-                            classNames="grid grid-cols-1 gap-3 sm:grid-cols-3"
-                            key={wasteType}
-                          />
+                          <div className="flex w-full items-start gap-3">
+                            <div className="pt-1">
+                              <ReadAloud text={`${t("form.wasteType")}`} />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <ProcessSelectInput
+                                isProduct={false}
+                                control={control}
+                                label={`${t("form.wasteType")} *`}
+                                name="wasteType"
+                                option={[
+                                  {
+                                    value: "crop",
+                                    icon: "🌾",
+                                    name: c("wasteTypes.crop"),
+                                  },
+                                  {
+                                    value: "vegetable",
+                                    icon: "🥬",
+                                    name: c("wasteTypes.vegetable"),
+                                  },
+                                  {
+                                    value: "fruit",
+                                    icon: "🍎",
+                                    name: c("wasteTypes.fruit"),
+                                  },
+                                ]}
+                                classNames="grid grid-cols-1 gap-3 sm:grid-cols-3"
+                                key={wasteType}
+                              />
+                            </div>
+                          </div>
 
                           {wasteType && (
-                            <SelectInput
-                              control={control}
-                              label={`${t("form.wasteCategory")} *`}
-                              name="wasteCategory"
-                              placeholder={t("placeholders.selectCategory")}
-                              classname={`w-full rounded-lg border-2 text-base transition-all ${
-                                wasteCategory
-                                  ? "border-green-300 bg-green-50/30"
-                                  : "border-gray-200"
-                              }`}
-                              option={categoryOptions as []}
-                              disabled={!wasteType}
-                              key={wasteCategory}
-                            />
+                            <div 
+                              key={wasteCategory} 
+                              className="flex w-full items-start gap-3 animate-fadeIn"
+                            >
+                              <div className="pt-1">
+                                <ReadAloud text={`${t("form.wasteCategory")}`} />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <SelectInput
+                                  control={control}
+                                  label={`${t("form.wasteCategory")} *`}
+                                  name="wasteCategory"
+                                  placeholder={t("placeholders.selectCategory")}
+                                  classname={`w-full rounded-lg border-2 text-base transition-all ${
+                                    wasteCategory
+                                      ? "border-green-300 bg-green-50/30"
+                                      : "border-gray-200"
+                                  }`}
+                                  option={categoryOptions as []}
+                                  disabled={!wasteType}
+                                />
+                              </div>
+                            </div>
                           )}
 
                           {wasteType && wasteCategory && (
-                            <ProcessSelectInput
-                              isProduct={true}
-                              control={control}
-                              label={`${t("form.wasteProduct")} *`}
-                              classNames="grid grid-cols-2 gap-2 sm:grid-cols-3"
-                              name="wasteProduct"
-                              option={productCatalog[wasteType]?.[wasteCategory]}
-                              disabled={!wasteType && !wasteCategory}
-                              key={wasteCategory + wasteType}
-                            />
+                            <div 
+                              key={wasteCategory + wasteType} 
+                              className="flex w-full items-start gap-3 animate-fadeIn"
+                            >
+                              <div className="pt-1">
+                                <ReadAloud text={`${t("form.wasteProduct")}`} />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <ProcessSelectInput
+                                  isProduct={true}
+                                  control={control}
+                                  label={`${t("form.wasteProduct")} *`}
+                                  classNames="grid grid-cols-2 gap-2 sm:grid-cols-3"
+                                  name="wasteProduct"
+                                  option={
+                                    productCatalog[wasteType]?.[wasteCategory]
+                                  }
+                                  disabled={!wasteType && !wasteCategory}
+                                />
+                              </div>
+                            </div>
                           )}
 
                           {watch("wasteProduct") && (
                             <Button
                               type="button"
-                              className="h-12 w-full rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 font-semibold text-white shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
+                              className="mt-4 h-12 w-full rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 font-semibold text-white shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
                               onClick={() => setStep(2)}
                             >
                               {t("actions.continue")}
@@ -257,62 +285,76 @@ export default function Process() {
 
                       {step === 2 && (
                         <div className="animate-fadeIn space-y-6">
-                          <ProcessSelectInput
-                            classNames="grid grid-cols-1 gap-3 sm:grid-cols-3"
-                            control={control}
-                            isProduct={false}
-                            label={`${t("form.moisture")} *`}
-                            name="moisture"
-                            option={[
-                              {
-                                value: "dry",
-                                icon: <Sun />,
-                                name: c("moisture.dry"),
-                              },
-                              {
-                                value: "semi_wet",
-                                icon: <DropletOff />,
-                                name: c("moisture.semi_wet"),
-                              },
-                              {
-                                value: "wet",
-                                icon: <Droplet />,
-                                name: c("moisture.wet"),
-                              },
-                            ]}
-                            key={watch("moisture")}
-                          />
+                          <div className="flex w-full items-start gap-3">
+                            <div className="pt-1">
+                              <ReadAloud text={`${t("form.moisture")}`} />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <ProcessSelectInput
+                                classNames="grid grid-cols-1 gap-3 sm:grid-cols-3"
+                                control={control}
+                                isProduct={false}
+                                label={`${t("form.moisture")} *`}
+                                name="moisture"
+                                option={[
+                                  {
+                                    value: "dry",
+                                    icon: <Sun />,
+                                    name: c("moisture.dry"),
+                                  },
+                                  {
+                                    value: "semi_wet",
+                                    icon: <DropletOff />,
+                                    name: c("moisture.semi_wet"),
+                                  },
+                                  {
+                                    value: "wet",
+                                    icon: <Droplet />,
+                                    name: c("moisture.wet"),
+                                  },
+                                ]}
+                                key={watch("moisture")}
+                              />
+                            </div>
+                          </div>
 
-                          <ProcessSelectInput
-                            classNames="grid grid-cols-2 gap-3 sm:grid-cols-2"
-                            control={control}
-                            isProduct={false}
-                            label={`${t("form.intendedUse")} *`}
-                            name="intendedUse"
-                            option={[
-                              {
-                                value: "compost",
-                                icon: "🌱",
-                                name: t("intendedUse.compost"),
-                              },
-                              {
-                                value: "feed",
-                                icon: "🐄",
-                                name: t("intendedUse.feed"),
-                              },
-                              {
-                                value: "sell",
-                                icon: "💰",
-                                name: t("intendedUse.sell"),
-                              },
-                              {
-                                value: "biogas",
-                                icon: "⚡",
-                                name: t("intendedUse.biogas"),
-                              },
-                            ]}
-                            key={watch("intendedUse")}
-                          />
+                          <div className="flex w-full items-start gap-3">
+                            <div className="pt-1">
+                              <ReadAloud text={`${t("form.intendedUse")}`} />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <ProcessSelectInput
+                                classNames="grid grid-cols-2 gap-3 sm:grid-cols-2"
+                                control={control}
+                                isProduct={false}
+                                label={`${t("form.intendedUse")} *`}
+                                name="intendedUse"
+                                option={[
+                                  {
+                                    value: "compost",
+                                    icon: "🌱",
+                                    name: t("intendedUse.compost"),
+                                  },
+                                  {
+                                    value: "feed",
+                                    icon: "🐄",
+                                    name: t("intendedUse.feed"),
+                                  },
+                                  {
+                                    value: "sell",
+                                    icon: "💰",
+                                    name: t("intendedUse.sell"),
+                                  },
+                                  {
+                                    value: "biogas",
+                                    icon: "⚡",
+                                    name: t("intendedUse.biogas"),
+                                  },
+                                ]}
+                                key={watch("intendedUse")}
+                              />
+                            </div>
+                          </div>
 
                           <div className="flex gap-3 pt-4">
                             <Button
@@ -366,7 +408,8 @@ export default function Process() {
                   <div className="space-y-6">
                     <div>
                       <h3 className="mb-4 flex items-center gap-2 font-semibold text-gray-900">
-                        <span className="text-lg">1.</span> {t("result.process")}
+                        <span className="text-lg">1.</span>{" "}
+                        {t("result.process")}
                       </h3>
                       <div className="space-y-3">
                         {data?.process.map((item: string, index: number) => (

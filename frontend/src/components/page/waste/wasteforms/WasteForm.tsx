@@ -3,6 +3,8 @@ import productCategoryMap from "@/../public/Products/Product.json";
 import { FormInput } from "@/components/common/form/FormInput";
 import { ProcessSelectInput } from "@/components/common/form/ProcessSelectInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
+import VoiceInput from "@/components/provider/VoiceInput";
+import ReadAloud from "@/components/provider/ReadAloud";
 import {
   wasteFormDataType,
   wasteFormSchema,
@@ -77,7 +79,7 @@ export default function ListWaste() {
     useCreateWasteMutation();
 
   const t = useTranslations("waste");
-  const c = useTranslations("wasteCommon");
+  const c = useTranslations("wasteCommon"); // Ensure wasteCommon has translations for categories/types
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -94,13 +96,11 @@ export default function ListWaste() {
 
   const onSubmit = async (wasteData: wasteFormDataType) => {
     if (!address && !farmerUser) {
-      toast.error(
-        "Error while loading the farmer data please refresh the page",
-      );
+      toast.error(t("messages.genericError"));
       return;
     }
     if (!file) {
-      toast.error("Please select an image first");
+      toast.error(t("fields.image.noImageSelected"));
       return;
     }
 
@@ -138,7 +138,7 @@ export default function ListWaste() {
       wasteProduct: wasteData.wasteProduct,
       wasteType: wasteData.wasteType,
     }).unwrap();
-    toast.success("Listing created successfully!");
+    toast.success(t("messages.success"));
     setTimeout(() => {
       router.push("/profile/farmer/my-listing");
     }, 500);
@@ -146,11 +146,11 @@ export default function ListWaste() {
 
   useEffect(() => {
     if (isError) {
-      toast.error("error");
+      toast.error(t("messages.failure"));
       console.log(error);
     }
-  }, [isSuccess, isError]);
-  
+  }, [isSuccess, isError, t]);
+
   const selectedWasteType = watch("wasteType");
   const selectedWasteCategory = watch("wasteCategory");
 
@@ -160,6 +160,7 @@ export default function ListWaste() {
     setValue("wasteCategory", "");
     setValue("wasteProduct", "");
   }, [selectedWasteType, setValue]);
+
   useEffect(() => {
     if (!selectedWasteCategory) return;
 
@@ -239,17 +240,17 @@ export default function ListWaste() {
               <CardTitle className="text-2xl font-bold text-gray-900">
                 {step === 1 ? "📦 " : step === 2 ? "📊 " : "🖼️ "}
                 {step === 1
-                  ? "Waste Details"
+                  ? t("sections.wasteDetails")
                   : step === 2
-                    ? "Specifications"
-                    : "Product Image"}
+                    ? t("sections.specifications")
+                    : t("sections.productImage")}
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
                 {step === 1
-                  ? "Tell us about your agricultural waste"
+                  ? t("sections.wasteDetailsDesc") // Consider adding to your JSON
                   : step === 2
-                    ? "Add quantity, price, and condition details"
-                    : "Upload a clear photo of your waste"}
+                    ? t("sections.specificationsDesc") // Consider adding to your JSON
+                    : t("sections.productImageDesc")} // Consider adding to your JSON
               </p>
             </div>
           </CardHeader>
@@ -262,75 +263,115 @@ export default function ListWaste() {
                 {step === 1 && (
                   <div className="space-y-6 animate-fadeIn">
                     {/* Title */}
-                    <FormInput
-                      control={control}
-                      label="Give your listing a title *"
-                      name="title"
-                      placeholder="e.g., Fresh Rice Straw, Wheat Residue"
-                      type="text"
-                      classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                        formValues.price
-                          ? "border-green-300 bg-green-50/30"
-                          : "border-gray-200"
-                      } `}
-                    />
+                    <div className="flex w-full items-start gap-3">
+                      <div className="pt-1">
+                        <ReadAloud text={t("fields.title.label")} />
+                      </div>
+                      <div className="min-w-0 flex-1 flex gap-2 items-end">
+                        <div className="flex-1">
+                          <FormInput
+                            control={control}
+                            label={`${t("fields.title.label")} *`}
+                            name="title"
+                            placeholder={t("fields.title.placeholder")}
+                            type="text"
+                            classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                              formValues.price
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            } `}
+                          />
+                        </div>
+                        <VoiceInput
+                          onText={(txt) => {
+                            setValue("title", txt, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                              shouldTouch: true,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
 
                     {/* Waste Type Selection - Visual */}
-                    <ProcessSelectInput
-                      classNames="grid grid-cols-3 gap-3"
-                      control={control}
-                      isProduct={false}
-                      label="What type of waste? *"
-                      name="wasteType"
-                      option={[
-                        {
-                          value: "crop",
-                          icon: "🌾",
-                          name: c("wasteTypes.crop"),
-                        },
-                        {
-                          value: "fruit",
-                          icon: "🍓",
-                          name: c("wasteTypes.fruit"),
-                        },
-                        {
-                          value: "vegetable",
-                          icon: "🥬",
-                          name: c("wasteTypes.vegetable"),
-                        },
-                      ]}
-                    />
+                    <div className="flex w-full items-start gap-3">
+                      <div className="pt-1">
+                        <ReadAloud text={t("fields.wasteType.label")} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <ProcessSelectInput
+                          classNames="grid grid-cols-3 gap-3"
+                          control={control}
+                          isProduct={false}
+                          label={`${t("fields.wasteType.label")} *`}
+                          name="wasteType"
+                          option={[
+                            {
+                              value: "crop",
+                              icon: "🌾",
+                              name: c("wasteTypes.crop"),
+                            },
+                            {
+                              value: "fruit",
+                              icon: "🍓",
+                              name: c("wasteTypes.fruit"),
+                            },
+                            {
+                              value: "vegetable",
+                              icon: "🥬",
+                              name: c("wasteTypes.vegetable"),
+                            },
+                          ]}
+                        />
+                      </div>
+                    </div>
 
                     {/* Category Selection */}
                     {selectedWasteType && (
-                      <SelectInput
-                        control={control}
-                        label="Select category *"
-                        name="wasteCategory"
-                        option={CategoryObject as []}
-                        placeholder="Choose a category"
-                        classname={`w-full text-base rounded-lg border-2 transition-all ${
-                          selectedWasteCategory
-                            ? "border-green-300 bg-green-50/30"
-                            : "border-gray-200"
-                        }`}
-                        disabled={!selectedWasteType}
-                      />
+                      <div className="flex w-full items-start gap-3 animate-fadeIn">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.wasteCategory.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <SelectInput
+                            control={control}
+                            label={`${t("fields.wasteCategory.label")} *`}
+                            name="wasteCategory"
+                            option={CategoryObject as []}
+                            placeholder={t("fields.wasteCategory.placeholder")}
+                            classname={`w-full text-base rounded-lg border-2 transition-all ${
+                              selectedWasteCategory
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            }`}
+                            disabled={!selectedWasteType}
+                          />
+                        </div>
+                      </div>
                     )}
+
                     {selectedWasteType && selectedWasteCategory && (
-                      <ProcessSelectInput
-                        classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
-                        control={control}
-                        isProduct={true}
-                        label=" Select product *"
-                        name="wasteProduct"
-                        option={
-                          (productCategoryMap as any)?.[selectedWasteType]?.[
-                            selectedWasteCategory
-                          ]
-                        }
-                        disabled={!selectedWasteType && !selectedWasteCategory}
-                      />
+                      <div className="flex w-full items-start gap-3 animate-fadeIn">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.wasteProduct.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <ProcessSelectInput
+                            classNames="grid grid-cols-2 sm:grid-cols-3 gap-2"
+                            control={control}
+                            isProduct={true}
+                            label={`${t("fields.wasteProduct.label")} *`}
+                            name="wasteProduct"
+                            option={
+                              (productCategoryMap as any)?.[selectedWasteType]?.[
+                                selectedWasteCategory
+                              ]
+                            }
+                            disabled={!selectedWasteType && !selectedWasteCategory}
+                          />
+                        </div>
+                      </div>
                     )}
 
                     {/* Step 1 Navigation */}
@@ -340,7 +381,7 @@ export default function ListWaste() {
                         onClick={() => setStep(2)}
                         className="w-full h-12 mt-8 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {t("buttons.continue")} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     )}
                   </div>
@@ -351,91 +392,138 @@ export default function ListWaste() {
                   <div className="space-y-6 animate-fadeIn">
                     {/* Quantity & Unit */}
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <FormInput
-                        control={control}
-                        label="Quantity *"
-                        name="quantity"
-                        placeholder="e.g., 100"
-                        type="number"
-                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                          formValues.price
-                            ? "border-green-300 bg-green-50/30"
-                            : "border-gray-200"
-                        } `}
-                      />
+                      <div className="flex w-full items-start gap-3">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.quantity.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <FormInput
+                            control={control}
+                            label={`${t("fields.quantity.label")} *`}
+                            name="quantity"
+                            placeholder={t("fields.quantity.placeholder")}
+                            type="number"
+                            classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                              formValues.price
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            } `}
+                          />
+                        </div>
+                      </div>
 
-                      <SelectInput
-                        control={control}
-                        label="Unit *"
-                        name="unit"
-                        placeholder="Select unit"
-                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                          formValues.unit
-                            ? "border-green-300 bg-green-50/30"
-                            : "border-gray-200"
-                        }`}
-                        option={[
-                          { label: "📦 Kilogram (kg)", value: "kg" },
-                          { value: "ton", label: "🚛 Metric Ton" },
-                          { value: "gram", label: "⚖️ Gram (g)" },
-                        ]}
-                      />
+                      <div className="flex w-full items-start gap-3">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.unit.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <SelectInput
+                            control={control}
+                            label={`${t("fields.unit.label")} *`}
+                            name="unit"
+                            placeholder={t("fields.unit.placeholder")}
+                            classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                              formValues.unit
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            }`}
+                            option={[
+                              { label: `📦 ${t("unit.kg")}`, value: "kg" },
+                              { label: `🚛 ${t("unit.ton")}`, value: "ton" },
+                              { label: `⚖️ ${t("unit.gram")}`, value: "gram" },
+                            ]}
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Price & Moisture */}
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <FormInput
-                        control={control}
-                        label="Price per unit (₹) *"
-                        name="price"
-                        placeholder="e.g., 500"
-                        type="number"
-                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                          formValues.price
-                            ? "border-green-300 bg-green-50/30"
-                            : "border-gray-200"
-                        } `}
-                      />
-                      <SelectInput
-                        control={control}
-                        label="Moisture level *"
-                        name="moisture"
-                        placeholder="Select moisture"
-                        classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                          formValues.moisture
-                            ? "border-green-300 bg-green-50/30"
-                            : "border-gray-200"
-                        } `}
-                        option={[
-                          {
-                            value: "dry",
-                            label: "☀️ Dry",
-                          },
-                          {
-                            value: "semi_wet",
-                            label: "🌤️ Semi-wet",
-                          },
-                          {
-                            value: "wet",
-                            label: "💧 Wet",
-                          },
-                        ]}
-                      />
+                      <div className="flex w-full items-start gap-3">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.price.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <FormInput
+                            control={control}
+                            label={`${t("fields.price.label")} *`}
+                            name="price"
+                            placeholder={t("fields.price.placeholder")}
+                            type="number"
+                            classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                              formValues.price
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            } `}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="flex w-full items-start gap-3">
+                        <div className="pt-1">
+                          <ReadAloud text={t("fields.moisture.label")} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <SelectInput
+                            control={control}
+                            label={`${t("fields.moisture.label")} *`}
+                            name="moisture"
+                            placeholder={t("fields.moisture.placeholder")}
+                            classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                              formValues.moisture
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            } `}
+                            option={[
+                              {
+                                value: "dry",
+                                label: "☀️ Dry",
+                              },
+                              {
+                                value: "semi_wet",
+                                label: "🌤️ Semi-wet",
+                              },
+                              {
+                                value: "wet",
+                                label: "💧 Wet",
+                              },
+                            ]}
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     {/* Description */}
-                    <FormInput
-                      classname={`resize-none text-base rounded-lg border-2 transition-all ${
-                        formValues.description
-                          ? "border-green-300 bg-green-50/30"
-                          : "border-gray-200"
-                      } `}
-                      control={control}
-                      label="Add description (optional)"
-                      name="description"
-                      type="text"
-                      placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
-                    />
+                    <div className="flex w-full items-start gap-3">
+                      <div className="pt-1">
+                        <ReadAloud text={t("fields.description.label")} />
+                      </div>
+                      <div className="min-w-0 flex-1 flex gap-2 items-end">
+                        <div className="flex-1">
+                          <FormInput
+                            classname={`resize-none text-base rounded-lg border-2 transition-all ${
+                              formValues.description
+                                ? "border-green-300 bg-green-50/30"
+                                : "border-gray-200"
+                            } `}
+                            control={control}
+                            label={t("fields.description.label")}
+                            name="description"
+                            type="text"
+                            placeholder={t("fields.description.placeholder")}
+                          />
+                        </div>
+                        <VoiceInput
+                          onText={(txt) =>
+                            setValue("description", txt, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
 
                     {/* Step 2 Navigation */}
                     <div className="flex gap-3 pt-4">
@@ -445,7 +533,7 @@ export default function ListWaste() {
                         onClick={() => setStep(1)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {t("buttons.back")}
                       </Button>
                       <Button
                         type="button"
@@ -457,7 +545,7 @@ export default function ListWaste() {
                         }
                         className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg transition-all"
                       >
-                        Continue <ChevronRight className="w-5 h-5 ml-2" />
+                        {t("buttons.continue")} <ChevronRight className="w-5 h-5 ml-2" />
                       </Button>
                     </div>
                   </div>
@@ -469,61 +557,65 @@ export default function ListWaste() {
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
                       <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-blue-800">
-                        Upload a clear, well-lit photo of your waste product.
-                        This helps buyers trust your listing.
+                        {t("sections.productImageDesc")}
                       </p>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="image"
-                        className="text-base font-semibold text-gray-900"
-                      >
-                        Product Image <span className="text-red-500">*</span>
-                      </Label>
+                    <div className="flex w-full items-start gap-3">
+                      <div className="pt-1">
+                        <ReadAloud text={t("fields.image.label")} />
+                      </div>
+                      <div className="min-w-0 flex-1 space-y-3">
+                        <Label
+                          htmlFor="image"
+                          className="text-base font-semibold text-gray-900"
+                        >
+                          {t("fields.image.label")} <span className="text-red-500">*</span>
+                        </Label>
 
-                      {/* Image Preview */}
-                      {previewImage ? (
-                        <div className="relative rounded-lg overflow-hidden border-2 border-green-300 bg-green-50">
-                          <img
-                            src={previewImage}
-                            alt="Preview"
-                            className="w-full h-64 object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setPreviewImage(null);
-                              setFile(null);
-                            }}
-                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ) : (
-                        <label htmlFor="image" className="block">
-                          <div className="relative border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg p-8 text-center cursor-pointer transition-all hover:bg-green-50">
-                            <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                            <p className="text-base font-semibold text-gray-900">
-                              Tap to upload photo
-                            </p>
-                            <p className="text-sm text-gray-600 mt-1">
-                              or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 mt-2">
-                              JPG, PNG up to 10MB
-                            </p>
+                        {/* Image Preview */}
+                        {previewImage ? (
+                          <div className="relative rounded-lg overflow-hidden border-2 border-green-300 bg-green-50">
+                            <img
+                              src={previewImage}
+                              alt="Preview"
+                              className="w-full h-64 object-cover"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPreviewImage(null);
+                                setFile(null);
+                              }}
+                              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all"
+                            >
+                              ✕
+                            </button>
                           </div>
-                          <Input
-                            id="image"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="hidden"
-                          />
-                        </label>
-                      )}
+                        ) : (
+                          <label htmlFor="image" className="block">
+                            <div className="relative border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg p-8 text-center cursor-pointer transition-all hover:bg-green-50">
+                              <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                              <p className="text-base font-semibold text-gray-900">
+                                {t("fields.image.click")}
+                              </p>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {t("fields.image.or")}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-2">
+                                {t("fields.image.helper")}
+                              </p>
+                            </div>
+                            <Input
+                              id="image"
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageChange}
+                              className="hidden"
+                            />
+                          </label>
+                        )}
+                      </div>
                     </div>
 
                     {/* Step 3 Navigation */}
@@ -534,7 +626,7 @@ export default function ListWaste() {
                         onClick={() => setStep(2)}
                         className="flex-1 h-12 rounded-lg border-2 font-semibold"
                       >
-                        Back
+                        {t("buttons.back")}
                       </Button>
                       <Button
                         type="submit"
@@ -544,12 +636,12 @@ export default function ListWaste() {
                         {isSubmitting || isLoading ? (
                           <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Publishing...
+                            {t("buttons.submitting")}
                           </>
                         ) : (
                           <>
                             <Leaf className="mr-2 h-5 w-5" />
-                            Publish Listing
+                            {t("buttons.submit")}
                           </>
                         )}
                       </Button>
@@ -566,28 +658,28 @@ export default function ListWaste() {
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📸</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Quality Photos
+              {t("infoCards.photos.title")}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Clear images increase buyer interest
+              {t("infoCards.photos.desc")}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">💰</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Fair Pricing
+              {t("infoCards.pricing.title")}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Competitive prices attract more buyers
+              {t("infoCards.pricing.desc")}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-2">📝</div>
             <h3 className="font-semibold text-gray-900 text-sm">
-              Good Details
+              {t("infoCards.details.title")}
             </h3>
             <p className="text-xs text-gray-600 mt-1">
-              Complete information builds trust
+              {t("infoCards.details.desc")}
             </p>
           </div>
         </div>

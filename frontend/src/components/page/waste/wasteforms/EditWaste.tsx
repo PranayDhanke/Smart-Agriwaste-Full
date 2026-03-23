@@ -35,6 +35,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import VoiceInput from "@/components/provider/VoiceInput";
 
 export default function EditWaste() {
   const { user, isLoaded } = useUser();
@@ -260,7 +261,13 @@ export default function EditWaste() {
     </div>
   );
 
-  if (!isLoaded || !address || !farmerUser || isWasteLoading || isWasteFetching) {
+  if (
+    !isLoaded ||
+    !address ||
+    !farmerUser ||
+    isWasteLoading ||
+    isWasteFetching
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin mr-2" />
@@ -273,9 +280,7 @@ export default function EditWaste() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-lg font-semibold text-gray-900">
-            Waste not found
-          </p>
+          <p className="text-lg font-semibold text-gray-900">Waste not found</p>
           <p className="mt-2 text-sm text-gray-600">
             We could not load the waste details for editing.
           </p>
@@ -343,18 +348,31 @@ export default function EditWaste() {
                 {step === 1 && (
                   <div className="space-y-6 animate-fadeIn">
                     {/* Title */}
-                    <FormInput
-                      control={control}
-                      label="Give your listing a title *"
-                      name="title"
-                      placeholder="e.g., Fresh Rice Straw, Wheat Residue"
-                      type="text"
-                      classname={`h-12 text-base rounded-lg border-2 transition-all ${
-                        formValues.price
-                          ? "border-green-300 bg-green-50/30"
-                          : "border-gray-200"
-                      } `}
-                    />
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-1">
+                        <FormInput
+                          control={control}
+                          label="Give your listing a title *"
+                          name="title"
+                          placeholder="e.g., Fresh Rice Straw, Wheat Residue"
+                          type="text"
+                          classname={`h-12 text-base rounded-lg border-2 transition-all ${
+                            formValues.price
+                              ? "border-green-300 bg-green-50/30"
+                              : "border-gray-200"
+                          } `}
+                        />
+                      </div>
+                      <VoiceInput
+                        onText={(t) => {
+                          setValue("title", t, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                            shouldTouch: true,
+                          });
+                        }}
+                      />
+                    </div>
 
                     {/* Waste Type Selection - Visual */}
                     <ProcessSelectInput
@@ -505,18 +523,31 @@ export default function EditWaste() {
                     </div>
 
                     {/* Description */}
-                    <FormInput
-                      classname={`resize-none text-base rounded-lg border-2 transition-all ${
-                        formValues.description
-                          ? "border-green-300 bg-green-50/30"
-                          : "border-gray-200"
-                      } `}
-                      control={control}
-                      label="Add description (optional)"
-                      name="description"
-                      type="text"
-                      placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
-                    />
+                    <div className="flex gap-2 items-end">
+                      <div className="flex-1">
+                        <FormInput
+                          classname={`resize-none text-base rounded-lg border-2 transition-all ${
+                            formValues.description
+                              ? "border-green-300 bg-green-50/30"
+                              : "border-gray-200"
+                          } `}
+                          control={control}
+                          label="Add description (optional)"
+                          name="description"
+                          type="text"
+                          placeholder="Tell buyers more about the waste quality, origin, storage conditions..."
+                        />
+                      </div>
+                      <VoiceInput
+                        onText={(t) =>
+                          setValue("description", t, {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                            shouldValidate: true,
+                          })
+                        }
+                      />
+                    </div>
 
                     {/* Step 2 Navigation */}
                     <div className="flex gap-3 pt-4">
