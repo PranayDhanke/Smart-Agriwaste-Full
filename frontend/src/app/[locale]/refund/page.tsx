@@ -1,4 +1,6 @@
 import LegalPage from "@/components/page/legal/LegalPage";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 
 const sections = [
   {
@@ -31,9 +33,28 @@ const sections = [
   },
 ];
 
-export default function RefundPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function RefundPage({ params }: Props) {
+  const { locale: requestedLocale } = await params;
+  const locale = hasLocale(routing.locales, requestedLocale)
+    ? requestedLocale
+    : routing.defaultLocale;
+
+  const legalMessagesByLocale = {
+    en: (await import("@/messages/legal/en.json")).default,
+    hi: (await import("@/messages/legal/hi.json")).default,
+    mr: (await import("@/messages/legal/mr.json")).default,
+  };
+
+  const legalMessages = legalMessagesByLocale[locale];
+
   return (
     <LegalPage
+      legalLabel={legalMessages.common.badge}
+      lastUpdatedLabel={legalMessages.common.lastUpdated}
       title="Refund Policy"
       description="This Refund Policy explains how Smart Agriwaste reviews and processes refund requests related to orders and payments on the platform."
       lastUpdated="March 21, 2026"
