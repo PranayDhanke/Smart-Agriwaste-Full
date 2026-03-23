@@ -45,29 +45,33 @@ func GetRecommendation(c *gin.Context) {
 		"intendedUse": intendedUse,
 		"isActive":    true,
 	}
+
 	var rec models.Recommendation
 
 	err := config.RecommendationCollection.
 		FindOne(context.Background(), filter).
 		Decode(&rec)
+
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Recommendation not found",
 		})
 		return
 	}
+
 	if _, ok := rec.Process[lang]; !ok {
 		lang = "en"
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"process":             getLocalizedStringSlice(rec.Process, lang),
 		"finalOutput":         getLocalizedString(rec.FinalOutput, lang),
 		"benefits":            getLocalizedString(rec.Benefits, lang),
 		"notes":               getLocalizedString(rec.Notes, lang),
 		"requiredMaterials":   getLocalizedStringSlice(rec.RequiredMaterials, lang),
-		"processDuration":     getLocalizedString(rec.ProcessDuration, lang),
+		"processDuration":     getLocalizedStringSlice(rec.ProcessDuration, lang),
 		"requiredEquipment":   getLocalizedStringSlice(rec.RequiredEquipment, lang),
 		"recommendedFor":      getLocalizedStringSlice(rec.RecommendedFor, lang),
-		"environmentalImpact": getLocalizedString(rec.EnvironmentalImpact, lang),
+		"environmentalImpact": getLocalizedStringSlice(rec.EnvironmentalImpact, lang),
 	})
 }
