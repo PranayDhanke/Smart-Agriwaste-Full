@@ -76,6 +76,10 @@ export default function Profile() {
   const router = useRouter();
   const t = useTranslations("profile.buyer.Profile");
   const Address: AddressType = addressJson;
+  const statusLabel = (status?: string | null) =>
+    status && t.has(`status.${status}` as Parameters<typeof t>[0])
+      ? t(`status.${status}` as Parameters<typeof t>[0])
+      : (status ?? "not_requested");
 
   const fieldLabels = getFieldLabels(t);
 
@@ -221,9 +225,17 @@ export default function Profile() {
         userId: buyerId,
       }).unwrap();
       await getProfile({ id: buyerId, role: role as string }).unwrap();
-      toast.success("Verification request submitted.");
+      toast.success(
+        t.has("verification.requestSubmitted")
+          ? t("verification.requestSubmitted")
+          : "Verification request submitted.",
+      );
     } catch {
-      toast.error("Unable to submit verification request.");
+      toast.error(
+        t.has("verification.requestFailed")
+          ? t("verification.requestFailed")
+          : "Unable to submit verification request.",
+      );
     }
   };
 
@@ -232,7 +244,9 @@ export default function Profile() {
       <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
         <Loader2 className="w-10 h-10 text-indigo-600 animate-spin mb-4" />
         <p className="text-indigo-900 font-medium">
-          Loading your colorful profile...
+          {t.has("ui.loadingProfile")
+            ? t("ui.loadingProfile")
+            : "Loading your colorful profile..."}
         </p>
       </div>
     );
@@ -273,14 +287,22 @@ export default function Profile() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-violet-800">
-                    Verification status
+                    {t.has("verification.heading")
+                      ? t("verification.heading")
+                      : "Verification status"}
                   </p>
                   <p className="mt-1 text-sm text-violet-700">
-                    Current status: {verification?.status ?? "not_requested"}
+                    {t.has("verification.currentStatus")
+                      ? t("verification.currentStatus", {
+                          status: statusLabel(verification?.status),
+                        })
+                      : `Current status: ${statusLabel(verification?.status)}`}
                   </p>
                   {verification?.reason && (
                     <p className="mt-1 text-xs text-violet-700">
-                      Admin note: {verification.reason}
+                      {t.has("verification.adminNote")
+                        ? t("verification.adminNote", { note: verification.reason })
+                        : `Admin note: ${verification.reason}`}
                     </p>
                   )}
                 </div>
@@ -293,12 +315,20 @@ export default function Profile() {
                   }
                 >
                   {isRequestingVerification
-                    ? "Requesting..."
+                    ? t.has("verification.requesting")
+                      ? t("verification.requesting")
+                      : "Requesting..."
                     : verification?.status === "verified"
-                      ? "Verified"
+                      ? t.has("verification.verified")
+                        ? t("verification.verified")
+                        : "Verified"
                       : verification?.status === "pending"
-                        ? "Pending review"
-                        : "Request verification"}
+                        ? t.has("verification.pending")
+                          ? t("verification.pending")
+                          : "Pending review"
+                        : t.has("verification.request")
+                          ? t("verification.request")
+                          : "Request verification"}
                 </Button>
               </div>
             </div>
@@ -423,7 +453,11 @@ export default function Profile() {
                             : []
                         }
                         placeholder={
-                          selectedState ? fieldLabels.district : "State first"
+                          selectedState
+                            ? fieldLabels.district
+                            : t.has("ui.stateFirst")
+                              ? t("ui.stateFirst")
+                              : "State first"
                         }
                         disabled={!selectedState}
                         classname="h-12 rounded-xl bg-white shadow-sm"
@@ -442,7 +476,9 @@ export default function Profile() {
                         placeholder={
                           selectedDistrict
                             ? fieldLabels.taluka
-                            : "District first"
+                            : t.has("ui.districtFirst")
+                              ? t("ui.districtFirst")
+                              : "District first"
                         }
                         disabled={!selectedDistrict}
                         classname="h-12 rounded-xl bg-white shadow-sm"
@@ -459,7 +495,11 @@ export default function Profile() {
                             : []
                         }
                         placeholder={
-                          selectedTaluka ? fieldLabels.village : "Taluka first"
+                          selectedTaluka
+                            ? fieldLabels.village
+                            : t.has("ui.talukaFirst")
+                              ? t("ui.talukaFirst")
+                              : "Taluka first"
                         }
                         disabled={!selectedTaluka}
                         classname="h-12 rounded-xl bg-white shadow-sm"
@@ -519,11 +559,13 @@ export default function Profile() {
                   >
                     {isUpdating ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-3 animate-spin" /> Saving
-                        Changes...
+                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />{" "}
+                        {t.has("ui.savingChanges")
+                          ? t("ui.savingChanges")
+                          : "Saving Changes..."}
                       </>
                     ) : (
-                      t("saveChanges") || "Save Profile Updates"
+                      t("saveChanges")
                     )}
                   </Button>
                 </div>

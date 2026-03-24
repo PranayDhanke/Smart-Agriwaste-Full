@@ -48,8 +48,42 @@
     "aadhar": "Aadhar Document",
     "farm": "Farm Document"
   },
+  "verification": {
+    "heading": "Verification status",
+    "currentStatus": "Current status: {status}",
+    "adminNote": "Admin note: {note}",
+    "requesting": "Requesting...",
+    "verified": "Verified",
+    "pending": "Pending review",
+    "request": "Request verification",
+    "requestSubmitted": "Verification request submitted.",
+    "requestFailed": "Unable to submit verification request."
+  },
   "address": {
     "heading": "Address Information"
+  },
+  "ui": {
+    "loadingProfile": "Loading your colorful profile...",
+    "savingChanges": "Saving Changes...",
+    "selectState": "Select State",
+    "selectDistrict": "Select District",
+    "selectTaluka": "Select Taluka",
+    "selectVillage": "Select Village",
+    "housePlaceholder": "House No / Building",
+    "landmarkPlaceholder": "Landmark / Area",
+    "farmNumberPlaceholder": "e.g. Survey No. 12A",
+    "farmAreaPlaceholder": "Total Area size",
+    "selectUnit": "Select Unit"
+  },
+  "status": {
+    "not_requested": "Not requested",
+    "pending": "Pending",
+    "verified": "Verified",
+    "rejected": "Rejected"
+  },
+  "units": {
+    "hectare": "Hectare",
+    "acre": "Acre"
   },
   "saveChanges": "Save Changes",
   "uploadFailed": "Upload failed. Please try again.",

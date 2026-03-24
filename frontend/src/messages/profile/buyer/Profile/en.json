@@ -9,6 +9,30 @@
   "addressDetails": "Address Details",
   "document": "Document",
   "aadharDocument": "Aadhar Document",
+  "verification": {
+    "heading": "Verification status",
+    "currentStatus": "Current status: {status}",
+    "adminNote": "Admin note: {note}",
+    "requesting": "Requesting...",
+    "verified": "Verified",
+    "pending": "Pending review",
+    "request": "Request verification",
+    "requestSubmitted": "Verification request submitted.",
+    "requestFailed": "Unable to submit verification request."
+  },
+  "ui": {
+    "loadingProfile": "Loading your colorful profile...",
+    "savingChanges": "Saving Changes...",
+    "stateFirst": "State first",
+    "districtFirst": "District first",
+    "talukaFirst": "Taluka first"
+  },
+  "status": {
+    "not_requested": "Not requested",
+    "pending": "Pending",
+    "verified": "Verified",
+    "rejected": "Rejected"
+  },
   "saveChanges": "Save Changes",
   "fields": {
     "phone": "Phone Number",

@@ -25,7 +25,8 @@
   "profile": {
     "myAccount": "My Account",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "myReports": "My Reports"
   },
   "notification": {
     "title": "Notifications"

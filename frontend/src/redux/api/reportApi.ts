@@ -1,9 +1,10 @@
 import { baseApi } from "./baseApi";
+import { ModerationReport } from "@/components/types/admin";
 
 export const reportApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createReport: builder.mutation<
-      { message: string },
+      { message: string; report: ModerationReport },
       {
         targetType: "buyer" | "farmer" | "waste";
         targetId: string;
@@ -16,8 +17,16 @@ export const reportApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
+      invalidatesTags: [{ type: "Report", id: "MINE" }, "Admin"],
+    }),
+    getMyReports: builder.query<{ reports: ModerationReport[] }, void>({
+      query: () => ({
+        url: "/report/mine",
+        method: "GET",
+      }),
+      providesTags: [{ type: "Report", id: "MINE" }],
     }),
   }),
 });
 
-export const { useCreateReportMutation } = reportApi;
+export const { useCreateReportMutation, useGetMyReportsQuery } = reportApi;

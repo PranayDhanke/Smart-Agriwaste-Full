@@ -50,6 +50,7 @@ export interface ModerationReport {
   status: "pending" | "reviewed" | "resolved" | "rejected";
   resolutionNote?: string;
   createdAt: string;
+  reviewedAt?: string | null;
 }
 
 export interface AdminDashboardResponse {

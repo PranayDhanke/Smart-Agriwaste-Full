@@ -44,6 +44,7 @@ import {
 } from "@/redux/api/authApi";
 import { FormInput } from "@/components/common/form/FormInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
+import ReadAloud from "@/components/provider/ReadAloud";
 
 interface AddressType {
   states: string[];
@@ -130,15 +131,15 @@ export default function CreateAccountFarmer() {
 
   const onSubmit = async (data: FarmerAccountForm) => {
     if (!user?.id || role !== "farmer") {
-      toast.error("Unable to create farmer account right now.");
+      toast.error(t("errors.createFailed"));
       return;
     }
 
     const aadharToastId = data.aadhar
-      ? toast.loading("Uploading Aadhaar...")
+      ? toast.loading(t("actions.uploadingAadhaar"))
       : undefined;
     const farmDocToastId = data.farmdoc
-      ? toast.loading("Uploading Farm Document...")
+      ? toast.loading(t("actions.uploadingFarmDoc"))
       : undefined;
 
     try {
@@ -187,7 +188,7 @@ export default function CreateAccountFarmer() {
       await createProfile({ role, data: payload }).unwrap();
       await getProfile({ id: user.id, role }).unwrap();
 
-      toast.success("Profile created successfully");
+      toast.success(t("actions.complete"));
       router.replace("/");
     } catch (error: unknown) {
       if (aadharToastId) {
@@ -206,7 +207,7 @@ export default function CreateAccountFarmer() {
         "message" in error.data &&
         typeof error.data.message === "string"
           ? error.data.message
-          : "Failed to create farmer account";
+          : t("errors.createFailed");
 
       toast.error(message);
     }
@@ -234,16 +235,16 @@ export default function CreateAccountFarmer() {
               <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
             <h2 className="text-xl font-semibold text-gray-900">
-              Authentication Required
+              {t("authRequired.title")}
             </h2>
             <p className="text-gray-600">
-              You must be signed in to access this page
+              {t("authRequired.description")}
             </p>
             <Button
               onClick={() => router.push("/sign-up?role=farmer")}
               className="w-full bg-green-600 hover:bg-green-700"
             >
-              Go to Sign Up
+              {t("authRequired.button")}
             </Button>
           </div>
         </Card>
@@ -304,7 +305,7 @@ export default function CreateAccountFarmer() {
                     step >= 1 ? "text-white" : "text-green-200"
                   }`}
                 >
-                  Personal Info
+                  {t("steps.personalInfo")}
                 </span>
               </div>
               {/* Step 2 */}
@@ -323,7 +324,7 @@ export default function CreateAccountFarmer() {
                     step === 2 ? "text-white" : "text-green-200"
                   }`}
                 >
-                  Farm Details
+                  {t("steps.farmDetails")}
                 </span>
               </div>
             </div>
@@ -367,6 +368,9 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.identity.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.identity.title")}. ${t("fields.aadhaarNumber")}. Aadhaar Card Photo.`}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -375,7 +379,7 @@ export default function CreateAccountFarmer() {
                         name="aadharnumber"
                         label={`${t("fields.aadhaarNumber")} *`}
                         type="text"
-                        placeholder="XXXX XXXX XXXX"
+                        placeholder={t("placeholders.aadhaar")}
                         classname={`h-12 ${
                           errors.aadharnumber ? "border-red-500" : ""
                         }`}
@@ -385,8 +389,9 @@ export default function CreateAccountFarmer() {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Upload className="h-3.5 w-3.5" />
-                        Aadhaar Card Photo{" "}
+                        {t("fields.aadhaarPhoto")}{" "}
                         <span className="text-red-500">*</span>
+                        <ReadAloud text={t("fields.aadhaarPhoto")} />
                       </Label>
                       <div className="relative">
                         <Input
@@ -418,9 +423,7 @@ export default function CreateAccountFarmer() {
                           {errors.aadhar.message as string}
                         </p>
                       )}
-                      <p className="text-xs text-gray-500">
-                        Max size: 1MB | Formats: JPG, PNG
-                      </p>
+                      <p className="text-xs text-gray-500">{t("hints.aadhaarFormat")}</p>
                     </div>
                   </div>
 
@@ -431,6 +434,9 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.contact.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.contact.title")}. ${t("fields.phone")}.`}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -439,7 +445,7 @@ export default function CreateAccountFarmer() {
                         name="phone"
                         label={`${t("fields.phone")} *`}
                         type="tel"
-                        placeholder="+91 XXXXX XXXXX"
+                        placeholder={t("placeholders.phone")}
                         classname={`h-12 ${
                           errors.phone ? "border-red-500" : ""
                         }`}
@@ -454,6 +460,9 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.location.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.location.title")}. ${t("fields.state")}. ${t("fields.district")}. ${t("fields.taluka")}. ${t("fields.village")}.`}
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -467,7 +476,7 @@ export default function CreateAccountFarmer() {
                             label: s,
                             value: s,
                           }))}
-                          placeholder="Select State"
+                          placeholder={t("placeholders.selectState")}
                           classname={`h-12 ${
                             errors.state ? "border-red-500" : ""
                           }`}
@@ -491,7 +500,7 @@ export default function CreateAccountFarmer() {
                               : []
                           }
                           placeholder={
-                            selectedState ? "Select District" : "Select State first"
+                            selectedState ? t("placeholders.selectDistrict") : t("placeholders.selectStateFirst")
                           }
                           disabled={!selectedState}
                           classname={`h-12 ${
@@ -523,7 +532,7 @@ export default function CreateAccountFarmer() {
                               : []
                           }
                           placeholder={
-                            selectedDistrict ? "Select Taluka" : "Select District first"
+                            selectedDistrict ? t("placeholders.selectTaluka") : t("placeholders.selectDistrictFirst")
                           }
                           disabled={!selectedDistrict}
                           classname={`h-12 ${
@@ -553,7 +562,7 @@ export default function CreateAccountFarmer() {
                               : []
                           }
                           placeholder={
-                            selectedTaluka ? "Select Village/City" : "Select Taluka first"
+                            selectedTaluka ? t("placeholders.selectVillage") : t("placeholders.selectTalukaFirst")
                           }
                           disabled={!selectedTaluka}
                           classname={`h-12 ${
@@ -575,6 +584,9 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.address.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.address.title")}. ${t("fields.houseNumber")}. ${t("fields.road")}.`}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -583,7 +595,7 @@ export default function CreateAccountFarmer() {
                         name="houseBuildingName"
                         label={`${t("fields.houseNumber")} *`}
                         type="text"
-                        placeholder="e.g., House No. 123, Residential Complex"
+                        placeholder={t("placeholders.houseBuilding")}
                         classname={`h-12 ${
                           errors.houseBuildingName ? "border-red-500" : ""
                         }`}
@@ -596,7 +608,7 @@ export default function CreateAccountFarmer() {
                         name="roadarealandmarkName"
                         label={`${t("fields.road")} *`}
                         type="text"
-                        placeholder="e.g., Near Town Hall, MG Road"
+                        placeholder={t("placeholders.road")}
                         classname={`h-12 ${
                           errors.roadarealandmarkName ? "border-red-500" : ""
                         }`}
@@ -610,7 +622,7 @@ export default function CreateAccountFarmer() {
                       onClick={handleNextStep}
                       className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white h-14 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
                     >
-                      Continue to Farm Details
+                      {t("actions.continue")}
                       <CheckCircle2 className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
@@ -625,6 +637,9 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.farmDocs.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.farmDocs.title")}. ${t("fields.farmNumber")}. ${t("fields.farmDoc")}.`}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -633,7 +648,7 @@ export default function CreateAccountFarmer() {
                         name="farmNumber"
                         label={`${t("fields.farmNumber")} *`}
                         type="text"
-                        placeholder="Enter your land document number"
+                        placeholder={t("placeholders.farmNumber")}
                         classname={`h-12 ${
                           errors.farmNumber ? "border-red-500" : ""
                         }`}
@@ -646,8 +661,9 @@ export default function CreateAccountFarmer() {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Upload className="h-3.5 w-3.5" />
-                        Upload Farm Document{" "}
+                        {t("fields.farmDoc")}{" "}
                         <span className="text-red-500">*</span>
+                        <ReadAloud text={t("fields.farmDoc")} />
                       </Label>
                       <div className="relative">
                         <Input
@@ -692,16 +708,19 @@ export default function CreateAccountFarmer() {
                       <h3 className="font-semibold text-gray-900">
                         {t("sections.farmArea.title")}
                       </h3>
+                      <ReadAloud
+                        text={`${t("sections.farmArea.title")}. ${t("fields.totalArea")}. ${t("fields.unit")}.`}
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <FormInput
-                          control={control}
-                          name="farmArea"
-                          label={`${t("fields.totalArea")} *`}
-                          type="text"
-                          placeholder="e.g., 5.5"
+                      <FormInput
+                        control={control}
+                        name="farmArea"
+                        label={`${t("fields.totalArea")} *`}
+                        type="text"
+                        placeholder={t("placeholders.totalArea")}
                           classname={`h-12 ${
                             errors.farmArea ? "border-red-500" : ""
                           }`}
@@ -717,7 +736,7 @@ export default function CreateAccountFarmer() {
                             { label: t("units.hectare"), value: "hectare" },
                             { label: t("units.acre"), value: "acre" },
                           ]}
-                          placeholder="Select unit"
+                          placeholder={t("fields.unit")}
                           classname="h-12 border-green-300 bg-green-50/30"
                         />
                       </div>
@@ -727,12 +746,12 @@ export default function CreateAccountFarmer() {
                       <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <p className="text-sm text-blue-900">
                           <span className="font-semibold">
-                            Total Farm Area:
+                            {t("labels.totalFarmArea")}
                           </span>{" "}
                           {watch("farmArea")}{" "}
                           {watch("farmUnit") === "hectare"
-                            ? "hectares"
-                            : "acres"}
+                            ? t("units.hectarePlural")
+                            : t("units.acrePlural")}
                           {watch("farmArea") &&
                             watch("farmUnit") === "hectare" && (
                               <>
@@ -742,7 +761,7 @@ export default function CreateAccountFarmer() {
                                   {(
                                     parseFloat(watch("farmArea")) * 2.471
                                   ).toFixed(2)}{" "}
-                                  acres
+                                  {t("units.acrePlural")}
                                 </span>
                                 )
                               </>
@@ -756,7 +775,7 @@ export default function CreateAccountFarmer() {
                                   {(
                                     parseFloat(watch("farmArea")) / 2.471
                                   ).toFixed(2)}{" "}
-                                  hectares
+                                  {t("units.hectarePlural")}
                                 </span>
                                 )
                               </>
@@ -794,25 +813,25 @@ export default function CreateAccountFarmer() {
                       {isLoading || isSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Creating Profile...
+                          {t("actions.creating")}
                         </>
                       ) : (
                         <>
                           <CheckCircle2 className="mr-2 h-5 w-5" />
-                          Complete Registration
+                          {t("actions.complete")}
                         </>
                       )}
                     </Button>
                   </div>
 
                   <p className="text-center text-xs text-gray-500 pt-2">
-                    By completing registration, you agree to our{" "}
+                    {t("legal.prefix")}{" "}
                     <span className="text-green-600 underline cursor-pointer">
-                      Terms of Service
+                      {t("links.terms")}
                     </span>{" "}
-                    and{" "}
+                    {t("legal.and")}{" "}
                     <span className="text-green-600 underline cursor-pointer">
-                      Privacy Policy
+                      {t("links.privacy")}
                     </span>
                   </p>
                 </div>

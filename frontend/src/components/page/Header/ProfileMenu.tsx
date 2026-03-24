@@ -11,7 +11,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { LogOut, Settings, User } from "lucide-react";
+import { FileText, LogOut, Settings, User } from "lucide-react";
 
 interface ProfileMenuProps {
   user: {
@@ -55,12 +55,19 @@ export default function ProfileMenu({
           {t("profile.profile")}
         </DropdownMenuItem>
 
-        <Link href={role === "admin" ? "/profile/admin" : `/profile/${role}`}>
-          <DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/my-reports">
+            <FileText className="mr-2" />
+            My Reports
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link href={role === "admin" ? "/profile/admin" : `/profile/${role}`}>
             <Settings className="mr-2" />
             {t("profile.settings")}
-          </DropdownMenuItem>
-        </Link>
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 

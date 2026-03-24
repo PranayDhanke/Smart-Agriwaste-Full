@@ -30,3 +30,14 @@ export const createReport = async (req: Request, res: Response) => {
     report,
   });
 };
+
+export const getMyReports = async (req: Request, res: Response) => {
+  const actor = await getRequestActor(req);
+
+  const reports = await reportModel
+    .find({ reporterId: actor.userId })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  res.status(200).json({ reports });
+};

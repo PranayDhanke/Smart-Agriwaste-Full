@@ -110,7 +110,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { status, resolutionNote },
       }),
-      invalidatesTags: ["Admin"],
+      invalidatesTags: ["Admin", { type: "Report", id: "MINE" }],
     }),
   }),
 });

@@ -40,6 +40,7 @@ import {
 } from "@/redux/api/authApi";
 import { FormInput } from "@/components/common/form/FormInput";
 import { SelectInput } from "@/components/common/form/SelectInput";
+import ReadAloud from "@/components/provider/ReadAloud";
 
 interface AddressType {
   states: string[];
@@ -104,12 +105,12 @@ export default function CreateAccount() {
 
   const onSubmit = async (data: BuyerAccountForm) => {
     if (!user?.id || role !== "buyer") {
-      toast.error("Unable to create buyer account right now.");
+      toast.error(t("failedCreateProfile"));
       return;
     }
 
     const uploadToastId = data.aadhar
-      ? toast.loading("Uploading Aadhaar...")
+      ? toast.loading(t("uploadingAadhaar"))
       : undefined;
 
     try {
@@ -142,7 +143,7 @@ export default function CreateAccount() {
       await createProfile({ role, data: payload }).unwrap();
       await getProfile({ id: user.id, role }).unwrap();
 
-      toast.success("Profile created successfully");
+      toast.success(t("completeRegistration"));
       router.replace("/");
     } catch (error: unknown) {
       if (uploadToastId) {
@@ -158,7 +159,7 @@ export default function CreateAccount() {
         "message" in error.data &&
         typeof error.data.message === "string"
           ? error.data.message
-          : "Failed to create buyer account";
+          : t("failedCreateProfile");
 
       toast.error(message);
     }
@@ -248,18 +249,17 @@ export default function CreateAccount() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <CreditCard className="h-4 w-4 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">
-                      Identity Verification
-                    </h3>
+                    <h3 className="font-semibold text-gray-900">{t("identityVerification")}</h3>
+                    <ReadAloud text={`${t("identityVerification")}. ${t("aadhaarNumber")}. ${t("aadhaarPhoto")}.`} />
                   </div>
 
                   <div className="space-y-2">
                     <FormInput
                       control={control}
                       name="aadharnumber"
-                      label="Aadhaar Number *"
+                      label={`${t("aadhaarNumber")} *`}
                       type="text"
-                      placeholder="XXXX XXXX XXXX"
+                      placeholder={t("aadhaarPlaceholder")}
                       classname={`h-12 ${
                         errors.aadharnumber ? "border-red-500" : ""
                       }`}
@@ -269,7 +269,8 @@ export default function CreateAccount() {
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                       <Upload className="h-3.5 w-3.5" />
-                      Aadhaar Card Photo <span className="text-red-500">*</span>
+                      {t("aadhaarPhoto")} <span className="text-red-500">*</span>
+                      <ReadAloud text={t("aadhaarPhoto")} />
                     </Label>
                     <div className="relative">
                       <Input
@@ -301,9 +302,7 @@ export default function CreateAccount() {
                         {errors.aadhar.message as string}
                       </p>
                     )}
-                    <p className="text-xs text-gray-500">
-                      Max size: 1MB | Formats: JPG, PNG
-                    </p>
+                    <p className="text-xs text-gray-500">{t("maxSizeNote")}</p>
                   </div>
                 </div>
 
@@ -311,18 +310,17 @@ export default function CreateAccount() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <Phone className="h-4 w-4 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">
-                      Contact Information
-                    </h3>
+                    <h3 className="font-semibold text-gray-900">{t("contactInformation")}</h3>
+                    <ReadAloud text={`${t("contactInformation")}. ${t("phoneNumber")}.`} />
                   </div>
 
                   <div className="space-y-2">
                     <FormInput
                       control={control}
                       name="phone"
-                      label="Phone Number *"
+                      label={`${t("phoneNumber")} *`}
                       type="tel"
-                      placeholder="+91 XXXXX XXXXX"
+                      placeholder={t("phoneNumber")}
                       classname={`h-12 ${errors.phone ? "border-red-500" : ""}`}
                     />
                   </div>
@@ -332,9 +330,8 @@ export default function CreateAccount() {
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <MapPin className="h-4 w-4 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">
-                      Location Details
-                    </h3>
+                    <h3 className="font-semibold text-gray-900">{t("locationDetails")}</h3>
+                    <ReadAloud text={`${t("locationDetails")}. ${t("state")}. ${t("district")}. ${t("taluka")}. ${t("villageOrCity")}.`} />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -343,12 +340,12 @@ export default function CreateAccount() {
                       <SelectInput
                         control={control}
                         name="state"
-                        label="State *"
+                        label={`${t("state")} *`}
                         option={Address.states.map((s) => ({
                           label: s,
                           value: s,
                         }))}
-                        placeholder="Select State"
+                        placeholder={t("selectState")}
                         classname={`h-12 ${
                           errors.state ? "border-red-500" : ""
                         }`}
@@ -360,7 +357,7 @@ export default function CreateAccount() {
                       <SelectInput
                         control={control}
                         name="district"
-                        label="District *"
+                        label={`${t("district")} *`}
                         option={
                           selectedState
                             ? (Address.districts[selectedState] || []).map(
@@ -373,8 +370,8 @@ export default function CreateAccount() {
                         }
                         placeholder={
                           selectedState
-                            ? "Select District"
-                            : "Select State first"
+                            ? t("selectDistrict")
+                            : t("selectStateFirst")
                         }
                         disabled={!selectedState}
                         classname={`h-12 ${
@@ -394,7 +391,7 @@ export default function CreateAccount() {
                       <SelectInput
                         control={control}
                         name="taluka"
-                        label="Taluka *"
+                        label={`${t("taluka")} *`}
                         option={
                           selectedDistrict
                             ? (Address.talukas[selectedDistrict] || []).map(
@@ -407,8 +404,8 @@ export default function CreateAccount() {
                         }
                         placeholder={
                           selectedDistrict
-                            ? "Select Taluka"
-                            : "Select District first"
+                            ? t("selectTaluka")
+                            : t("selectDistrictFirst")
                         }
                         disabled={!selectedDistrict}
                         classname={`h-12 ${
@@ -426,7 +423,7 @@ export default function CreateAccount() {
                       <SelectInput
                         control={control}
                         name="village"
-                        label="Village / City *"
+                        label={`${t("villageOrCity")} *`}
                         option={
                           selectedTaluka
                             ? (Address.villages[selectedTaluka] || []).map(
@@ -439,8 +436,8 @@ export default function CreateAccount() {
                         }
                         placeholder={
                           selectedTaluka
-                            ? "Select Village/City"
-                            : "Select Taluka first"
+                            ? t("selectVillage")
+                            : t("selectTalukaFirst")
                         }
                         disabled={!selectedTaluka}
                         classname={`h-12 ${
@@ -460,20 +457,21 @@ export default function CreateAccount() {
                   <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
                     <Home className="h-4 w-4 text-green-600" />
                     <h3 className="font-semibold text-gray-900">
-                      Address Details{" "}
+                      {t("addressDetails")}{" "}
                       <span className="text-xs text-gray-500 font-normal">
-                        (Optional)
+                        {t("optional")}
                       </span>
                     </h3>
+                    <ReadAloud text={`${t("addressDetails")}. ${t("houseBuilding")}. ${t("roadAreaLandmark")}.`} />
                   </div>
 
                   <div className="space-y-2">
                     <FormInput
                       control={control}
                       name="houseBuildingName"
-                      label="House Number / Building Name"
+                      label={t("houseBuilding")}
                       type="text"
-                      placeholder="e.g., House No. 123, Residential Complex"
+                      placeholder={t("example.housePlaceholder")}
                       classname={`h-12 ${
                         errors.houseBuildingName ? "border-red-500" : ""
                       }`}
@@ -484,9 +482,9 @@ export default function CreateAccount() {
                     <FormInput
                       control={control}
                       name="roadarealandmarkName"
-                      label="Road, Area, Landmark"
+                      label={t("roadAreaLandmark")}
                       type="text"
-                      placeholder="e.g., Near Town Hall, MG Road"
+                      placeholder={t("example.roadPlaceholder")}
                       classname={`h-12 ${
                         errors.roadarealandmarkName ? "border-red-500" : ""
                       }`}
@@ -503,25 +501,25 @@ export default function CreateAccount() {
                     {isSubmitting || isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Creating Profile...
+                        {t("creatingProfile")}
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="mr-2 h-5 w-5" />
-                        Complete Registration
+                        {t("completeRegistration")}
                       </>
                     )}
                   </Button>
                 </div>
 
                 <p className="text-center text-xs text-gray-500">
-                  By completing registration, you agree to our{" "}
+                  {t("agreeTo")}{" "}
                   <span className="text-green-600 underline cursor-pointer">
-                    Terms of Service
+                    {t("terms")}
                   </span>{" "}
-                  and{" "}
+                  {t("and")}{" "}
                   <span className="text-green-600 underline cursor-pointer">
-                    Privacy Policy
+                    {t("privacy")}
                   </span>
                 </p>
               </div>

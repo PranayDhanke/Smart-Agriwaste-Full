@@ -18,7 +18,6 @@ import {
   Leaf,
   LayoutDashboard,
   ChevronRight,
-  Bell,
   LogOut,
   X,
 } from "lucide-react";
@@ -310,14 +309,6 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {pendingVerifications.length + pendingReports.length > 0 && (
-            <button className="relative text-slate-500 hover:text-slate-900">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[9px] text-white font-bold flex items-center justify-center">
-                {pendingVerifications.length + pendingReports.length}
-              </span>
-            </button>
-          )}
         </header>
 
         {/* Scrollable content */}

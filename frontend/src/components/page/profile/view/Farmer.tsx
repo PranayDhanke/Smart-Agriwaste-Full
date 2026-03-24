@@ -61,6 +61,10 @@ export default function Profile() {
   const { user, isLoaded } = useUser();
   const t = useTranslations("profile.farmer.Profile");
   const Address: AddressType = addressJson;
+  const statusLabel = (status?: string | null) =>
+    status && t.has(`status.${status}` as Parameters<typeof t>[0])
+      ? t(`status.${status}` as Parameters<typeof t>[0])
+      : (status ?? "not_requested");
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -144,9 +148,17 @@ export default function Profile() {
         userId: farmerId,
       }).unwrap();
       await getProfile({ id: farmerId, role: role as string }).unwrap();
-      toast.success("Verification request submitted.");
+      toast.success(
+        t.has("verification.requestSubmitted")
+          ? t("verification.requestSubmitted")
+          : "Verification request submitted.",
+      );
     } catch {
-      toast.error("Unable to submit verification request.");
+      toast.error(
+        t.has("verification.requestFailed")
+          ? t("verification.requestFailed")
+          : "Unable to submit verification request.",
+      );
     }
   };
 
@@ -155,7 +167,9 @@ export default function Profile() {
       <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
         <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-4" />
         <p className="text-emerald-900 font-medium">
-          Loading your colorful profile...
+          {t.has("ui.loadingProfile")
+            ? t("ui.loadingProfile")
+            : "Loading your colorful profile..."}
         </p>
       </div>
     );
@@ -177,12 +191,11 @@ export default function Profile() {
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white flex items-center tracking-tight">
-                {t("title") || "Farmer Profile"}{" "}
+                {t("title")}{" "}
                 <Sparkles className="w-6 h-6 ml-3 text-yellow-300" />
               </h1>
               <p className="text-emerald-50 mt-2 text-base max-w-lg">
-                Manage your personal details, farm location, and agricultural
-                verification documents.
+                {t("subtitle")}
               </p>
             </div>
             <div className="bg-black/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 shadow-inner inline-flex items-center self-start sm:self-auto">
@@ -200,14 +213,22 @@ export default function Profile() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-emerald-800">
-                    Verification status
+                    {t.has("verification.heading")
+                      ? t("verification.heading")
+                      : "Verification status"}
                   </p>
                   <p className="mt-1 text-sm text-emerald-700">
-                    Current status: {verification?.status ?? "not_requested"}
+                    {t.has("verification.currentStatus")
+                      ? t("verification.currentStatus", {
+                          status: statusLabel(verification?.status),
+                        })
+                      : `Current status: ${statusLabel(verification?.status)}`}
                   </p>
                   {verification?.reason && (
                     <p className="mt-1 text-xs text-emerald-700">
-                      Admin note: {verification.reason}
+                      {t.has("verification.adminNote")
+                        ? t("verification.adminNote", { note: verification.reason })
+                        : `Admin note: ${verification.reason}`}
                     </p>
                   )}
                 </div>
@@ -220,12 +241,20 @@ export default function Profile() {
                   }
                 >
                   {isRequestingVerification
-                    ? "Requesting..."
+                    ? t.has("verification.requesting")
+                      ? t("verification.requesting")
+                      : "Requesting..."
                     : verification?.status === "verified"
-                      ? "Verified"
+                      ? t.has("verification.verified")
+                        ? t("verification.verified")
+                        : "Verified"
                       : verification?.status === "pending"
-                        ? "Pending review"
-                        : "Request verification"}
+                        ? t.has("verification.pending")
+                          ? t("verification.pending")
+                          : "Pending review"
+                        : t.has("verification.request")
+                          ? t("verification.request")
+                          : "Request verification"}
                 </Button>
               </div>
             </div>
@@ -296,7 +325,7 @@ export default function Profile() {
                       name="phone"
                       label={t("fields.phone")}
                       type="tel"
-                      placeholder="10-digit number"
+                      placeholder={t("placeholders.phone")}
                     />
                     <FormInput
                       control={control}
@@ -304,7 +333,7 @@ export default function Profile() {
                       name="aadharnumber"
                       label={t("fields.aadharnumber")}
                       type="text"
-                      placeholder="12-digit number"
+                      placeholder={t("placeholders.aadharnumber")}
                     />
                   </div>
                 </div>
@@ -322,7 +351,9 @@ export default function Profile() {
                       <SelectInput
                         classname={inputStyle}
                         control={control}
-                        placeholder="Select State"
+                        placeholder={
+                          t.has("ui.selectState") ? t("ui.selectState") : "Select State"
+                        }
                         name="state"
                         label={t("fields.state")}
                         option={Address.states.map((s) => ({
@@ -334,7 +365,9 @@ export default function Profile() {
                         classname={inputStyle}
                         control={control}
                         name="district"
-                        placeholder="Select District"
+                        placeholder={
+                          t.has("ui.selectDistrict") ? t("ui.selectDistrict") : "Select District"
+                        }
                         label={t("fields.district")}
                         option={
                           selectedState
@@ -349,7 +382,9 @@ export default function Profile() {
                         classname={inputStyle}
                         control={control}
                         name="taluka"
-                        placeholder="Select Taluka"
+                        placeholder={
+                          t.has("ui.selectTaluka") ? t("ui.selectTaluka") : "Select Taluka"
+                        }
                         label={t("fields.taluka")}
                         option={
                           selectedDistrict
@@ -364,7 +399,9 @@ export default function Profile() {
                         classname={inputStyle}
                         control={control}
                         name="village"
-                        placeholder="Select Village"
+                        placeholder={
+                          t.has("ui.selectVillage") ? t("ui.selectVillage") : "Select Village"
+                        }
                         label={t("fields.village")}
                         option={
                           selectedTaluka
@@ -383,7 +420,11 @@ export default function Profile() {
                         control={control}
                         name="houseBuildingName"
                         label={t("fields.houseBuildingName")}
-                        placeholder="House No / Building"
+                        placeholder={
+                          t.has("ui.housePlaceholder")
+                            ? t("ui.housePlaceholder")
+                            : "House No / Building"
+                        }
                       />
                       <FormInput
                         type="text"
@@ -391,7 +432,11 @@ export default function Profile() {
                         control={control}
                         name="roadarealandmarkName"
                         label={t("fields.roadarealandmarkName")}
-                        placeholder="Landmark / Area"
+                        placeholder={
+                          t.has("ui.landmarkPlaceholder")
+                            ? t("ui.landmarkPlaceholder")
+                            : "Landmark / Area"
+                        }
                       />
                     </div>
                   </div>
@@ -412,7 +457,11 @@ export default function Profile() {
                       control={control}
                       name="farmNumber"
                       label={t("fields.farmNumber")}
-                      placeholder="e.g. Survey No. 12A"
+                      placeholder={
+                        t.has("ui.farmNumberPlaceholder")
+                          ? t("ui.farmNumberPlaceholder")
+                          : "e.g. Survey No. 12A"
+                      }
                     />
                     <FormInput
                       classname={inputStyle}
@@ -420,17 +469,29 @@ export default function Profile() {
                       name="farmArea"
                       label={t("fields.farmArea")}
                       type="number"
-                      placeholder="Total Area size"
+                      placeholder={
+                        t.has("ui.farmAreaPlaceholder")
+                          ? t("ui.farmAreaPlaceholder")
+                          : "Total Area size"
+                      }
                     />
                     <SelectInput
                       classname={inputStyle}
-                      placeholder="Select Unit"
+                      placeholder={
+                        t.has("ui.selectUnit") ? t("ui.selectUnit") : "Select Unit"
+                      }
                       control={control}
                       name="farmUnit"
                       label={t("fields.farmUnit")}
                       option={[
-                        { label: "Hectare", value: "hectare" },
-                        { label: "Acre", value: "acre" },
+                        {
+                          label: t.has("units.hectare") ? t("units.hectare") : "Hectare",
+                          value: "hectare",
+                        },
+                        {
+                          label: t.has("units.acre") ? t("units.acre") : "Acre",
+                          value: "acre",
+                        },
                       ]}
                     />
                   </div>
@@ -480,11 +541,13 @@ export default function Profile() {
                   >
                     {isUpdating ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-3 animate-spin" /> Saving
-                        Changes...
+                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />{" "}
+                        {t.has("ui.savingChanges")
+                          ? t("ui.savingChanges")
+                          : "Saving Changes..."}
                       </>
                     ) : (
-                      t("saveChanges") || "Save Profile Updates"
+                      t("saveChanges")
                     )}
                   </Button>
                 </div>
