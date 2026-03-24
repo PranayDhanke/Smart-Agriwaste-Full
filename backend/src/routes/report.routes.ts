@@ -8,9 +8,6 @@ const router = Router();
 
 router.post(
   "/",
-  requireAuth(),
-  requireRoles(["buyer", "farmer", "admin"]),
-  requireActiveAccount,
   asyncHandler(createReport),
 );
 
