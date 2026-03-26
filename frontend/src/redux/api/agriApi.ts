@@ -11,11 +11,11 @@ interface RecommendationParams {
 
 export interface RecommendationResult {
   benefits: string;
-  environmentalImpact: string;
+  environmentalImpact: string[];
   finalOutput: string;
   notes: string;
   process: string[];
-  processDuration: string;
+  processDuration: string[];
   recommendedFor: string[];
   requiredEquipment: string[];
   requiredMaterials: string[];

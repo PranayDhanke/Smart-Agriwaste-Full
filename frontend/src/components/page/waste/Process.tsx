@@ -221,12 +221,14 @@ export default function Process() {
                           </div>
 
                           {wasteType && (
-                            <div 
-                              key={wasteCategory} 
+                            <div
+                              key={wasteCategory}
                               className="flex w-full items-start gap-3 animate-fadeIn"
                             >
                               <div className="pt-1">
-                                <ReadAloud text={`${t("form.wasteCategory")}`} />
+                                <ReadAloud
+                                  text={`${t("form.wasteCategory")}`}
+                                />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <SelectInput
@@ -247,8 +249,8 @@ export default function Process() {
                           )}
 
                           {wasteType && wasteCategory && (
-                            <div 
-                              key={wasteCategory + wasteType} 
+                            <div
+                              key={wasteCategory + wasteType}
                               className="flex w-full items-start gap-3 animate-fadeIn"
                             >
                               <div className="pt-1">
@@ -493,9 +495,20 @@ export default function Process() {
                           <Clock3 className="h-4 w-4 text-cyan-700" />
                           {t("result.processDuration")}
                         </h4>
-                        <p className="text-gray-700">
-                          {data?.processDuration || "-"}
-                        </p>
+                         <div className="flex flex-wrap gap-2">
+                          {data?.processDuration?.length ? (
+                            data.processDuration.map((item: string) => (
+                              <span
+                                key={item}
+                                className="rounded-full bg-white px-3 py-1 text-sm text-lime-900 shadow-sm"
+                              >
+                                {item}
+                              </span>
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-600">-</p>
+                          )}
+                        </div>
                       </div>
 
                       <div className="rounded-lg border border-lime-200 bg-lime-50 p-4">
@@ -524,9 +537,20 @@ export default function Process() {
                           <Trees className="h-4 w-4 text-teal-700" />
                           {t("result.environmentalImpact")}
                         </h4>
-                        <p className="text-gray-700">
-                          {data?.environmentalImpact || "-"}
-                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {data?.environmentalImpact?.length ? (
+                            data.environmentalImpact.map((item: string) => (
+                              <span
+                                key={item}
+                                className="rounded-full bg-white px-3 py-1 text-sm text-lime-900 shadow-sm"
+                              >
+                                {item}
+                              </span>
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-600">-</p>
+                          )}
+                        </div>
                       </div>
                     </div>
 
