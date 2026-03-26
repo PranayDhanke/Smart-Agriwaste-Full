@@ -17,25 +17,14 @@ import {
 
 const router = Router();
 
-router.post(
-  "/create-waste",
-  requireActiveAccount,
-  requireWasteCreatorOrAdmin,
-  asyncHandler(addWaste),
-);
+router.post("/create-waste", asyncHandler(addWaste));
 router.get("/get-wastes", asyncHandler(getWaste));
 router.get("/get-single/:id", asyncHandler(getSingleWaste));
 router.get("/get-waste/:id", asyncHandler(getWastebyId));
-router.put(
-  "/update-waste/:id",
-  requireActiveAccount,
-  requireWasteOwnerOrAdmin,
-  asyncHandler(updateWaste),
-);
+router.put("/update-waste/:id", asyncHandler(updateWaste));
 router.delete(
   "/delete/:id",
-  requireActiveAccount,
-  requireWasteOwnerOrAdmin,
+
   asyncHandler(deleteWaste),
 );
 

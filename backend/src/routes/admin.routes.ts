@@ -12,7 +12,10 @@ import {
   updateUserBanStatus,
   updateUserVerificationStatus,
 } from "../controllers/admin.controller";
-import { requireRoles, requireSelfOrAdmin } from "../middlewares/authz.middleware";
+import {
+  requireRoles,
+  requireSelfOrAdmin,
+} from "../middlewares/authz.middleware";
 import { asyncHandler } from "../utils/asyncHandler";
 
 const router = Router();
@@ -24,8 +27,18 @@ router.get(
   requireSelfOrAdmin((req) => req.params.id, ["admin"]),
   asyncHandler(getAdminAccount),
 );
-router.get("/dashboard", requireAuth(), requireRoles(["admin"]), asyncHandler(getAdminDashboard));
-router.get("/users", requireAuth(), requireRoles(["admin"]), asyncHandler(getAdminUsers));
+router.get(
+  "/dashboard",
+  requireAuth(),
+  requireRoles(["admin"]),
+  asyncHandler(getAdminDashboard),
+);
+router.get(
+  "/users",
+  requireAuth(),
+  requireRoles(["admin"]),
+  asyncHandler(getAdminUsers),
+);
 router.patch(
   "/users/:role/:userId/ban",
   requireAuth(),
@@ -50,7 +63,12 @@ router.delete(
   requireRoles(["admin"]),
   asyncHandler(deleteWasteAsAdmin),
 );
-router.get("/reports", requireAuth(), requireRoles(["admin"]), asyncHandler(getReports));
+router.get(
+  "/reports",
+  requireAuth(),
+  requireRoles(["admin"]),
+  asyncHandler(getReports),
+);
 router.patch(
   "/reports/:id",
   requireAuth(),

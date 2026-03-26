@@ -15,13 +15,7 @@ router.get(
   "/get-negotiation/farmer/:id",
   asyncHandler(getNegotiationsByFarmer),
 );
-router.get(
-  "/get-negotiation/buyer/:id",
-  asyncHandler(getNegotiationsByBuyer),
-);
-router.patch(
-  "/update-status",
-  asyncHandler(updateNegotiationStatus),
-);
+router.get("/get-negotiation/buyer/:id", asyncHandler(getNegotiationsByBuyer));
+router.patch("/update-status", asyncHandler(updateNegotiationStatus));
 
 export default router;
