@@ -276,9 +276,3 @@ go test ./...
 - [Frontend README](/a:/FinalY/frontend/README.md)
 - [Dataset API README](/a:/FinalY/dataset-api/README.md) 
 
-## Project By 
-   Pratik Dhokne 
-   Prajyot Nimbokar
-   Pranay Dhanke 
-   Deep Manmode
-   Samyak Kalaskar
