@@ -4,6 +4,7 @@ import CommunityPost from "../models/communityPost.model";
 import { AppError } from "../utils/AppError";
 import { createNotificationRecord } from "../lib/notifications";
 import { getIO } from "../lib/socket";
+import { getRequestActor } from "../middlewares/authz.middleware";
 
 const normalizeLimit = (rawLimit: unknown, fallback = 10) =>
   Math.min(Number(rawLimit) || fallback, 50);
@@ -80,7 +81,16 @@ export const deleteCommunityPost = async (req: Request, res: Response) => {
     throw new AppError("Post not found", 404);
   }
 
-  if (post.authorId !== String(userId)) {
+  let isAdmin = false;
+
+  try {
+    const actor = await getRequestActor(req);
+    isAdmin = actor.role === "admin";
+  } catch {
+    isAdmin = false;
+  }
+
+  if (!isAdmin && post.authorId !== String(userId)) {
     throw new AppError("You can delete only your own post", 403);
   }
 

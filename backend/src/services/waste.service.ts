@@ -1,4 +1,5 @@
 import { toLocalizedFields } from "../lib/localizedText";
+import farmeraccount from "../models/farmer.model";
 import { wasteRepository } from "../repositories/waste.repository";
 import { AppError } from "../utils/AppError";
 
@@ -66,7 +67,19 @@ export const wasteService = {
       throw new AppError("Can not fetch the single waste", 500);
     }
 
-    return singleWaste;
+    const sellerVerification = await farmeraccount
+      .findOne({ farmerId: singleWaste.seller?.farmerId })
+      .select("verification.status")
+      .lean();
+
+    return {
+      ...singleWaste.toObject(),
+      seller: {
+        ...singleWaste.seller,
+        verificationStatus:
+          sellerVerification?.verification?.status ?? "not_requested",
+      },
+    };
   },
 
   async deleteWaste(id: string) {

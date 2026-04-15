@@ -34,8 +34,18 @@ export interface ManagedUser {
   isBanned?: boolean;
   bannedReason?: string;
   createdAt?: string;
+  aadharnumber?: string;
   aadharUrl?: string;
   farmDocUrl?: string;
+  state?: string;
+  district?: string;
+  taluka?: string;
+  village?: string;
+  houseBuildingName?: string;
+  roadarealandmarkName?: string;
+  farmNumber?: string;
+  farmArea?: string;
+  farmUnit?: string;
   verification?: VerificationInfo;
 }
 

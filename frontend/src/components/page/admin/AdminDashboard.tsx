@@ -7,6 +7,9 @@ import { toast } from "sonner";
 import {
   Ban,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
   FileBadge,
   Loader2,
   Search,
@@ -14,15 +17,14 @@ import {
   Trash2,
   UserX,
   Users,
+  Eye,
   FileWarning,
   Leaf,
   LayoutDashboard,
   ChevronRight,
-  LogOut,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useGetWastesQuery } from "@/redux/api/wasteApi";
 import {
@@ -86,6 +88,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab]         = useState<UserTab>("buyer");
   const [search, setSearch]               = useState("");
   const [sidebarOpen, setSidebarOpen]     = useState(true);
+  const [expandedVerificationId, setExpandedVerificationId] = useState<string | null>(null);
 
   const token        = useSelector((state: RootState) => state.auth.token);
   const adminEnabled = isLoaded && isSignedIn && role === "admin" && !!token;
@@ -155,11 +158,14 @@ export default function AdminDashboard() {
       toast.success(msg);
       refetchEverything();
     } catch (error: unknown) {
+      const apiError = error as {
+        data?: {
+          message?: string;
+        };
+      };
       const message =
-        typeof error === "object" && error !== null && "data" in error &&
-        typeof (error as any).data === "object" && (error as any).data !== null &&
-        "message" in (error as any).data && typeof (error as any).data.message === "string"
-          ? (error as any).data.message
+        typeof apiError?.data?.message === "string"
+          ? apiError.data.message
           : "Admin action failed";
       toast.error(message);
     }
@@ -464,6 +470,8 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {pendingVerifications.map((entry) => {
                     const targetRole = entry.buyerId ? "buyer" : "farmer";
+                    const verificationId = entry.buyerId || entry.farmerId || entry._id;
+                    const isExpanded = expandedVerificationId === verificationId;
                     return (
                       <div key={entry._id} className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
                         <div className="flex items-start justify-between gap-2">
@@ -478,6 +486,23 @@ export default function AdminDashboard() {
                         {entry.verification?.reason && (
                           <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">{entry.verification.reason}</p>
                         )}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full h-8 text-xs border-slate-200"
+                          onClick={() =>
+                            setExpandedVerificationId(isExpanded ? null : verificationId)
+                          }
+                        >
+                          <Eye className="h-3.5 w-3.5 mr-1" />
+                          View details
+                          {isExpanded ? (
+                            <ChevronUp className="h-3.5 w-3.5 ml-1" />
+                          ) : (
+                            <ChevronDown className="h-3.5 w-3.5 ml-1" />
+                          )}
+                        </Button>
+                        {isExpanded && <VerificationDetails entry={entry} role={targetRole} />}
                         <div className="flex gap-2 pt-1">
                           <Button
                             size="sm"
@@ -666,6 +691,67 @@ function AccessDenied({ onSwitch, onHome }: { onSwitch: () => void; onHome: () =
           <Button variant="outline" className="w-full" onClick={onHome}>Return to Home</Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function VerificationDetails({
+  entry,
+  role,
+}: {
+  entry: ManagedUser;
+  role: "buyer" | "farmer";
+}) {
+  const address = [entry.village, entry.taluka, entry.district, entry.state]
+    .filter(Boolean)
+    .join(", ");
+  const joinedAddress = [entry.houseBuildingName, entry.roadarealandmarkName]
+    .filter(Boolean)
+    .join(", ");
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <DetailItem label="Phone" value={entry.phone} />
+        <DetailItem label="Email" value={entry.email} />
+        <DetailItem label="Username" value={entry.username} />
+        <DetailItem label="Aadhar" value={entry.aadharnumber} />
+        <DetailItem label="Requested" value={entry.verification?.requestedAt ? new Date(entry.verification.requestedAt).toLocaleString() : undefined} />
+        <DetailItem label="Address" value={address || joinedAddress || undefined} />
+        {role === "farmer" && <DetailItem label="Farm Number" value={entry.farmNumber} />}
+        {role === "farmer" && <DetailItem label="Farm Area" value={entry.farmArea ? `${entry.farmArea} ${entry.farmUnit ?? ""}`.trim() : undefined} />}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {entry.aadharUrl && (
+          <a
+            href={entry.aadharUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+          >
+            View Aadhar <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
+        {role === "farmer" && entry.farmDocUrl && (
+          <a
+            href={entry.farmDocUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100"
+          >
+            View Farm Doc <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DetailItem({ label, value }: { label: string; value?: string }) {
+  return (
+    <div className="rounded-lg bg-white px-3 py-2 border border-slate-200">
+      <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="mt-1 text-slate-700">{value || "-"}</p>
     </div>
   );
 }

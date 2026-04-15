@@ -5,7 +5,6 @@ import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -27,6 +26,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { uploadImage } from "@/utils/imagekit";
 import { connectSocketForUser } from "@/lib/socket";
 import {
+  CommunityPost,
+  CommunityReply,
   useAddCommunityReplyMutation,
   useCreateCommunityPostMutation,
   useDeleteCommunityPostMutation,
@@ -39,7 +40,6 @@ import {
 } from "@/redux/api/communityApi";
 import {
   Bookmark,
-  Camera,
   ChevronDown,
   Heart,
   ImagePlus,
@@ -296,6 +296,7 @@ function ComposeBox({
 function PostCard({
   post,
   userId,
+  userRole,
   username,
   userImage,
   onLike,
@@ -305,10 +306,23 @@ function PostCard({
   onDeletePost,
   onEditReply,
   onDeleteReply,
-}: any) {
+}: {
+  post: CommunityPost;
+  userId?: string;
+  userRole?: string;
+  username: string;
+  userImage?: string;
+  onLike: (postId: string) => void;
+  onSave: (postId: string) => void;
+  onReply: (postId: string, message: string) => void;
+  onEditPost: (postId: string, description: string, category: string) => void;
+  onDeletePost: (postId: string) => void;
+  onEditReply: (postId: string, replyId: string, message: string) => void;
+  onDeleteReply: (postId: string, replyId: string) => void;
+}) {
   const likedByUser = userId ? post.likes.includes(userId) : false;
   const savedByUser = userId ? post.saves.includes(userId) : false;
-  const canManage = userId === post.authorId;
+  const canManage = userId === post.authorId || userRole === "admin";
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -518,7 +532,7 @@ function PostCard({
 
           {showReplies && (
             <div className="px-4 pb-3 space-y-3">
-              {post.replies.map((reply: any) => (
+              {post.replies.map((reply: CommunityReply) => (
                 <div key={reply._id} className="flex gap-2.5">
                   <Avatar className="h-8 w-8 shrink-0 mt-0.5">
                     <AvatarImage src={reply.userImage} />
@@ -651,6 +665,7 @@ function PostCard({
 ───────────────────────────────────────────── */
 export default function CommunityFeed() {
   const { user } = useUser();
+  const userRole = user?.unsafeMetadata?.role;
   const [feedFilter, setFeedFilter] = useState<"all" | "mine" | "others">(
     "all",
   );
@@ -664,8 +679,7 @@ export default function CommunityFeed() {
   const { data, isLoading, refetch } = useGetCommunityPostsQuery({ limit: 20 });
   const [createPost, { isLoading: isCreatingPost }] =
     useCreateCommunityPostMutation();
-  const [updatePost, { isLoading: isUpdatingPost }] =
-    useUpdateCommunityPostMutation();
+  const [updatePost] = useUpdateCommunityPostMutation();
   const [deletePost, { isLoading: isDeletingPost }] =
     useDeleteCommunityPostMutation();
   const [toggleLike] = useToggleCommunityLikeMutation();
@@ -854,7 +868,7 @@ export default function CommunityFeed() {
               {feedFilters.map((f) => (
                 <button
                   key={f.id}
-                  onClick={() => setFeedFilter(f.id as any)}
+                  onClick={() => setFeedFilter(f.id as "all" | "mine" | "others")}
                   className={cn(
                     "text-xs font-bold px-3 py-1.5 rounded-full transition-all",
                     feedFilter === f.id
@@ -930,6 +944,7 @@ export default function CommunityFeed() {
               key={post._id}
               post={post}
               userId={user?.id}
+              userRole={userRole}
               username={signedInName}
               userImage={user?.imageUrl}
               onLike={handleLike}

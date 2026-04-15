@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -30,6 +30,7 @@ import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Waste, WasteType } from "@/components/types/waste";
 import { useGetSingleWasteQuery } from "@/redux/api/wasteApi";
+import { useLazyGetProfileQuery } from "@/redux/api/authApi";
 import { CartItem } from "@/components/types/order";
 import { addToCart } from "@/redux/features/cartSlice";
 import { toast } from "sonner";
@@ -84,9 +85,16 @@ export default function SingleMarketplace() {
 
   const { user } = useUser();
 
-  const role = user?.unsafeMetadata.role;
+  const role = user?.unsafeMetadata?.role as "buyer" | "farmer" | "admin" | undefined;
+  const [getProfile, { data: profileData }] = useLazyGetProfileQuery();
 
   const { data, isFetching } = useGetSingleWasteQuery(id || "");
+
+  useEffect(() => {
+    if (user?.id && role) {
+      getProfile({ id: user.id, role });
+    }
+  }, [getProfile, role, user?.id]);
 
   const handleAddToCart = (item: Waste) => {
     const u: CartItem = {
@@ -170,6 +178,10 @@ export default function SingleMarketplace() {
   }
 
   const totalPrice = data.price * quantity;
+  const buyerCanSeeVerifiedBadge =
+    role === "buyer" && profileData?.accountdata?.verification?.status === "verified";
+  const showSellerVerifiedBadge =
+    buyerCanSeeVerifiedBadge && data.seller.verificationStatus === "verified";
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/20 to-emerald-50">
@@ -330,7 +342,7 @@ export default function SingleMarketplace() {
               </h1>
               <p className="text-lg text-gray-600 font-medium">
                 {c(
-                  `productSet.${data.wasteType}.${data.wasteCategory}.${data.wasteProduct}`,
+                  `productSetgit.${data.wasteProduct}`,
                 )}
               </p>
             </div>
@@ -430,9 +442,11 @@ export default function SingleMarketplace() {
                         <p className="text-sm font-semibold text-gray-900">
                           {data.seller.name}
                         </p>
-                        <p className="text-xs text-gray-600">
-                          {t("seller.verified")}
-                        </p>
+                        {showSellerVerifiedBadge && (
+                          <p className="text-xs text-gray-600">
+                            {t("seller.verified")}
+                          </p>
+                        )}
                       </div>
                     </div>
 

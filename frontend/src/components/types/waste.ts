@@ -20,6 +20,7 @@ export interface seller {
   name: string;
   phone: string;
   email: string;
+  verificationStatus?: "not_requested" | "pending" | "verified" | "rejected";
 }
 
 export interface Waste {
