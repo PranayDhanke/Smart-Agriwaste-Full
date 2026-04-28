@@ -23,11 +23,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
-import { uploadImage } from "@/utils/imagekit";
-import { connectSocketForUser } from "@/lib/socket";
 import {
   CommunityPost,
   CommunityReply,
+} from "@/components/types/community";
+import { uploadImage } from "@/utils/imagekit";
+import { connectSocketForUser } from "@/lib/socket";
+import {
   useAddCommunityReplyMutation,
   useCreateCommunityPostMutation,
   useDeleteCommunityPostMutation,
@@ -665,7 +667,10 @@ function PostCard({
 ───────────────────────────────────────────── */
 export default function CommunityFeed() {
   const { user } = useUser();
-  const userRole = user?.unsafeMetadata?.role;
+  const userRole =
+    typeof user?.unsafeMetadata?.role === "string"
+      ? user.unsafeMetadata.role
+      : undefined;
   const [feedFilter, setFeedFilter] = useState<"all" | "mine" | "others">(
     "all",
   );
