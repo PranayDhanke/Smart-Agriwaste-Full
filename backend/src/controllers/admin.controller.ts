@@ -254,6 +254,22 @@ export const deleteWasteAsAdmin = async (req: Request, res: Response) => {
   res.status(200).json({ message: "Waste deleted successfully" });
 };
 
+export const deleteCommunityPostAsAdmin = async (req: Request, res: Response) => {
+  const postId = toSingleParam(req.params.id);
+
+  if (!postId) {
+    throw new AppError("Community post id is required", 400);
+  }
+
+  const deleted = await communityPost.findByIdAndDelete(postId);
+
+  if (!deleted) {
+    throw new AppError("Community post not found", 404);
+  }
+
+  res.status(200).json({ message: "Community post deleted successfully" });
+};
+
 export const getReports = async (_req: Request, res: Response) => {
   const reports = await reportModel.find().sort({ createdAt: -1 }).lean();
 

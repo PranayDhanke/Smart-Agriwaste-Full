@@ -21,13 +21,17 @@ import {
   FileWarning,
   Leaf,
   LayoutDashboard,
+  MessageSquare,
   ChevronRight,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CommunityPost } from "@/components/types/community";
+import { useGetCommunityPostsQuery } from "@/redux/api/communityApi";
 import { useGetWastesQuery } from "@/redux/api/wasteApi";
 import {
+  useDeleteCommunityPostAsAdminMutation,
   useDeleteManagedUserMutation,
   useDeleteWasteAsAdminMutation,
   useGetAdminDashboardQuery,
@@ -44,7 +48,13 @@ import { RootState } from "@/redux/store";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type UserTab = "buyer" | "farmer" | "admin";
-type SidebarSection = "overview" | "users" | "verifications" | "reports" | "wastes";
+type SidebarSection =
+  | "overview"
+  | "users"
+  | "verifications"
+  | "reports"
+  | "wastes"
+  | "community";
 
 // ─── Stat config ──────────────────────────────────────────────────────────────
 const statCards = [
@@ -52,6 +62,7 @@ const statCards = [
   { key: "farmers",              label: "Farmers",               color: "green"  },
   { key: "admins",               label: "Admins",                color: "purple" },
   { key: "wastes",               label: "Waste Listings",        color: "amber"  },
+  { key: "communityPosts",       label: "Community Posts",       color: "teal"   },
   { key: "pendingReports",       label: "Pending Reports",       color: "red"    },
   { key: "pendingVerifications", label: "Pending Verifications", color: "orange" },
   { key: "orders",               label: "Orders",                color: "teal"   },
@@ -76,6 +87,7 @@ const navItems: { id: SidebarSection; label: string; icon: React.ElementType; ba
   { id: "verifications",  label: "Verifications",   icon: FileBadge       },
   { id: "reports",        label: "Reports",         icon: FileWarning     },
   { id: "wastes",         label: "Waste Listings",  icon: Leaf            },
+  { id: "community",      label: "Community Posts", icon: MessageSquare   },
 ];
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -106,12 +118,19 @@ export default function AdminDashboard() {
     useGetReportsQuery(undefined, { skip: !adminEnabled });
   const { data: wastesResponse,  isLoading: wastesLoading,      refetch: refetchWastes    } =
     useGetWastesQuery({ limit: 50 }, { skip: !adminEnabled });
+  const {
+    data: communityPostsResponse,
+    isLoading: communityPostsLoading,
+    refetch: refetchCommunityPosts,
+  } = useGetCommunityPostsQuery({ limit: 50 }, { skip: !adminEnabled });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
   const [updateUserBanStatus,          { isLoading: banLoading          }] = useUpdateUserBanStatusMutation();
   const [updateUserVerificationStatus, { isLoading: verificationLoading }] = useUpdateUserVerificationStatusMutation();
   const [deleteManagedUser,            { isLoading: deleteUserLoading   }] = useDeleteManagedUserMutation();
   const [deleteWasteAsAdmin,           { isLoading: deleteWasteLoading  }] = useDeleteWasteAsAdminMutation();
+  const [deleteCommunityPostAsAdmin,   { isLoading: deleteCommunityPostLoading }] =
+    useDeleteCommunityPostAsAdminMutation();
   const [updateReportStatus,           { isLoading: reportLoading       }] = useUpdateReportStatusMutation();
 
   // ── Derived data ──────────────────────────────────────────────────────────
@@ -133,6 +152,15 @@ export default function AdminDashboard() {
     );
   }, [search, wastesResponse?.wastedata]);
 
+  const filteredCommunityPosts = useMemo(() => {
+    const posts = communityPostsResponse?.posts ?? [];
+    const q = search.trim().toLowerCase();
+    if (!q) return posts;
+    return posts.filter((post) =>
+      `${post.authorName} ${post.description} ${post.category}`.toLowerCase().includes(q),
+    );
+  }, [communityPostsResponse?.posts, search]);
+
   const pendingVerifications = useMemo(
     () =>
       [...(buyerUsersResponse?.users ?? []), ...(farmerUsersResponse?.users ?? [])].filter(
@@ -150,6 +178,7 @@ export default function AdminDashboard() {
   const refetchEverything = () => {
     refetchDashboard(); refetchUsers(); refetchBuyerUsers();
     refetchFarmerUsers(); refetchReports(); refetchWastes();
+    refetchCommunityPosts();
   };
 
   const runAdminAction = async (action: () => Promise<unknown>, msg: string) => {
@@ -191,6 +220,14 @@ export default function AdminDashboard() {
   const handleDeleteWaste = (waste: Waste) => {
     if (!window.confirm(`Delete "${waste.title.en}"?`)) return;
     runAdminAction(() => deleteWasteAsAdmin(waste._id).unwrap(), "Waste deleted");
+  };
+
+  const handleDeleteCommunityPost = (post: CommunityPost) => {
+    if (!window.confirm(`Delete this post by ${post.authorName}?`)) return;
+    runAdminAction(
+      () => deleteCommunityPostAsAdmin(post._id).unwrap(),
+      "Community post deleted",
+    );
   };
 
   const handleVerification = (entry: ManagedUser, targetRole: "buyer" | "farmer", status: "verified" | "rejected") => {
@@ -297,6 +334,7 @@ export default function AdminDashboard() {
               {activeSection === "verifications" && "Pending verification requests"}
               {activeSection === "reports"       && "Submitted moderation reports"}
               {activeSection === "wastes"        && "Review and moderate waste listings"}
+              {activeSection === "community"     && "Review and moderate community posts"}
             </p>
           </div>
 
@@ -360,6 +398,12 @@ export default function AdminDashboard() {
                   count={wastesResponse?.wastedata?.length ?? 0}
                   color="green"
                   onClick={() => setActiveSection("wastes")}
+                />
+                <QuickCard
+                  title="Community Posts"
+                  count={communityPostsResponse?.posts?.length ?? 0}
+                  color="teal"
+                  onClick={() => setActiveSection("community")}
                 />
               </div>
             </>
@@ -593,6 +637,60 @@ export default function AdminDashboard() {
                         className="h-8 px-3 text-red-600 hover:bg-red-50 hover:text-red-700 text-xs shrink-0"
                         onClick={() => handleDeleteWaste(entry)}
                         disabled={deleteWasteLoading}
+                      >
+                        <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeSection === "community" && (
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div className="px-5 py-3 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                <p className="text-sm font-medium text-slate-700">Recent Community Posts</p>
+                <span className="text-xs text-slate-400">
+                  {filteredCommunityPosts.length} post{filteredCommunityPosts.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+              {communityPostsLoading ? (
+                <div className="flex items-center justify-center py-16 text-slate-400">
+                  <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading posts...
+                </div>
+              ) : filteredCommunityPosts.length === 0 ? (
+                <div className="py-16 text-center text-sm text-slate-400">No community posts found.</div>
+              ) : (
+                <div className="divide-y divide-slate-50">
+                  {filteredCommunityPosts.map((entry) => (
+                    <div
+                      key={entry._id}
+                      className="flex items-start gap-4 px-5 py-4 hover:bg-slate-50/60 transition-colors"
+                    >
+                      <div className="h-8 w-8 rounded-lg bg-teal-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <MessageSquare className="h-4 w-4 text-teal-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-sm font-medium text-slate-900">{entry.authorName}</p>
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+                            {entry.category}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {new Date(entry.createdAt).toLocaleString()} • {entry.likes.length} likes • {entry.replies.length} repl{entry.replies.length === 1 ? "y" : "ies"}
+                        </p>
+                        <p className="mt-2 text-sm text-slate-700 line-clamp-2">
+                          {entry.description}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 px-3 text-red-600 hover:bg-red-50 hover:text-red-700 text-xs shrink-0"
+                        onClick={() => handleDeleteCommunityPost(entry)}
+                        disabled={deleteCommunityPostLoading}
                       >
                         <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
                       </Button>

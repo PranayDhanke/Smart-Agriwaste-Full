@@ -2,6 +2,7 @@ import { requireAuth } from "@clerk/express";
 import { Router } from "express";
 import {
   bootstrapAdmin,
+  deleteCommunityPostAsAdmin,
   deleteManagedUser,
   getReports,
   deleteWasteAsAdmin,
@@ -62,6 +63,12 @@ router.delete(
   requireAuth(),
   requireRoles(["admin"]),
   asyncHandler(deleteWasteAsAdmin),
+);
+router.delete(
+  "/community-posts/:id",
+  requireAuth(),
+  requireRoles(["admin"]),
+  asyncHandler(deleteCommunityPostAsAdmin),
 );
 router.get(
   "/reports",

@@ -93,6 +93,13 @@ export const adminApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Waste", id: "LIST" }, "Admin"],
     }),
+    deleteCommunityPostAsAdmin: builder.mutation<{ message: string }, string>({
+      query: (id) => ({
+        url: `/admin/community-posts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Community", id: "LIST" }, "Admin"],
+    }),
     getReports: builder.query<{ reports: ModerationReport[] }, void>({
       query: () => "/admin/reports",
       providesTags: ["Admin"],
@@ -117,6 +124,7 @@ export const adminApi = baseApi.injectEndpoints({
 
 export const {
   useBootstrapAdminMutation,
+  useDeleteCommunityPostAsAdminMutation,
   useDeleteManagedUserMutation,
   useDeleteWasteAsAdminMutation,
   useGetAdminDashboardQuery,
