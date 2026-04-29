@@ -7,7 +7,7 @@
       { "name": "jowar", "icon": "🌾" },
       { "name": "bajra", "icon": "🌾" },
       { "name": "ragi", "icon": "🌾" },
-      { "name": "barley", "icon": "🌾" },
+
       { "name": "oats", "icon": "🌾" }
     ],
 
@@ -48,23 +48,6 @@
       { "name": "lucerne", "icon": "🌿" },
       { "name": "napier_grass", "icon": "🌱" },
       { "name": "sorghum_fodder", "icon": "🌾" }
-    ],
-
-    "plantation": [
-      { "name": "tea", "icon": "🍵" },
-      { "name": "coffee", "icon": "☕" },
-      { "name": "coconut", "icon": "🥥" },
-      { "name": "rubber", "icon": "🌳" }
-    ],
-
-    "horticulture": [
-      { "name": "rose", "icon": "🌹" },
-      { "name": "marigold", "icon": "🌼" },
-      { "name": "jasmine", "icon": "🌸" },
-      { "name": "sunflower", "icon": "🌻" },
-      { "name": "aloe_vera", "icon": "🌵" },
-      { "name": "tulsi", "icon": "🌿" },
-      { "name": "ashwagandha", "icon": "🌿" }
     ]
   },
 
