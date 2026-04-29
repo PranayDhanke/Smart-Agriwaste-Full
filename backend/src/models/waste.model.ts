@@ -43,7 +43,7 @@ const wasteSchema = new mongoose.Schema(
 
     moisture: {
       type: String,
-      enum: ["dry", "semiwet", "wet"],
+      enum: ["dry", "semi_wet", "wet"],
       required: true,
     },
 
